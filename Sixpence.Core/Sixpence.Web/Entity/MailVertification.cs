@@ -9,7 +9,7 @@ using System.ComponentModel;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "邮箱验证")]
-    public class MailVertification : MetaEntity
+    public class MailVertification : AuditEntity
     {
         /// <summary>
         /// 实体id

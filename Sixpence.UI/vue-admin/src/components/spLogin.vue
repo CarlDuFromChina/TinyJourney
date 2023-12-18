@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { encrypt } from '@sixpence/js-utils';
+import encrypt from '../lib/encrypt';
 import { saveAuth, thirdPartyLogin } from '../lib/login';
 // const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/;
 

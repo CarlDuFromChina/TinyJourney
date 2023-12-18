@@ -84,7 +84,7 @@ export default {
       sp.get(this.customApi.replace('$pageSize', this.pageSize).replace('$pageIndex', this.pageIndex))
         .then(resp => {
           this.dataList = this.dataList.concat(
-            resp.DataList.map(item => {
+            resp.data.map(item => {
               return {
                 src: sp.getDownloadUrl(item.preview_url),
                 name: item.name,
@@ -92,7 +92,7 @@ export default {
               };
             })
           );
-          this.total = resp.RecordCount;
+          this.total = resp.count;
           this.isFirstLoad = false;
           this.busy = false;
         })

@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     getUserInfo() {
-      sp.get(`api/user_info/${sp.getUserId()}`).then(resp => {
+      sp.get(`api/sys_user/${sp.getUserId()}`).then(resp => {
         this.user_info = resp;
       });
     },

@@ -14,7 +14,7 @@ namespace Sixpence.Web.Auth
         /// <summary>
         /// 匿名id
         /// </summary>
-        public const string ANONYMOUS_ID = "222222222-22222-2222-2222-222222222222";
+        public const string ANONYMOUS_ID = "33333333-3333-3333-3333-333333333333";
 
         /// <summary>
         /// 管理员id
@@ -24,12 +24,12 @@ namespace Sixpence.Web.Auth
         /// <summary>
         /// 系统用户id
         /// </summary>
-        public const string SYSTEM_ID = "111111111-11111-1111-1111-111111111111";
+        public const string SYSTEM_ID = "11111111-1111-1111-1111-111111111111";
 
         /// <summary>
         /// 用户id
         /// </summary>
-        public const string USER_ID = "333333333-33333-3333-3333-333333333333";
+        public const string USER_ID = "22222222-2222-2222-2222-222222222222";
 
         /// <summary>
         /// 用户Id

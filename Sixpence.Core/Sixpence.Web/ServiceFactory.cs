@@ -19,7 +19,8 @@ namespace Sixpence.Web
 
         public static T Resolve<T>(Func<T, bool> predicate)
         {
-            return Provider.GetServices<T>().Where(predicate).FirstOrDefault();
+            var services = Provider.GetServices<T>();
+            return services.Where(predicate).FirstOrDefault();
         }
 
         public static IEnumerable<T> ResolveAll<T>()

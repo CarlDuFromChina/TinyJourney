@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Sixpence.Common.Utils;
 using Sixpence.Web.Model;
+using Sixpence.Web.Entity;
+using Sixpence.Web.Module.SysMenu;
 
 namespace Sixpence.Web
 {
@@ -42,6 +44,25 @@ namespace Sixpence.Web
             #region 3. 系统配置自动创建
             var settings = ServiceFactory.ResolveAll<ISysConfig>();
             new SysConfigService().CreateMissingConfig(settings);
+            #endregion
+
+            #region 4. 初始化用户
+            var inits = ServiceFactory.ResolveAll<IInitDbData>();
+            using (var manger = new EntityManager())
+            {
+                var sysUsers = new List<SysUser>();
+                var sysAuthUsers = new List<SysAuthUser>();
+                var sysMenus = new List<SysMenu>();
+                foreach (var item in inits)
+                {
+                    sysUsers = sysUsers.Concat(item.GetSysUsers()).ToList();
+                    sysAuthUsers = sysAuthUsers.Concat(item.GetSysAuthUsers()).ToList();
+                    sysMenus = sysMenus.Concat(item.GetSysMenus()).ToList();
+                }
+                new SysUserService(manager).CreateMissingUser(sysUsers);
+                new SysAuthUserService(manager).CreateMissingAuthUser(sysAuthUsers);
+                new SysMenuService(manager).CreateMissingMenu(sysMenus);
+            }
             #endregion
         }
     }

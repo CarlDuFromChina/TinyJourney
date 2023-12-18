@@ -54,7 +54,6 @@ module.exports = {
     resolve: {
       alias: {
         '@': resolve('src'),
-        axios: resolve('node_modules/.pnpm/api-axios@2.0.4/node_modules/axios/lib/axios.js')
       }
     },
     plugins: [

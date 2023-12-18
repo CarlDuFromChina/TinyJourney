@@ -23,6 +23,11 @@ namespace Sixpence.Web
         Role Role { get; }
 
         /// <summary>
+        /// 描述
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
         /// 获取角色
         /// </summary>
         /// <param name="role"></param>

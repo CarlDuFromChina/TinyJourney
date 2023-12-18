@@ -10,12 +10,6 @@ var editor = [
     name: 'draftEdit',
     component: () => import('./editor/postEdit.vue'),
     meta: { title: '草稿编辑' }
-  },
-  {
-    path: '/admin/editor/reading/:id?',
-    name: 'readingNoteEdit',
-    component: () => import('./editor/readingNoteEdit.vue'),
-    meta: { title: '阅读笔记编辑' }
   }
 ];
 
@@ -66,11 +60,5 @@ export default [
     name: 'draft',
     component: () => import('./draftList'),
     meta: { title: '草稿管理' }
-  },
-  {
-    path: '/admin/readingNote',
-    name: 'readingNoteList',
-    component: () => import('./readingNoteList.vue'),
-    meta: { title: '阅读笔记' }
   }
 ].concat(editor);

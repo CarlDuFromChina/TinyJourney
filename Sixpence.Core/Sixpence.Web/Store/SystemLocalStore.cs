@@ -9,6 +9,7 @@ using System.Web;
 using Sixpence.Web.Entity;
 using Sixpence.ORM;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Sixpence.Web.Store
 {
@@ -16,10 +17,12 @@ namespace Sixpence.Web.Store
     {
         private readonly IEntityManager manager;
         private readonly ILogger<SystemLocalStore> logger;
-        public SystemLocalStore(IEntityManager manager, ILogger<SystemLocalStore> logger)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public SystemLocalStore(IEntityManager manager, ILogger<SystemLocalStore> logger, IHttpContextAccessor contextAccessor)
         {
             this.manager = manager;
             this.logger = logger;
+            _httpContextAccessor = contextAccessor;
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Sixpence.Web.Store
             if (fileInfo.Exists)
             {
                 var stream = await FileUtil.GetFileStreamAsync(fileInfo.FullName);
-                HttpCurrentContext.Response.Headers.Add("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(fileInfo.Name, System.Text.Encoding.UTF8));
+                _httpContextAccessor.HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(fileInfo.Name, System.Text.Encoding.UTF8));
                 return new FileStreamResult(stream, "application/octet-stream");
             }
             logger.LogError($"文件{fileInfo.Name}未找到，文件路径：{fileInfo.FullName}");

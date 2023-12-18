@@ -74,12 +74,12 @@ export default {
       sp.get(
         `api/message_remind/search?orderBy=created_at desc&pageSize=${this.pageSize}&pageIndex=${this.pageIndex}&searchList=&viewId=${this.viewId}&searchValue=${this.searchValue}`
       ).then(resp => {
-        this.total = resp.RecordCount;
-        resp.DataList.forEach(item => {
+        this.total = resp.count;
+        resp.data.forEach(item => {
           item.avatar = sp.getAvatar(item.created_by);
           item.data = JSON.parse(item.content);
         });
-        this.listData = this.listData.concat(resp.DataList);
+        this.listData = this.listData.concat(resp.data);
         this.isLoadedAll = this.pageSize * this.pageIndex >= this.total;
         this.pageIndex++;
       })

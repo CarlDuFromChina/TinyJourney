@@ -27,7 +27,7 @@ namespace Sixpence.Web.Entity
         public string Code { get; set; }
 
         /// <summary>
-        /// 性别
+        /// 性别，1男，2女，9未知
         /// </summary>
         [Column, Description("性别")]
         public int? Gender { get; set; }

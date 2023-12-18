@@ -72,7 +72,7 @@ WHERE id {Manager.Driver.Dialect.GetInClauseSql("@ids")}
             }
             searchList.Add(new SearchCondition() { Name = "receiver_id", Type = SearchType.Equals, Value = UserIdentityUtil.GetCurrentUserId() });
             var model = base.GetDataList(searchList, orderBy, pageSize, pageIndex, viewId, searchValue);
-            var ids = model.DataList.Where(item => !item.IsRead.Value).Select(item => item.Id);
+            var ids = model.Data.Where(item => !item.IsRead.Value).Select(item => item.Id);
             ReadMessage(ids);
             return model;
         }

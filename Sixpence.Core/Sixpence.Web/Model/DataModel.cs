@@ -15,8 +15,8 @@ namespace Sixpence.Web.Model
     public class DataModel<T>
         where T : BaseEntity, new()
     {
-        public IList<T> DataList { get; set; }
-        public int RecordCount { get; set; }
+        public IList<T> Data { get; set; }
+        public int Count { get; set; }
     }
 
     /// <summary>

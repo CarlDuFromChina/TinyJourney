@@ -18,7 +18,7 @@ export default {
   name: 'userInfoList',
   data() {
     return {
-      controllerName: 'user_info',
+      controllerName: 'sys_user',
       operations: ['new', 'delete', 'search', 'export'],
       columns: [
         { prop: 'name', label: '名称' },
@@ -49,7 +49,7 @@ export default {
         return;
       }
 
-      sp.get(`api/auth_user/${this.selectionIds[0]}/lock`)
+      sp.get(`api/sys_auth_user/${this.selectionIds[0]}/lock`)
         .then(() => {
           this.$message.success('锁定成功');
         })
@@ -67,7 +67,7 @@ export default {
         return;
       }
 
-      sp.get(`api/auth_user/${this.selectionIds[0]}/lock`)
+      sp.get(`api/sys_auth_user/${this.selectionIds[0]}/lock`)
         .then(() => {
           this.$message.success('解锁成功');
         })

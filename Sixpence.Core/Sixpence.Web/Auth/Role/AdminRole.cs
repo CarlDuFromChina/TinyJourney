@@ -16,6 +16,8 @@ namespace Sixpence.Web.Auth.Role
     {
         public override Role Role => Role.Admin;
 
+        public override string Description => "系统管理员：系统最高权限用户";
+
         public override IDictionary<string, IEnumerable<SysRolePrivilege>> GetMissingPrivilege(IEntityManager manager)
         {
             var dic = new Dictionary<string, IEnumerable<SysRolePrivilege>>();

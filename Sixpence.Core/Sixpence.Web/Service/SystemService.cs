@@ -86,20 +86,20 @@ namespace Sixpence.Web.Service
             UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
 
             // 联合第三方登录
-            if (model.third_party_login != null)
+            if (model.ThirdPartyLogin != null)
             {
                 var loginStrategy = ServiceFactory
                     .ResolveAll<IThirdPartyLoginStrategy>()
-                    .First(item => item.GetName().Equals(model.third_party_login.type, StringComparison.OrdinalIgnoreCase));
-                AssertUtil.IsNull(loginStrategy, $"根据{model.third_party_login.type}未找到登录策略");
-                return loginStrategy.Login(model.third_party_login.param);
+                    .First(item => item.GetName().Equals(model.ThirdPartyLogin.Type, StringComparison.OrdinalIgnoreCase));
+                AssertUtil.IsNull(loginStrategy, $"根据{model.ThirdPartyLogin.Type}未找到登录策略");
+                return loginStrategy.Login(model.ThirdPartyLogin.Param);
             }
 
-            var code = model.code;
-            var pwd = model.password;
-            var publicKey = model.publicKey;
+            var code = model.Code;
+            var pwd = model.Password;
+            var publicKey = model.PublicKey;
 
-            var authUser = Manager.QueryFirst<SysAuthUser>("SELECT * FROM auth_user WHERE lower(code) = lower(@code)", new Dictionary<string, object>() { { "@code", code } });
+            var authUser = Manager.QueryFirst<SysAuthUser>(new { code });
 
             if (authUser == null)
             {
@@ -181,20 +181,20 @@ namespace Sixpence.Web.Service
         /// <returns></returns>
         public LoginResponse Signup(LoginRequest model)
         {
-            AssertUtil.IsNullOrEmpty(model.code, "账号不能为空");
-            AssertUtil.IsNullOrEmpty(model.password, "密码不能为空");
+            AssertUtil.IsNullOrEmpty(model.Code, "账号不能为空");
+            AssertUtil.IsNullOrEmpty(model.Password, "密码不能为空");
 
             return Manager.ExecuteTransaction(() =>
             {
-                if (!model.code.Contains("@"))
+                if (!model.Code.Contains("@"))
                     return new LoginResponse(false, "注册失败，请使用邮箱作为账号");
 
-                var vertification = new MailVertificationService(Manager).GetDataByMailAdress(model.code);
+                var vertification = new MailVertificationService(Manager).GetDataByMailAdress(model.Code);
                 if (vertification != null)
                     return new LoginResponse(false, "激活邮件已发送，请前往邮件激活账号，请勿重复注册", LoginMesageLevel.Warning);
 
                 var id = Guid.NewGuid().ToString();
-                model.password = RSAUtil.Decrypt(model.password, model.publicKey);
+                model.Password = RSAUtil.Decrypt(model.Password, model.PublicKey);
                 var data = new MailVertification()
                 {
                     Id = id,
@@ -205,7 +205,7 @@ namespace Sixpence.Web.Service
                     ExpireTime = DateTime.Now.AddHours(2),
                     IsActive = false,
                     LoginRequest = JsonConvert.SerializeObject(model),
-                    MailAddress = model.code,
+                    MailAddress = model.Code,
                     MailType = MailType.Activation.ToString()
                 };
                 Manager.Create(data);

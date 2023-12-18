@@ -14,7 +14,7 @@
             <span slot="title">
               <a-icon :type="item.icon" /><span>{{ item.title }}</span>
             </span>
-            <a-menu-item v-for="item2 in item.subMenu[0].menus" :key="`/admin/${item2.router}`" @click="handleClick">
+            <a-menu-item v-for="item2 in item.children" :key="`/admin/${item2.router}`" @click="handleClick">
               {{ item2.title }}
             </a-menu-item>
           </a-sub-menu>
@@ -67,7 +67,6 @@ import { clearAuth } from '@/lib/login';
 import userInfoEdit from './userInfo/userInfoEdit.vue';
 
 export default {
-  name: 'admin',
   components: { userInfoEdit },
   data() {
     return {
@@ -91,7 +90,7 @@ export default {
   created() {
     this.getMenu();
     this.imageUrl = `${sp.getServerUrl()}api/system/avatar/${sp.getUserId()}`;
-    sp.get(`api/user_info/${sp.getUserId()}`).then(resp => {
+    sp.get(`api/sys_user/${sp.getUserId()}`).then(resp => {
       this.$store.commit('updateUser', resp);
     });
     sp.get('api/message_remind/unread_message_count').then(resp => {
@@ -107,21 +106,21 @@ export default {
     getMenu() {
       const searchList = [
         {
-          Name: 'statecode',
+          Name: 'is_enable',
           Value: true
         }
       ];
       sp.get(`api/sys_menu/search?searchList=${JSON.stringify(searchList)}`)
         .then(resp => {
-          resp.DataList.forEach(e => {
+          resp.data.forEach(e => {
             const menu = {
               title: e.name,
               router: e.router,
-              subMenu: [{ title: '', menus: [] }],
+              children: [],
               icon: e.icon
             };
             if (e.children && e.children.length > 0) {
-              menu.subMenu[0].menus = e.children.map(item => ({
+              menu.children = e.children.map(item => ({
                 title: item.name,
                 router: item.router,
                 icon: item.icon

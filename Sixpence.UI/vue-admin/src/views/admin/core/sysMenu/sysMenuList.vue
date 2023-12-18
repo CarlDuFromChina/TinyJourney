@@ -26,7 +26,7 @@ export default {
         { prop: 'created_at', label: '创建日期', type: 'datetime' },
         { prop: 'updated_by_name', label: '最后修改人' },
         { prop: 'updated_at', label: '最后修改日期', type: 'datetime' },
-        { prop: 'statecode_name', label: '状态' }
+        { prop: 'is_enable_name', label: '状态' }
       ],
       editComponent: sysMenuEdit
     };

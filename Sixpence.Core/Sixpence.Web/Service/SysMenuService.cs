@@ -7,6 +7,7 @@ using Sixpence.Web.Module.SysMenu;
 using Sixpence.Web.Extensions;
 using Sixpence.ORM;
 using Sixpence.Web.Model;
+using Sixpence.Common;
 
 namespace Sixpence.Web.Service
 {
@@ -38,7 +39,7 @@ namespace Sixpence.Web.Service
         public override DataModel<SysMenu> GetDataList(IList<SearchCondition> searchList, string orderBy, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
         {
             var model = base.GetDataList(searchList, orderBy, pageSize, pageIndex, viewId);
-            var data = model.DataList.Filter().ToList();
+            var data = model.Data.Filter().ToList();
             var firstMenu = data.Where(e => string.IsNullOrEmpty(e.ParentId)).ToList();
             firstMenu.ForEach(item =>
             {
@@ -55,8 +56,8 @@ namespace Sixpence.Web.Service
             firstMenu = firstMenu.OrderBy(e => e.MenuIndex).ToList();
             return new DataModel<SysMenu>()
             {
-                DataList = firstMenu,
-                RecordCount = data.Count()
+                Data = firstMenu,
+                Count = data.Count()
             };
         }
 
@@ -69,6 +70,22 @@ ORDER BY menu_index
 ";
             var data = Manager.Query<SysMenu>(sql).ToList();
             return data;
+        }
+
+        public void CreateMissingMenu(IEnumerable<SysMenu> menus)
+        {
+            foreach (var item in menus)
+            {
+                SysMenu data;
+
+                if (!string.IsNullOrEmpty(item.Router))
+                    data = Repository.FindOne(new { router = item.Router });
+                else
+                    data = Repository.FindOne(new { id = item.Id });
+
+                if (data == null)
+                    Repository.Create(item);
+            }
         }
     }
 }

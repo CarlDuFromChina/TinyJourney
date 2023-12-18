@@ -57,7 +57,7 @@ WHERE sys_param_group.code = @code
             return paramsList.Select(item => GetParams(item));
         }
 
-        public IEnumerable<SelectOption> GetEntities(string code)
+        public IEnumerable<SelectOption> GetEntityOptions(string code)
         {
             var resolve = ServiceFactory.Resolve<IEntityOptionProvider>(name => code.Replace("_", "").ToLower() == name.GetType().Name.Replace("EntityOptionProvider", "").ToLower());
             if (resolve != null)
@@ -65,7 +65,7 @@ WHERE sys_param_group.code = @code
                 return resolve.GetOptions();
             }
 
-            var entity = Manager.QueryFirst<SysEntity>(@"select * from sys_entity se where code = @code", new Dictionary<string, object>() { { "@code", code } });
+            var entity = Manager.QueryFirst<SysEntity>(new { code });
             if (entity != null)
             {
                 return Manager.Query<SelectOption>($"select id AS Value, name AS Name from {entity.Code}");
@@ -73,10 +73,10 @@ WHERE sys_param_group.code = @code
             return new List<SelectOption>();
         }
 
-        public IEnumerable<IEnumerable<SelectOption>> GetEntitiyList(string[] paramsList)
+        public IEnumerable<IEnumerable<SelectOption>> GetEntityOptions(string[] codeList)
         {
             var dataList = new List<List<SelectOption>>();
-            return paramsList.Select(item => GetEntities(item));
+            return codeList.Select(item => GetEntityOptions(item));
         }
 
         public override void DeleteData(List<string> ids)

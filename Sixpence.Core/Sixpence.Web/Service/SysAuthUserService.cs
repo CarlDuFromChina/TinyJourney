@@ -77,5 +77,15 @@ namespace Sixpence.Web.Service
             AssertUtil.IsNull(type, "绑定类型不能为空");
             ServiceFactory.ResolveAll<IThirdPartyBindStrategy>().First(item => item.GetName().Equals(type, StringComparison.OrdinalIgnoreCase))?.Bind(code, id);
         }
+
+        public void CreateMissingAuthUser(IEnumerable<SysAuthUser> users)
+        {
+            users.Each(user =>
+            {
+                var data = Repository.FindOne(new { code = user.Code });
+                if (data == null)
+                    Manager.Create(user, false);
+            });
+        }
     }
 }

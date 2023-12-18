@@ -101,7 +101,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="状态">
-              <a-switch v-model="data.statecode"></a-switch>
+              <a-switch v-model="data.is_enable"></a-switch>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -184,7 +184,7 @@ export default {
   components: { editPassword },
   data() {
     return {
-      controllerName: 'user_info',
+      controllerName: 'sys_user',
       thirdPartyBind: thirdPartyBind,
       avatarChange: false,
       lifePhotoChange: false,

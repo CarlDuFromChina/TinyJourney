@@ -28,7 +28,8 @@ namespace Sixpence.Web.EntityPlugin
                 case EntityAction.PostCreate:
                     {
                         // 重新创建权限
-                        var privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(obj.InheritedRoleId, RoleType.All).ToList();
+                        var rootRoleId = string.IsNullOrEmpty(obj.InheritedRoleId) ? obj.Id : obj.InheritedRoleId;
+                        var privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(rootRoleId, RoleType.All).ToList();
                         privileges.Each(item =>
                         {
                             item.Id = Guid.NewGuid().ToString();
@@ -45,10 +46,11 @@ namespace Sixpence.Web.EntityPlugin
                 case EntityAction.PostUpdate:
                     {
                         // 删除所有权限
+                        var rootRoleId = string.IsNullOrEmpty(obj.InheritedRoleId) ? obj.Id : obj.InheritedRoleId;
                         var privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(obj.Id, RoleType.All).ToList();
                         privileges.Each(item => context.EntityManager.Delete(item));
                         // 重新创建权限
-                        privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(obj.InheritedRoleId, RoleType.All).ToList();
+                        privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(rootRoleId, RoleType.All).ToList();
                         privileges.Each(item =>
                         {
                             item.Id = Guid.NewGuid().ToString();

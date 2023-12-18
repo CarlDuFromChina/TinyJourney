@@ -88,7 +88,7 @@ export default {
       let url = `api/${this.controllerName}/search?searchValue=&viewId=0F0DC786-CF7D-4997-B42C-47FB09B12AAE&searchList=&orderBy=`;
       url += `&pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`;
       return sp.get(url).then(resp => {
-        this.dataList = resp.DataList.map(item => ({
+        this.dataList = resp.data.map(item => ({
           id: item.id,
           previewURL: sp.getDownloadUrl(item.preview_url),
           preview_url: item.preview_url,
@@ -96,7 +96,7 @@ export default {
           image_url: item.image_url,
           imageid: item.imageid
         }));
-        this.total = resp.RecordCount;
+        this.total = resp.count;
       });
     },
     getCloudData() {

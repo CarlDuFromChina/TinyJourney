@@ -11,7 +11,7 @@ using Sixpence.Web.Service;
 
 namespace Sixpence.Web.Controllers
 {
-    public class AuthUserController : EntityBaseController<SysAuthUser, SysAuthUserService>
+    public class SysAuthUserController : EntityBaseController<SysAuthUser, SysAuthUserService>
     {
         /// <summary>
         /// 刷新Token

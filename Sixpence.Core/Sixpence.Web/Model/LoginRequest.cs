@@ -6,10 +6,10 @@ namespace Sixpence.Web.Model
 {
     public class LoginRequest
     {
-        public string code { get; set; }
-        public string password { get; set; }
-        public string publicKey { get; set; }
-        public ThirdPartyLogin third_party_login { get; set; }
+        public string Code { get; set; }
+        public string Password { get; set; }
+        public string PublicKey { get; set; }
+        public ThirdPartyLogin ThirdPartyLogin { get; set; }
     }
 
     /// <summary>
@@ -20,11 +20,11 @@ namespace Sixpence.Web.Model
         /// <summary>
         /// 第三方登录参数
         /// </summary>
-        public object param { get; set; }
+        public object Param { get; set; }
 
         /// <summary>
         /// 第三方登录方式
         /// </summary>
-        public string type { get; set; }
+        public string Type { get; set; }
     }
 }

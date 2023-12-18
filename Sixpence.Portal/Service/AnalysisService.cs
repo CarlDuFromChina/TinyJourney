@@ -19,10 +19,8 @@ namespace Sixpence.PortalService
         public IEnumerable<TimelineModel> GetTimeline()
         {
             var post = _manager.Query<TimelineModel>(@"SELECT created_at, title, created_by_name FROM post");
-            var reading = _manager.Query<TimelineModel>(@"SELECT created_at, name AS title, created_by_name FROM reading_note");
             return new List<TimelineModel>()
                 .Concat(post)
-                .Concat(reading)
                 .OrderByDescending(item => item.created_at);
         }
     }

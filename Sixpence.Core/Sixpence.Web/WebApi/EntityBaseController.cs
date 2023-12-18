@@ -30,15 +30,15 @@ namespace Sixpence.Web.WebApi
         /// <summary>
         /// 分页获取筛选数据
         /// </summary>
-        /// <param name="searchList"></param>
-        /// <param name="orderBy"></param>
         /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
+        /// <param name="searchList"></param>
+        /// <param name="orderBy"></param>
         /// <param name="viewId"></param>
         /// <param name="searchValue"></param>
         /// <returns></returns>
         [HttpGet("search")]
-        public virtual DataModel<E> GetViewData(string pageSize = "", string pageIndex = "", string searchList = "", string orderBy = "", string viewId = "", string searchValue = "")
+        public virtual DataModel<E> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? orderBy, string? viewId, string? searchValue)
         {
             var _searchList = string.IsNullOrEmpty(searchList) ? null : JsonConvert.DeserializeObject<IList<SearchCondition>>(searchList);
 
@@ -47,13 +47,13 @@ namespace Sixpence.Web.WebApi
                 var list = new S().GetDataList(_searchList, orderBy, viewId, searchValue).ToList();
                 return new DataModel<E>()
                 {
-                    DataList = list,
-                    RecordCount = list.Count
+                    Data = list,
+                    Count = list.Count
                 };
             }
 
-            int.TryParse(pageSize, out var size);
-            int.TryParse(pageIndex, out var index);
+            var size = ConvertUtil.ConToInt(pageSize);
+            var index = ConvertUtil.ConToInt(pageIndex);
             return new S().GetDataList(_searchList, orderBy, size, index, viewId, searchValue);
         }
 
@@ -67,8 +67,8 @@ namespace Sixpence.Web.WebApi
             var list = new S().GetAllData().ToList();
             return new DataModel<E>()
             {
-                DataList = list,
-                RecordCount = list.Count
+                Data = list,
+                Count = list.Count
             };
         }
 

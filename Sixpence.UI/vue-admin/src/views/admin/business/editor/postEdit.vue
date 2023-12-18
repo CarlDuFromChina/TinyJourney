@@ -24,24 +24,6 @@
                   @click="saveDraft">
                 </a-icon>
               </a-popover>
-              <sp-icon
-                name="sp-blog-wechat"
-                :size="14"
-                tooltip="同步到微信"
-                @click="syncBlog('wechat')"
-                style="cursor: pointer;padding-right: 12px;"
-                v-show="data.id"
-              >
-              </sp-icon>
-              <sp-icon
-                name="sp-blog-juejin"
-                :size="14"
-                tooltip="同步到掘金"
-                @click="syncBlog('juejin')"
-                style="cursor: pointer;padding-right: 12px;"
-                v-show="data.id"
-              >
-              </sp-icon>
             </template>
           </mavon-editor>
         </div>
@@ -140,20 +122,17 @@
       </span>
     </a-modal>
     <cloud-upload ref="cloudUpload" @selected="selected"></cloud-upload>
-    <jue-jin ref="juejin" :id="data.id"></jue-jin>
   </div>
 </template>
 
 <script>
 import { edit, select } from '@/mixins';
-import JueJin from './sync/juejin.vue';
 import { htmlToText } from 'html-to-text';
 import { toolbar } from './mavon';
 
 export default {
   name: 'post-edit',
   mixins: [edit, select],
-  components: { JueJin },
   data() {
     return {
       toolbar,
@@ -414,35 +393,6 @@ export default {
     },
     changeTags(val) {
       this.tags = val;
-    },
-    syncBlog(dest) {
-      if (sp.isNullOrEmpty(this.data.id)) {
-        this.$message.error('请先保存博客，再进行同步');
-        return;
-      }
-      if (dest === 'juejin') {
-        this.$refs.juejin.visible = true;
-      }
-      if (dest === 'wechat') {
-        this.$confirm({
-          title: '博客同步',
-          content: '是否同步博客到微信公众号?',
-          okText: '确定',
-          cancelText: '取消',
-          onOk: () => {
-            sp.post(`api/post/sync?id=${this.data.id}&destination=${dest}`)
-              .then(() => {
-                this.$message.success('同步成功');
-              })
-              .catch(() => {
-                this.$message.error('同步异常');
-              });
-          },
-          onCancel: () => {
-            this.$message.info('已取消');
-          }
-        });
-      }
     },
     /**
      * 获取草稿

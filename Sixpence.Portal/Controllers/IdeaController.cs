@@ -22,7 +22,7 @@ namespace Sixpence.PortalController
         }
 
         [HttpGet("search"), AllowAnonymous]
-        public override DataModel<Idea> GetViewData(string pageSize = "", string pageIndex = "", string searchList = "", string orderBy = "", string viewId = "", string searchValue = "")
+        public override DataModel<Idea> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? orderBy, string? viewId, string? searchValue)
         {
             return base.GetViewData(pageSize, pageIndex, searchList, orderBy, viewId, searchValue);
         }

@@ -17,14 +17,14 @@ namespace Sixpence.Web.Controllers
         }
 
         [HttpGet("entity_options")]
-        public IEnumerable<IEnumerable<SelectOption>> GetEntitiyList(string code)
+        public IEnumerable<IEnumerable<SelectOption>> GetEntityOptions(string code)
         {
             var codeList = new string[] { };
             if (!string.IsNullOrEmpty(code))
             {
                 codeList = code.Split(',');
             }
-            return new SysParamGroupService().GetEntitiyList(codeList);
+            return new SysParamGroupService().GetEntityOptions(codeList);
         }
     }
 }

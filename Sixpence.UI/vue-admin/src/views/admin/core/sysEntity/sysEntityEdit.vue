@@ -11,11 +11,6 @@
           <a-input v-model="data.code" :disabled="pageState == 'edit'"></a-input>
         </a-form-model-item>
       </a-col>
-      <a-col :span="12">
-        <a-form-model-item label="是否系统实体">
-          <a-switch v-model="data.is_sys"></a-switch>
-        </a-form-model-item>
-      </a-col>
     </a-row>
     <template v-if="pageState == 'edit'">
       <a-button type="primary" @click="editVisible = true">新增</a-button>

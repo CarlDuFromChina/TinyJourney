@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sixpence.ORM;
+using Sixpence.Portal.Implements;
 using Sixpence.PortalEntity;
 using Sixpence.PortalEntityOptionProvider;
 using Sixpence.PortalPlugin;
@@ -13,6 +14,7 @@ namespace Sixpence.Portal
         {
             services
                 .AddEntity()
+                .AddInitData()
                 .AddEntityPlugin()
                 .AddEntityOptionProvider();
         }
@@ -29,14 +31,20 @@ namespace Sixpence.Portal
 
         private static IServiceCollection AddEntityPlugin(this IServiceCollection services)
         {
-            services.AddSingleton<IEntityManagerPlugin, PostPlugin>();
-            services.AddSingleton<IEntityManagerPlugin, CategoryPlugin>();
+            services.AddTransient<IEntityManagerPlugin, PostPlugin>();
+            services.AddTransient<IEntityManagerPlugin, CategoryPlugin>();
             return services;
         }
 
         private static IServiceCollection AddEntityOptionProvider(this IServiceCollection services)
         {
-            services.AddSingleton<IEntityOptionProvider, CategoryEntityOptionProvider>();
+            services.AddTransient<IEntityOptionProvider, CategoryEntityOptionProvider>();
+            return services;
+        }
+
+        private static IServiceCollection AddInitData(this IServiceCollection services)
+        {
+            services.AddSingleton<IInitDbData, InitDbBusinessData>();
             return services;
         }
     }

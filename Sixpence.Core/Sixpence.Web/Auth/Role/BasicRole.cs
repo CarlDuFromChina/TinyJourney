@@ -11,6 +11,7 @@ using Sixpence.Web.Entity;
 using Sixpence.Web.Model;
 using System.ComponentModel;
 using Sixpence.ORM;
+using Sixpence.Web.Extensions;
 
 namespace Sixpence.Web.Auth.Role
 {
@@ -26,6 +27,8 @@ namespace Sixpence.Web.Auth.Role
         /// 系统角色
         /// </summary>
         public abstract Role Role { get; }
+        public abstract string Description { get; }
+        public string RoleId => "{848FA7AC-C4E3-413A-B531-6EA2661B6B70}"; // Role.ToString("D");
 
         /// <summary>
         /// 系统角色名
@@ -42,13 +45,14 @@ namespace Sixpence.Web.Auth.Role
             var key = $"{ROLE_PREFIX}_{RoleName}";
             return MemoryCacheUtil.GetOrAddCacheItem(key, () =>
             {
-                var role = Manager.QueryFirst<SysRole>("select * from sys_role where name = @name", new Dictionary<string, object>() { { "@name", Role.GetDescription() } });
+                var role = Manager.QueryFirst<SysRole>( new { name = Role.GetDescription() });
                 if (role == null)
                 {
                     role = new SysRole()
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = Role.GetIdentifier(),
                         Name = Role.GetDescription(),
+                        Description = this.Description,
                         IsBasic = true
                     };
                     Manager.Create(role);
@@ -60,18 +64,13 @@ namespace Sixpence.Web.Auth.Role
         /// <summary>
         /// 获取角色权限
         /// </summary>
-        /// <param name="roleName"></param>
         /// <returns></returns>
         public IEnumerable<SysRolePrivilege> GetRolePrivilege()
         {
-            var key = $"{PRIVILEGE_PREFIX}_{RoleName}";
+            var key = $"{PRIVILEGE_PREFIX}_{Role.GetIdentifier()}";
             return MemoryCacheUtil.GetOrAddCacheItem(key, () =>
             {
-                var sql = @"
-SELECT * FROM sys_role_privilege
-WHERE role_name = @name
-";
-                var dataList = Manager.Query<SysRolePrivilege>(sql, new Dictionary<string, object>() { { "@name", Role.GetDescription() } });
+                var dataList = Manager.Query<SysRolePrivilege>(new { role_id = Role.GetIdentifier() } );
                 return dataList;
             }, DateTime.Now.AddHours(12));
         }
@@ -81,8 +80,8 @@ WHERE role_name = @name
         /// </summary>
         public void ClearCache()
         {
-            MemoryCacheUtil.RemoveCacheItem($"{PRIVILEGE_PREFIX}_{RoleName}");
-            MemoryCacheUtil.RemoveCacheItem($"{ROLE_PREFIX}_{RoleName}");
+            MemoryCacheUtil.RemoveCacheItem($"{PRIVILEGE_PREFIX}_{Role.GetIdentifier()}");
+            MemoryCacheUtil.RemoveCacheItem($"{ROLE_PREFIX}_{Role.GetIdentifier()}");
         }
 
         /// <summary>
@@ -129,7 +128,7 @@ WHERE id NOT IN (
         }
 
         /// <summary>
-        /// 生成权限
+        /// 生成权限（仅限于实体和菜单权限）
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="role"></param>
@@ -162,22 +161,22 @@ WHERE id NOT IN (
         /// 拥有系统所有权限
         /// </summary>
         [Description("系统管理员")]
-        Admin,
+        Admin = 0,
         /// <summary>
         /// 系统角色
         /// </summary>
         [Description("系统")]
-        System,
+        System = 1,
         /// <summary>
         /// 拥有自己的权限
         /// </summary>
         [Description("用户")]
-        User,
+        User = 2,
         /// <summary>
         /// 拥有只读权限
         /// </summary>
         [Description("访客")]
-        Guest
+        Guest = 3
     }
 
     /// <summary>

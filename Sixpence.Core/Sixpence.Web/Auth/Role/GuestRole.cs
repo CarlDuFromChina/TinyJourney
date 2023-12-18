@@ -16,6 +16,8 @@ namespace Sixpence.Web.Auth.Role
     {
         public override Role Role => Role.Guest;
 
+        public override string Description => "匿名用户：一般情况下无修改更新权限，只读";
+
         public override IDictionary<string, IEnumerable<SysRolePrivilege>> GetMissingPrivilege(IEntityManager manager)
         {
             var dic = new Dictionary<string, IEnumerable<SysRolePrivilege>>();

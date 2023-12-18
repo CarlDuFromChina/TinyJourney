@@ -16,12 +16,6 @@ namespace Sixpence.Web.Entity
         public string Id { get; set; }
 
         /// <summary>
-        /// 名称
-        /// </summary>
-        [Column, Description("名称")]
-        public string Name { get; set; }
-
-        /// <summary>
         /// 角色id
         /// </summary>
         [Column, Description("角色id")]

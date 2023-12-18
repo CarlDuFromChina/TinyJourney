@@ -97,8 +97,8 @@ namespace Sixpence.Web
             var data = Repository.GetDataList(view, searchList, orderBy, pageSize, pageIndex, out var recordCount, searchValue);
             return new DataModel<T>()
             {
-                DataList = data.ToList(),
-                RecordCount = recordCount
+                Data = data.ToList(),
+                Count = recordCount
             };
         }
 

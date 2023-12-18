@@ -1,20 +1,11 @@
-import { common, http, uuid } from '@sixpence/js-utils';
+import http from './http';
+import common from './common';
+import uuid from './uuid';
 import store from '../store';
 import axios from 'axios';
 import './jigsaw';
-import spExtension from './sp';
 
-var originHttp = {
-  originGet: (url, config) => {
-    var instance = axios.create({
-      timeout: 5000,
-      baseURL: window.origin
-    });
-    return instance.get(url, config);
-  }
-};
-
-window.sp = Object.assign({}, common, http, originHttp, spExtension);
+window.sp = Object.assign({}, common, http);
 window.uuid = Object.assign({}, uuid);
 
 axios.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL || window.location.origin;
@@ -93,7 +84,7 @@ async function checkToken() {
  */
 async function refreshToken() {
   store.commit('changeTokenWithRefreshToken'); // 更换成RefreshToken
-  const resp = await sp.get('api/auth_user/refresh_access_token');
+  const resp = await sp.get('api/sys_auth_user/refresh_access_token');
   if (resp) {
     store.commit('updateAccessToken', resp);
   }

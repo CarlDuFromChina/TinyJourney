@@ -11,7 +11,7 @@ using Sixpence.Web.Entity;
 
 namespace Sixpence.Web.Controllers
 {
-    public class UserInfoController : EntityBaseController<SysUser, SysUserService>
+    public class SysUserController : EntityBaseController<SysUser, SysUserService>
     {
         [HttpGet("{id}"), AllowAnonymous]
         public override SysUser GetData(string id)

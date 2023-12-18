@@ -16,6 +16,8 @@ namespace Sixpence.Web.Auth.Role
     {
         public override Role Role => Role.User;
 
+        public override string Description => "普通用户：拥有修改特定部分实体权限";
+
         public override IDictionary<string, IEnumerable<SysRolePrivilege>> GetMissingPrivilege(IEntityManager manager)
         {
             var dic = new Dictionary<string, IEnumerable<SysRolePrivilege>>();

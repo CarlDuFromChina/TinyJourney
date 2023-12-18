@@ -15,7 +15,6 @@ using Sixpence.Web.Entity;
 using Sixpence.Web.EntityInterceptor;
 using Sixpence.Web.EntityOptionProvider;
 using Sixpence.Web.EntityPlugin;
-using Sixpence.Web.Job;
 using Sixpence.Web.Module.SysAttrs;
 using Sixpence.Web.Module.SysMenu;
 using Sixpence.Web.Store;
@@ -37,6 +36,7 @@ namespace Sixpence.Web
                 .AddEntityOptionProvider()
                 .AddStorage()
                 .AddRole()
+                .AddInitData()
                 .AddSysConfig()
                 .AddSSO()
                 .AddJwt();
@@ -63,14 +63,14 @@ namespace Sixpence.Web
             services.AddTransient<IEntity, VersionScriptExecutionLog>();
 
             // 2. 添加实体插件
-            services.AddSingleton<IEntityManagerPlugin, GalleryPlugin>();
-            services.AddSingleton<IEntityManagerPlugin, SysEntityPlugin>();
-            services.AddSingleton<IEntityManagerPlugin, SysMenuPlugin>();
-            services.AddSingleton<IEntityManagerPlugin, SysEntityPlugin>();
-            services.AddSingleton<IEntityManagerPlugin, MailVertificationPlugin>();
-            services.AddSingleton<IEntityManagerPlugin, SysRolePlugin>();
-            services.AddSingleton<IEntityManagerPlugin, SysRolePrivilegePlugin>();
-            services.AddSingleton<IEntityManagerPlugin, SysUserPlugin>();
+            services.AddTransient<IEntityManagerPlugin, GalleryPlugin>();
+            services.AddTransient<IEntityManagerPlugin, SysEntityPlugin>();
+            services.AddTransient<IEntityManagerPlugin, SysMenuPlugin>();
+            services.AddTransient<IEntityManagerPlugin, SysEntityPlugin>();
+            services.AddTransient<IEntityManagerPlugin, MailVertificationPlugin>();
+            services.AddTransient<IEntityManagerPlugin, SysRolePlugin>();
+            services.AddTransient<IEntityManagerPlugin, SysRolePrivilegePlugin>();
+            services.AddTransient<IEntityManagerPlugin, SysUserPlugin>();
 
             // 3. 添加实体拦截器
             services.AddSingleton<IEntityMigrationInterceptor, EntityMigrationInterceptor>();
@@ -114,7 +114,7 @@ namespace Sixpence.Web
 
         private static IServiceCollection AddEntityOptionProvider(this IServiceCollection services)
         {
-            services.AddScoped<IEntityOptionProvider, SysEntityEntityOptionProvider>();
+            services.AddTransient<IEntityOptionProvider, SysEntityEntityOptionProvider>();
             return services;
         }
 
@@ -130,6 +130,12 @@ namespace Sixpence.Web
             services.AddSingleton<IRole, GuestRole>();
             services.AddSingleton<IRole, UserRole>();
             services.AddSingleton<IRole, SystemRole>();
+            return services;
+        }
+
+        private static IServiceCollection AddInitData(this IServiceCollection services)
+        {
+            services.AddSingleton<IInitDbData, InitDbData>();
             return services;
         }
 

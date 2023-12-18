@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "角色")]
-    public partial class SysRole : BaseEntity
+    public partial class SysRole : SormEntity
     {
         /// <summary>
         /// 实体id
@@ -33,12 +33,6 @@ namespace Sixpence.Web.Entity
         /// </summary>
         [Column, Description("是否基础角色")]
         public bool? IsBasic { get; set; }
-
-        /// <summary>
-        /// 是否基础角色
-        /// </summary>
-        [Column, Description("是否基础角色")]
-        public string IsBasicName { get; set; }
 
         /// <summary>
         /// 继承角色

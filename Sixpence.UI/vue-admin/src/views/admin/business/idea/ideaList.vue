@@ -97,11 +97,11 @@ export default {
     fetchData(callback) {
       sp.get(`api/idea/search?orderBy=created_at desc&pageSize=${this.pageSize}&pageIndex=${this.pageIndex}&searchList=&searchValue=`).then(
         resp => {
-          const dataList = resp.DataList.map(item => {
+          const dataList = resp.data.map(item => {
             item.avatar = `${sp.getServerUrl()}api/system/avatar/${item.created_by}`;
             return item;
           });
-          this.total = resp.RecordCount;
+          this.total = resp.count;
           callback(dataList);
           this.pageIndex++;
         }

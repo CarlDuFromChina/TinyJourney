@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sixpence.Web.Auth;
 using Sixpence.Web.Model;
@@ -10,6 +11,12 @@ namespace Sixpence.Web.Controllers
 {
     public class SystemController : BaseApiController
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public SystemController(IHttpContextAccessor contextAccessor)
+        {
+            _httpContextAccessor = contextAccessor;
+        }
+
         /// <summary>
         /// 获取公钥
         /// </summary>
@@ -48,7 +55,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("test"), AllowAnonymous]
         public bool Test()
         {
-            var token = HttpCurrentContext.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
             if (string.IsNullOrEmpty(token))
             {
                 return false;

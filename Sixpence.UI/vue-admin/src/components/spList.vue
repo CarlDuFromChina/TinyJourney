@@ -74,6 +74,7 @@
 
 <script>
 import spHeader from './spHeader.vue';
+import uuid from '../lib/uuid';
 
 export default {
   components: { spHeader },
@@ -280,9 +281,9 @@ export default {
         .replace('$searchValue', this.searchValue);
       try {
         const resp = await sp.get(url);
-        if (resp && resp.DataList) {
-          this.tableData = resp.DataList;
-          this.$set(this.pagination, 'total', resp.RecordCount);
+        if (resp && resp.data) {
+          this.tableData = resp.data;
+          this.$set(this.pagination, 'total', resp.count);
         } else {
           this.tableData = this.handleDataList ? this.handleDataList(resp) : resp;
           this.$set(this.pagination, 'total', this.tableData.length);

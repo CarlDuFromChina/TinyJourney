@@ -15,6 +15,9 @@ namespace Sixpence.Web.Auth.Role
     public class SystemRole : BasicRole
     {
         public override Role Role => Role.System;
+
+        public override string Description => "系统角色：拥有最高权限";
+
         public override IDictionary<string, IEnumerable<SysRolePrivilege>> GetMissingPrivilege(IEntityManager manager)
         {
             var dic = new Dictionary<string, IEnumerable<SysRolePrivilege>>();

@@ -57,10 +57,10 @@ AND mail_type = @type";
                 var user = new SysUser()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Code = model.code,
-                    Password = model.password,
-                    Name = model.code.Split("@")[0],
-                    Mailbox = model.code,
+                    Code = model.Code,
+                    Password = model.Password,
+                    Name = model.Code.Split("@")[0],
+                    Mailbox = model.Code,
                     RoleId = role.Id,
                     RoleName = role.Name,
                     isActive = true,
@@ -77,7 +77,7 @@ AND mail_type = @type";
                     UserId = user.Id,
                     IsLock = false,
                     LastLoginTime = DateTime.Now,
-                    Password = model.password
+                    Password = model.Password
                 };
                 Manager.Create(_authUser);
                 #endregion

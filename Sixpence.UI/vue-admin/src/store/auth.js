@@ -1,8 +1,8 @@
 export default {
   state: {
     isLogin: false,
-    userId: '',
-    userName: '',
+    user_id: '',
+    user_name: '',
     token: {} // { RefreshToken, AccessToken }
   },
   getters: {
@@ -10,22 +10,22 @@ export default {
       return !!state.isLogin;
     },
     getToken(state) {
-      return (state.token.AccessToken || {}).TokenContent;
+      return (state.token.access_token || {}).token_content;
     },
     getUserId(state) {
-      return state.userId;
+      return state.user_id;
     },
     getUserName(state) {
-      return state.userName;
+      return state.user_name;
     },
     isAccessTokenExpired: (state) => () => {
-      const { AccessToken } = state.token;
-      const t1 = new Date(AccessToken.Expires);
+      const { access_token } = state.token;
+      const t1 = new Date(access_token.expires);
       return t1 < new Date();
     },
     isRefreshTokenExpired: (state) => () => {
-      const { RefreshToken } = state.token;
-      const t1 = new Date(RefreshToken.Expires);
+      const { refresh_token } = state.token;
+      const t1 = new Date(refresh_token.expires);
       return t1 < new Date();
     },
     isEmptyToken: (state) => () => {
@@ -38,18 +38,18 @@ export default {
     },
     updateAuth(state, data) {
       state.token = data.token;
-      state.userId = data.userId;
-      state.userName = data.userName;
+      state.user_id = data.user_id;
+      state.user_name = data.user_name;
     },
     changeTokenWithRefreshToken(state) {
-      state.token.AccessToken = state.token.RefreshToken;
+      state.token.access_token = state.token.refresh_token;
     },
     clearAuth(state) {
       state.token = {};
-      state.userId = '';
+      state.user_id = '';
     },
     updateAccessToken(state, data) {
-      state.token.AccessToken = data;
+      state.token.access_token = data;
     }
   }
 };

@@ -23,15 +23,15 @@ namespace Sixpence.Web.Service
             var sql = @"
 SELECT
     is_lock,
-	user_info.*
+	sys_user.*
 FROM
 	sys_user
 LEFT JOIN (
     SELECT
-        user_infoid,
+        user_id,
         is_lock
-    FROM auth_user
-) au ON user_info.id = au.user_infoid
+    FROM sys_auth_user
+) au ON sys_user.id = au.user_id
 ";
             var customFilter = new List<string>() { "name" };
             return new List<EntityView>()
@@ -80,6 +80,16 @@ LEFT JOIN (
         private bool CheckEmpty(params string[] args)
         {
             return args.Any(item => string.IsNullOrEmpty(item));
+        }
+
+        public void CreateMissingUser(IEnumerable<SysUser> users)
+        {
+            users.Each(user =>
+            {
+                var data = Repository.FindOne(new { code = user.Code });
+                if (data == null)
+                    Manager.Create(user, false);
+            });
         }
     }
 }
