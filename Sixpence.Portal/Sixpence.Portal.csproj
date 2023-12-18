@@ -22,4 +22,11 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <Target Name="CopyVueDistToWwwroot" AfterTargets="Build">
+      <ItemGroup>
+          <VueDistFiles Include="Sixpence.UI\vue-admin\dist\**\*.*" />
+      </ItemGroup>
+      <Copy SourceFiles="@(VueDistFiles)" DestinationFolder="wwwroot\%(RecursiveDir)" />
+  </Target>
+
 </Project>
