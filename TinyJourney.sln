@@ -21,8 +21,6 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vue-admin", "Sixpence.UI\vu
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vue-pc-public", "Sixpence.UI\vue-pc-public\vue-pc-public.esproj", "{8ECEA232-8616-4C4A-A81E-9801D45B7783}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vue-mobile-public", "Sixpence.UI\vue-mobile-public\vue-mobile-public.esproj", "{8C65F7C1-5266-46AE-B851-DAE823F5A109}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
