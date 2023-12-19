@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import sysEntityEdit from './sysEntityEdit';
+import sysEntityEdit from './sysEntityEdit.vue';
 
 export default {
   name: 'sysEntityList',

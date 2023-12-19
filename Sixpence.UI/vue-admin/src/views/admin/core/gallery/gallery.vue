@@ -19,7 +19,7 @@
 
 <script>
 import vueWaterfallEasy from '@sixpence/vue-waterfall-easy';
-import galleryEdit from './galleryEdit';
+import galleryEdit from './galleryEdit.vue';
 
 export default {
   name: 'gallery',

@@ -5,7 +5,7 @@ export default [
     meta: {
       title: 'Login'
     },
-    component: () => import('./login')
+    component: () => import('./login.vue')
   },
   {
     path: '/github-oauth/:id?',
@@ -13,7 +13,7 @@ export default [
     meta: {
       title: 'Github OAuth'
     },
-    component: () => import('./github')
+    component: () => import('./github.vue')
   },
   {
     path: '/gitee-oauth/:id?',
@@ -21,6 +21,6 @@ export default [
     meta: {
       title: 'Gitee OAuth'
     },
-    component: () => import('./gitee')
+    component: () => import('./gitee.vue')
   }
 ];

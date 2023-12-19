@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import robotEdit from './robotEdit';
+import robotEdit from './robotEdit.vue';
 
 export default {
   name: 'robot-list',

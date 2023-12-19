@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import recommendInfoEdit from './recommendInfoEdit';
+import recommendInfoEdit from './recommendInfoEdit.vue';
 
 export default {
   name: 'RecommendInfoList',

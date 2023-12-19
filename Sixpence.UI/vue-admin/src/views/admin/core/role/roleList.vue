@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import roleEdit from './roleEdit';
+import roleEdit from './roleEdit.vue';
 
 export default {
   name: 'sysRoleList',

@@ -22,7 +22,7 @@
 
 <script>
 import { edit } from '@/mixins';
-import sysParamList from './sysParamList';
+import sysParamList from './sysParamList.vue';
 
 export default {
   name: 'sysParamGroupEdit',

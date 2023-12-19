@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import linkEdit from './linkEdit';
+import linkEdit from './linkEdit.vue';
 
 export default {
   name: 'link-list',

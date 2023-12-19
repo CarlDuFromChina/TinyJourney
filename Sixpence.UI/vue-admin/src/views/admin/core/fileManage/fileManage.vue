@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import editComponent from './fileManageEdit';
+import editComponent from './fileManageEdit.vue';
 import { select } from '@/mixins';
 
 export default {

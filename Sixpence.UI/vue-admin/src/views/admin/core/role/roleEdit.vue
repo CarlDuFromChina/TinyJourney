@@ -42,8 +42,8 @@
 
 <script>
 import { edit } from '@/mixins';
-import entityPrivilege from './components/entityPrivilege';
-import menuPrivilege from './components/menuPrivilege';
+import entityPrivilege from './components/entityPrivilege.vue';
+import menuPrivilege from './components/menuPrivilege.vue';
 
 export default {
   name: 'sysRoleEdit',

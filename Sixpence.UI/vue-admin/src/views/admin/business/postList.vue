@@ -101,7 +101,7 @@ export default {
       this.searchData.date = [];
     },
     goReadonly(item) {
-      var host = process.env.VUE_APP_INDEX_URL;
+      var host = import.meta.env.VITE_APP_INDEX_URL;
       window.open(`${host}/post/${item.id}`, '_blank');
     },
     goEdit(item) {

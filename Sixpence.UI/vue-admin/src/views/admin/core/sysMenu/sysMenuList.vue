@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import sysMenuEdit from './sysMenuEdit';
+import sysMenuEdit from './sysMenuEdit.vue';
 
 export default {
   name: 'sysMenuList',

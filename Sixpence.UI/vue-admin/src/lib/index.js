@@ -7,8 +7,7 @@ import './jigsaw';
 
 window.sp = Object.assign({}, common, http);
 window.uuid = Object.assign({}, uuid);
-
-axios.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL || window.location.origin;
+axios.defaults.baseURL = import.meta.env.VITE_APP_AXIOS_BASE_URL || window.location.origin;
 axios.defaults.timeout = 20000;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/json';

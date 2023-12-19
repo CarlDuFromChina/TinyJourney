@@ -1,6 +1,6 @@
 import business from './business';
 import core from './core';
-import myAdmin from './myAdmin';
+import myAdmin from './myAdmin.vue';
 import result from './result';
 
 export default [

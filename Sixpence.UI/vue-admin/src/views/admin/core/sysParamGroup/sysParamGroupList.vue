@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import sysParamGroupEdit from './sysParamGroupEdit';
+import sysParamGroupEdit from './sysParamGroupEdit.vue';
 
 export default {
   name: 'sysParamGroupList',

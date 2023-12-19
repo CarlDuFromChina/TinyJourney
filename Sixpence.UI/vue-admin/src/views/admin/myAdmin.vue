@@ -42,7 +42,7 @@ export default {
       }
     },
     goIndex() {
-      window.open(process.env.VUE_APP_INDEX_URL, '_blank');
+      window.open(import.meta.env.VITE_APP_INDEX_URL, '_blank');
     },
   }
 };

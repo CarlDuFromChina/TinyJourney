@@ -1,4 +1,4 @@
-import App from './App';
+import App from './App.vue';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Antd from 'ant-design-vue';
@@ -11,10 +11,10 @@ import 'mavon-editor/dist/css/index.css';
 import 'ant-design-vue/dist/antd.css';
 import './lib';
 import './components';
-import './assets/icons';
 import './style/index.less';
 import './directives';
 import 'current-device';
+import 'virtual:svg-icons-register'
 
 Vue.config.productionTip = false;
 Vue.use(Antd);
@@ -29,16 +29,12 @@ Vue.prototype.$moment = moment;
 
 // 如果是移动端则跳转到移动端应用
 if (window.device.mobile()) {
-  window.location.href = process.env.VUE_APP_MOBILE_URL;
+  window.location.href = process.env.VITE_APP_MOBILE_URL;
 } else {
   /* eslint-disable no-new */
   new Vue({
-    el: '#app',
     router,
     store,
-    components: { App },
-    template: '<App/>'
-  });
+    render: h => h(App),
+  }).$mount('#app');
 }
-
-document.title = process.env.VUE_APP_TITLE;

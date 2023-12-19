@@ -22,10 +22,19 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <Target Name="BuildVueProject" AfterTargets="Build">
+	  <Exec Command="npm install &amp;&amp; npm run build" WorkingDirectory="..\Sixpence.UI\vue-admin"></Exec>
+  </Target>
+	
+  <Target Name="Cleanwwwroot" BeforeTargets="CopyVueDistToWwwroot">
+	<RemoveDir Directories="wwwroot" />
+  </Target>
+	
   <Target Name="CopyVueDistToWwwroot" AfterTargets="Build">
       <ItemGroup>
           <VueDistFiles Include="..\Sixpence.UI\vue-admin\dist\**\*.*" />
       </ItemGroup>
       <Copy SourceFiles="@(VueDistFiles)" DestinationFolder="wwwroot\%(RecursiveDir)" />
   </Target>
+
 </Project>

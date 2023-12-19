@@ -8,7 +8,7 @@ import gallery from './gallery';
 import fileManage from './fileManage';
 import robot from './robot';
 import role from './role';
-import admin from './admin';
+import admin from './admin.vue';
 import notification from './notification';
 
 export { admin };

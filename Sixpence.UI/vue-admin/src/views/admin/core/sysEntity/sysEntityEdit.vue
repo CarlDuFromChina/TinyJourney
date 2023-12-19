@@ -30,7 +30,7 @@
 
 <script>
 import { edit } from '@/mixins';
-import sysAttrsEdit from './sysAttrsEdit';
+import sysAttrsEdit from './sysAttrsEdit.vue';
 
 const columns = [
   {

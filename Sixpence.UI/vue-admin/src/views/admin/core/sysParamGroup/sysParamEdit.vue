@@ -36,8 +36,8 @@ export default {
       this.$refs.form.validate(async valid => {
         if (valid) {
           const { id, name } = this.parentId();
-          this.data.sys_paramGroupid = id;
-          this.data.sys_paramGroupid_name = name;
+          this.data.sys_param_group_id = id;
+          this.data.sys_param_group_name = name;
           if (sp.isNullOrEmpty(this.data.id)) {
             await sp.post(`api/${this.controllerName}`, this.data);
           } else {

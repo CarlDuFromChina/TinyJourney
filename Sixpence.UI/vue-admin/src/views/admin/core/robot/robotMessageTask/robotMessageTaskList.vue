@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import robotMessageTaskEdit from './robotMessageTaskEdit';
+import robotMessageTaskEdit from './robotMessageTaskEdit.vue';
 
 export default {
   name: 'robot-message-task-list',

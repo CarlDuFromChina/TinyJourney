@@ -52,10 +52,10 @@ namespace Sixpence.Web
 
             return new List<SysMenu>()
             {
-                new SysMenu() { Id = resource, Name = "资源管理", Router = "", Icon = "folder", MenuIndex = 10000, IsEnable = true },
+                new SysMenu() { Id = resource, Name = "资源管理", Router = "resource", Icon = "folder", MenuIndex = 10000, IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "文件管理", Router = "filemanage", Icon = "", MenuIndex = 10005, ParentId = resource, ParentName = "资源管理", IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "图库", Router = "gallery", Icon = "", MenuIndex = 10010, ParentId = resource, ParentName = "资源管理", IsEnable = true },
-                new SysMenu() { Id = setting, Name = "系统设置", Router = "", Icon = "setting", MenuIndex = 11000, IsEnable = true },
+                new SysMenu() { Id = setting, Name = "系统设置", Router = "setting", Icon = "setting", MenuIndex = 11000, IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "菜单管理", Router = "menus", Icon = "", MenuIndex = 11005, ParentId = setting, ParentName = "系统设置", IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "数据库管理", Router = "db", Icon = "", MenuIndex = 11010, ParentId = setting, ParentName = "系统设置", IsEnable = true },
                 new SysMenu() {Id = Guid.NewGuid().ToString(), Name = "作业管理", Router = "job", Icon = "", MenuIndex = 11015, ParentId = setting, ParentName = "系统设置", IsEnable = true},

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import sysConfigEdit from './sysConfigEdit';
+import sysConfigEdit from './sysConfigEdit.vue';
 
 export default {
   name: 'sysConfigList',

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import userInfoEdit from './userInfoEdit';
+import userInfoEdit from './userInfoEdit.vue';
 
 export default {
   name: 'userInfoList',

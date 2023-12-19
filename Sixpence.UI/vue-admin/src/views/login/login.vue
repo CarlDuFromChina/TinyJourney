@@ -52,12 +52,10 @@
 import { saveAuth, clearAuth, thirdPartyLogin } from '../../lib/login.js';
 import encrypt from '../../lib/encrypt';
 
-var header = process.env.VUE_APP_TITLE;
-
 export default {
   data() {
     return {
-      header,
+      header: import.meta.env.VITE_APP_TITLE,
       data: {
         code: '',
         password: ''

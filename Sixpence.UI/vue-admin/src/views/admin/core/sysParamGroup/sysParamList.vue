@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import sysParamEdit from './sysParamEdit';
+import sysParamEdit from './sysParamEdit.vue';
 
 export default {
   name: 'sysParamList',
@@ -45,7 +45,7 @@ export default {
     searchList() {
       return [
         {
-          Name: 'sys_paramGroupid',
+          Name: 'sys_param_group_id',
           Value: (this.relatedAttr || {}).id || ''
         }
       ];
