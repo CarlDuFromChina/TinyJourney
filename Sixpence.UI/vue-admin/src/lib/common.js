@@ -1,5 +1,6 @@
 import store from '../store';
 import http from './http';
+import avatar from '@/assets/images/avatar.png';
 
 export function isNil(value) {
   return value === undefined || value === null;
@@ -61,7 +62,6 @@ export function getDownloadUrl(value, isUrl = true) {
 export function getAvatar(id) {
   id = id || getUserId();
   if (sp.isNullOrEmpty(id)) {
-    var avatar = require('../assets/images/avatar.png');
     return avatar;
   }
   return `${getServerUrl()}api/system/avatar/${id}`;

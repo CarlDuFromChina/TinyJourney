@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import avatar from '@/assets/images/avatar.png';
+
 export default {
   name: 'sp-comment',
   props: {
@@ -59,7 +61,6 @@ export default {
   methods: {
     getAvatar(id) {
       if (sp.isNullOrEmpty(id)) {
-        var avatar = require('../assets/images/avatar.png');
         return avatar;
       }
       return sp.getAvatar(id);
