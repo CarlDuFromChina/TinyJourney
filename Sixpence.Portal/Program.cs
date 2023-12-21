@@ -45,9 +45,6 @@ builder.Services.AddSixpenceWeb();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -66,7 +63,5 @@ app.UseAuthorization();
 app.MapControllers().RequireCors("CorsPolicy");
 
 app.UseSixpenceWeb();
-
-app.MapFallbackToFile("/index.html");
 
 app.Run();

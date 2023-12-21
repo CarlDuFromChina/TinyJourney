@@ -6,15 +6,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="./favicon.ico">
     <title><%- title %></title>
-    <!-- 使用CDN的CSS文件 -->
-    <% for (var i in cdn && cdn.css) { %>
-      <link href="<%= cdn.css[i] %>" rel="preload" as="style">
-      <link href="<%= cdn.css[i] %>" rel="stylesheet">
-    <% } %>
-    <!-- 使用CDN的JS文件 -->
-    <% for (var i in cdn && cdn.js) { %>
-      <script src="<%= cdn.js[i] %>"></script>
-    <% } %>
   </head>
   <body>
     <div id="app"></div>

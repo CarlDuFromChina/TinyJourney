@@ -5,6 +5,7 @@
   "author": "Karl Du",
   "email": "18556906294@163.com",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue2": "^2.3.1",
     "fast-glob": "^3.3.2",
+    "vite-plugin-cdn-import": "^0.3.5",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-template-compiler": "^2.7.15"
