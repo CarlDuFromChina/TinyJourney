@@ -1,6 +1,6 @@
 <template>
   <a-select v-model="selectModel">
-    <a-select-option v-model="item.Value" v-for="(item, index) in options" :key="index">{{ item.Name }}</a-select-option>
+    <a-select-option v-model="item.value" v-for="(item, index) in options" :key="index">{{ item.name }}</a-select-option>
   </a-select>
 </template>
 

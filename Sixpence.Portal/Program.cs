@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using NLog.Extensions.Logging;
 using Sixpence.Portal;
@@ -34,6 +35,10 @@ builder.Services
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
     });
+
+builder.Services.Configure<ApiBehaviorOptions>(options => {
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

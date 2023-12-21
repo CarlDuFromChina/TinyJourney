@@ -32,7 +32,7 @@ namespace Sixpence.Web.Extensions
             }
             if (string.IsNullOrEmpty(entity.PrimaryColumn.Value?.ToString()))
             {
-                EntityCommon.SetAttributeValue(entity, entity.PrimaryColumn.Name, entity.NewId());
+                EntityCommon.SetDbColumnValue(entity, entity.PrimaryColumn.Name, entity.NewId());
             }
             return manager.Create(entity);
         }

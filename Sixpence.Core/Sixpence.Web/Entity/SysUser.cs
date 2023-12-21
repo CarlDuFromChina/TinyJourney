@@ -11,7 +11,7 @@ namespace Sixpence.Web.Entity
         /// <summary>
         /// 用户id
         /// </summary>
-        [PrimaryColumn()]
+        [PrimaryColumn]
         public string Id { get; set; }
 
         /// <summary>

@@ -25,7 +25,6 @@ SELECT
 	post.title,
 	post.post_type,
 	post.post_type_name,
-	post.article_type_name,
 	post.created_by,
 	post.created_by_name,
 	post.updated_by,

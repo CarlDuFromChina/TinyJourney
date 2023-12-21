@@ -51,17 +51,6 @@
         </a-row>
         <a-row>
           <a-col>
-            <a-form-model-item label="文章类型" prop="article_type">
-              <sp-select
-                v-model="data.article_type"
-                :options="selectDataList.article_type"
-                @change="item => (data.article_type_name = item.name)"
-              ></sp-select>
-            </a-form-model-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col>
             <a-form-model-item label="摘要">
               <a-textarea v-model="data.brief" placeholder="请输入摘要，若为空则自动生成" :auto-size="{ minRows: 2, maxRows: 4 }" allow-clear />
             </a-form-model-item>
@@ -166,7 +155,6 @@ export default {
       configs: {},
       publishModalVisible: false,
       controllerName: 'post',
-      selectParamNameList: ['article_type'],
       selectEntityNameList: ['category'],
       fileList: [],
       baseUrl: sp.getServerUrl(),
@@ -180,7 +168,6 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         post_type: [{ required: true, message: '请选择分类', trigger: 'blur' }],
-        article_type: [{ required: true, message: '请选择文章类型', trigger: 'blur' }]
       }
     };
   },
@@ -377,7 +364,7 @@ export default {
             this.data.brief = htmlToText(this.html, { baseElement: 'p', limits: { ellipsis: '...', maxInputLength: 200 } });
           }
           if (this.tags) {
-            this.data.tags = this.tags;
+            this.data.tags = JSON.stringify(this.tags);
           }
           this.data.html_content = this.html;
           try {

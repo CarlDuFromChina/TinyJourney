@@ -14,43 +14,43 @@ namespace Sixpence.PortalEntity
         /// </summary>
         [DataMember]
         [PrimaryColumn(primaryType: PrimaryType.GUIDNumber)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// 名称
         /// </summary>
         [Column, Description("名称")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// 类型
         /// </summary>
         [Column, Description("类型")]
-        public string PostType { get; set; }
+        public string? PostType { get; set; }
 
         /// <summary>
         /// 类型
         /// </summary>
         [Column, Description("类型")]
-        public string PostTypeName { get; set; }
+        public string? PostTypeName { get; set; }
 
         /// <summary>
         /// Markdown内容
         /// </summary>
         [Column, Description("Markdown内容")]
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         /// <summary>
         /// html内容
         /// </summary>
         [Column, Description("html内容")]
-        public string HtmlContent { get; set; }
+        public string? HtmlContent { get; set; }
 
         /// <summary>
         /// 标题
         /// </summary>
         [Column, Description("标题")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// 阅读次数
@@ -68,13 +68,13 @@ namespace Sixpence.PortalEntity
         /// 是否是系列
         /// </summary>
         [Column, Description("是否是系列")]
-        public string IsSeriesName { get; set; }
+        public string? IsSeriesName { get; set; }
 
         /// <summary>
         /// 标签
         /// </summary>
         [Column, Description("标签")]
-        public string Tags { get; set; }
+        public string? Tags { get; set; }
 
         /// <summary>
         /// 禁止评论
@@ -86,25 +86,25 @@ namespace Sixpence.PortalEntity
         /// 封面
         /// </summary>
         [Column, Description("封面")]
-        public string SurfaceId { get; set; }
+        public string? SurfaceId { get; set; }
 
         /// <summary>
         /// 封面地址
         /// </summary>
         [Column, Description("封面地址")]
-        public string SurfaceUrl { get; set; }
+        public string? SurfaceUrl { get; set; }
 
         /// <summary>
         /// 大封面
         /// </summary>
         [Column, Description("大封面")]
-        public string BigSurfaceId { get; set; }
+        public string? BigSurfaceId { get; set; }
 
         /// <summary>
         /// 大封面地址
         /// </summary>
         [Column, Description("大封面地址")]
-        public string BigSurfaceUrl { get; set; }
+        public string? BigSurfaceUrl { get; set; }
 
         /// <summary>
         /// 是否展示
@@ -116,31 +116,13 @@ namespace Sixpence.PortalEntity
         /// 是否展示
         /// </summary>
         [Column, Description("是否展示")]
-        public string IsShowName { get; set; }
+        public string? IsShowName { get; set; }
 
         /// <summary>
         /// 摘要
         /// </summary>
         [Column, Description("摘要")]
-        public string Brief { get; set; }
-
-        /// <summary>
-        /// 微信素材id
-        /// </summary>
-        [Column, Description("微信素材id")]
-        public string WechatNewsId { get; set; }
-
-        /// <summary>
-        /// 文章类型
-        /// </summary>
-        [Column, Description("文章类型")]
-        public string ArticleType { get; set; }
-
-        /// <summary>
-        /// 文章类型
-        /// </summary>
-        [Column, Description("文章类型")]
-        public string ArticleTypeName { get; set; }
+        public string? Brief { get; set; }
 
         /// <summary>
         /// 是否置顶
@@ -152,7 +134,7 @@ namespace Sixpence.PortalEntity
         /// 是否置顶
         /// </summary>
         [Column, Description("是否置顶")]
-        public string IsPopName { get; set; }
+        public string? IsPopName { get; set; }
     }
 }
 

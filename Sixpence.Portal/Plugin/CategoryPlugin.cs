@@ -45,12 +45,13 @@ namespace Sixpence.PortalPlugin
             }
             else
             {
+                var parentMenu = manager.QueryFirst<SysMenu>(new { router = "blog" });
                 menu = new SysMenu()
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = data.Name,
-                    ParentId = "8201EFED-76E2-4CD1-A522-4803D52D4D92",
-                    ParentName = "博客管理",
+                    ParentId = parentMenu.Id,
+                    ParentName = parentMenu.Name,
                     Router = $"post/{data.Code}",
                     MenuIndex = data.Index,
                     IsEnable = true,

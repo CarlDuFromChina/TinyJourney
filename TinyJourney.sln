@@ -15,10 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.Common", "Sixpence
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.Web", "Sixpence.Core\Sixpence.Web\Sixpence.Web.csproj", "{A862441E-311C-475B-BEDA-C94D1E447729}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sixpence.UI", "Sixpence.UI", "{B6654289-CE37-47A1-BB5B-DC97EFAD5D7E}"
-EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vue-admin", "Sixpence.UI\vue-admin\vue-admin.esproj", "{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,12 +41,6 @@ Global
 		{A862441E-311C-475B-BEDA-C94D1E447729}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A862441E-311C-475B-BEDA-C94D1E447729}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A862441E-311C-475B-BEDA-C94D1E447729}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,7 +50,6 @@ Global
 		{A92D81EC-0F65-4E86-BD44-DF6B2025F9B1} = {9E6E8367-AFFF-40A3-96FB-CD405D901F62}
 		{B466C66F-0840-428C-A99C-AFCD89E73003} = {9E6E8367-AFFF-40A3-96FB-CD405D901F62}
 		{A862441E-311C-475B-BEDA-C94D1E447729} = {9E6E8367-AFFF-40A3-96FB-CD405D901F62}
-		{A555466E-11AE-4257-BE1E-FE8CAED2EBAA} = {B6654289-CE37-47A1-BB5B-DC97EFAD5D7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FA7E2CC-7725-4832-A1CE-F82F2D0EFFAA}

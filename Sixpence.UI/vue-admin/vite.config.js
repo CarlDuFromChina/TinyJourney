@@ -86,6 +86,9 @@ export default defineConfig(( mode ) => {
     },
     build: {
       outDir: 'dist',
+    },
+    server: {
+      port: 8080,
     }
-  }
+  };
 });

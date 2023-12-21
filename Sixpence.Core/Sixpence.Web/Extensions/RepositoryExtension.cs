@@ -99,6 +99,10 @@ namespace Sixpence.Web.Extensions
             }
             else
             {
+                if (string.IsNullOrEmpty(id))
+                {
+                    EntityCommon.SetDbColumnValue(entity, entity.PrimaryColumn.Name, entity.NewId());
+                }
                 id = repository.Create(entity);
             }
 

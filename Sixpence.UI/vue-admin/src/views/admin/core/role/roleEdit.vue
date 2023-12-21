@@ -22,7 +22,7 @@
           </a-col>
           <a-col :span="12" v-if="!data.is_basic">
             <a-form-model-item label="继承角色">
-              <sp-select v-model="data.parent_roleid" :options="roles" @change="item => (data.parent_roleid_name = item.name)"></sp-select>
+              <sp-select v-model="data.inherited_role_id" :options="roles"></sp-select>
             </a-form-model-item>
           </a-col>
         </a-row>

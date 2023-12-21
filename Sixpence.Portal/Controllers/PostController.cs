@@ -83,19 +83,5 @@ namespace Sixpence.PortalController
         {
             return new PostService().GetIndexUser();
         }
-
-        [HttpPost("save")]
-        public override string CreateOrUpdateData(Post entity)
-        {
-            var id = base.CreateOrUpdateData(entity);
-            return JsonConvert.SerializeObject(id);
-        }
-
-        [HttpPost]
-        public override string CreateData(Post entity)
-        {
-            var id = base.CreateData(entity);
-            return JsonConvert.SerializeObject(id);
-        }
     }
 }

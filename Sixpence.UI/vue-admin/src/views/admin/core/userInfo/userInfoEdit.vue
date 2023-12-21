@@ -95,13 +95,13 @@
         </a-row>
         <a-row :gutter="24">
           <a-col :span="12">
-            <a-form-model-item label="角色" prop="roleid">
-              <sp-select v-model="data.roleid" :options="roles" @change="item => (data.roleid_name = item.name)"></sp-select>
+            <a-form-model-item label="角色" prop="role_id">
+              <sp-select v-model="data.role_id" :options="roles"></sp-select>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="状态">
-              <a-switch v-model="data.is_enable"></a-switch>
+              <a-switch v-model="data.is_active"></a-switch>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -199,7 +199,7 @@ export default {
         gender: [{ required: true, message: '请选择性别', trigger: 'blur' }],
         mailbox: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         cellphone: [{ required: true, message: '请输入手机号码', trigger: 'blur' }],
-        roleid: [{ required: true, message: '请选择角色', trigger: 'blur' }]
+        role_id: [{ required: true, message: '请选择角色', trigger: 'blur' }]
       },
       previewImage: '',
       previewVisible: false
