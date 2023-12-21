@@ -27,14 +27,9 @@ Vue.filter('moment', (data, formatStr) => (sp.isNullOrEmpty(data) ? '' : moment(
 moment.locale('zh-cn');
 Vue.prototype.$moment = moment;
 
-// 如果是移动端则跳转到移动端应用
-if (window.device.mobile()) {
-  window.location.href = process.env.VITE_APP_MOBILE_URL;
-} else {
-  /* eslint-disable no-new */
-  new Vue({
-    router,
-    store,
-    render: h => h(App),
-  }).$mount('#app');
-}
+/* eslint-disable no-new */
+new Vue({
+  router,
+  store,
+  render: h => h(App),
+}).$mount('#app');

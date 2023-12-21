@@ -1,4 +1,4 @@
-name: ci
+name: build-vue-admin-image
 
 on:
   push:
@@ -49,20 +49,18 @@ jobs:
           NODE_ENV=production
           VITE_APP_INDEX_URL=${{ secrets.VITE_APP_INDEX_URL }}
           VITE_APP_AXIOS_BASE_URL=${{ secrets.VITE_APP_AXIOS_BASE_URL }}
-          VITE_APP_MOBILE_URL=${{ secrets.VITE_APP_MOBILE_URL }}
           VITE_APP_TITLE=${{ secrets.VITE_APP_TITLE }}
-          VITE_APP_DISQUS_SHORTNAME=${{ secrets.VITE_APP_DISQUS_SHORTNAME }}
           eof
           
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Sixpence.UI/vue-admin/Dockerfile
           # 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
           platforms: linux/amd64
           # 镜像推送时间
           push: ${{ github.event_name != 'pull_request' }}
           # 给清单打上多个标签
           tags: |
-            carldu/blog-html-admin:latest
+            carldu/tinyjourney-vue-admin:latest
