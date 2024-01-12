@@ -1,0 +1,51 @@
+version: '2'
+services:
+
+  tj-vue-admin:
+    container_name: "tj-vue-admin"
+    image: carldu/tj-vue-admin:latest
+    links:
+      - tj-server
+    ports:
+      - "8006:80"
+    volumes:
+      - /docker_data/tj/admin/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - tj-network
+      
+  tj-db:
+    image: postgres:12
+    container_name: "tj-db"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: tj
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tj
+    volumes:
+      - /docker_data/tj/pg_data:/var/lib/postgresql/data
+    networks:
+      - tj-network
+
+  tj-server:
+    container_name: "tj-server"
+    image: carldu/tj-server:latest
+    links:
+      - tj-db
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /docker_data/tj/server/appsettings.json:/app/appsettings.json
+      - /docker_data/tj/server/logs:/app/log
+      - /docker_data/tj/server/storage:/app/storage
+    networks:
+      - tj-network
+      
+networks:
+  tj-network:
+    driver: bridge
