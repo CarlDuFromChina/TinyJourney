@@ -44,7 +44,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 添加 Web 服务注入
+// 娣诲姞 Web 鏈嶅姟娉ㄥ叆
 builder.Services.AddSixpencePortal();
 builder.Services.AddSixpenceWeb();
 
