@@ -3,6 +3,7 @@ using Sixpence.Common.Crypto;
 using Sixpence.Common.Extensions;
 using Sixpence.Common.Utils;
 using Sixpence.ORM;
+using Sixpence.ORM.Entity;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model.Gitee;
@@ -64,7 +65,7 @@ namespace Sixpence.Web.Service
 
                 var config = StoreConfig.Config;
                 var id = Guid.NewGuid().ToString();
-                var fileName = $"{id}.png";
+                var fileName = $"{EntityCommon.GenerateGuidNumber()}.png";
                 ServiceFactory.Resolve<IStoreStrategy>(config?.Type).Upload(stream, fileName, out var filePath);
 
                 var data = new SysFile()

@@ -11,6 +11,7 @@ using Sixpence.Common.Crypto;
 using Sixpence.Common.Extensions;
 using Sixpence.ORM;
 using Microsoft.Extensions.Logging;
+using Sixpence.ORM.Entity;
 
 namespace Sixpence.Web.Service
 {
@@ -90,7 +91,7 @@ namespace Sixpence.Web.Service
 
             var config = StoreConfig.Config;
             var id = Guid.NewGuid().ToString();
-            var fileName = $"{id}.jpg";
+            var fileName = $"{EntityCommon.GenerateGuidNumber()}.jpg";
             ServiceFactory.Resolve<IStoreStrategy>(config?.Type).Upload(stream, fileName, out var filePath);
 
             var data = new SysFile()

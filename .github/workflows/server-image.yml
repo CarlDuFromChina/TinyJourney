@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Sixpence.Portal/Dockerfile
+          file: ./Dockerfile
           # 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
           platforms: linux/amd64
           # 镜像推送时间
@@ -57,4 +57,5 @@ jobs:
             com.microsoft.visual-studio.project-name=Sixpence.Portal
           # 给清单打上多个标签
           tags: |
-            carldu/tinyjourney-server:latest
+            carldu/tj-server:latest
+            carldu/tj-server:1.0.0

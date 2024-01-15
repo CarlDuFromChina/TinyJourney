@@ -74,6 +74,7 @@ namespace Sixpence.Web
 
             // 3. 添加实体拦截器
             services.AddSingleton<IEntityMigrationInterceptor, EntityMigrationInterceptor>();
+            services.AddSingleton<IEntityManagerBeforeCreateOrUpdate, Implements.EntityManagerBeforeCreateOrUpdate>();
 
             // 4. 添加数据库连接
             services.AddSorm(options =>
@@ -120,7 +121,7 @@ namespace Sixpence.Web
 
         private static IServiceCollection AddStorage(this IServiceCollection services)
         {
-            services.AddScoped<IStoreStrategy, SystemLocalStore>();
+            services.AddSingleton<IStoreStrategy, SystemLocalStore>();
             return services;
         }
 

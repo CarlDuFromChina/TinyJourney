@@ -100,7 +100,7 @@ export default {
     this.editor.config.uploadImgServer = `${sp.getServerUrl()}api/sys_file/upload_image`; // 上传图片服务地址
     this.editor.config.uploadImgHooks = {
       customInsert: function (insertImgFn, result) {
-        insertImgFn(sp.getDownloadUrl(result.downloadUrl));
+        insertImgFn(sp.getDownloadUrl(result.download_url));
       }
     };
     this.editor.customConfig = {

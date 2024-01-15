@@ -27,7 +27,11 @@ namespace Sixpence.ORM.Repository
         /// <returns></returns>
         public virtual string Create(E entity)
         {
-            AssertUtil.IsNullOrEmpty(entity?.PrimaryColumn?.Value?.ToString(), "实体主键不能为空");
+            if (string.IsNullOrEmpty(entity.PrimaryColumn.Value?.ToString()))
+            {
+                EntityCommon.SetDbColumnValue(entity, entity.PrimaryColumn.Name, entity.NewId());
+            }
+            AssertUtil.IsNullOrEmpty(entity.PrimaryColumn.Value.ToString(), "实体主键不能为空");
             var id = Manager.Create(entity);
             return id;
         }
@@ -40,7 +44,11 @@ namespace Sixpence.ORM.Repository
         /// <returns></returns>
         public virtual string Save(E entity)
         {
-            var id = string.IsNullOrEmpty(entity.PrimaryColumn.Value?.ToString()) ? entity.NewId() : entity.PrimaryColumn.Value?.ToString();
+            if (string.IsNullOrEmpty(entity.PrimaryColumn.Value?.ToString()))
+            {
+                EntityCommon.SetDbColumnValue(entity, entity.PrimaryColumn.Name, entity.NewId());
+            }
+            var id = entity.PrimaryColumn.Value?.ToString();
             var isExist = FindOne(id) != null;
             if (isExist)
             {

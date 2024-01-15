@@ -5,7 +5,7 @@
       <!--LOGO-->
       <div class="logo" @click="$router.push({ name: 'workplace' })">
         <sp-icon name="sp-blog-leaf" :size="32"></sp-icon>
-        <span v-if="!collapsed">{{ import.meta.env.VITE_APP_TITLE }}</span>
+        <span v-if="!collapsed">{{ appTitle }}</span>
       </div>
       <!--菜单栏-->
       <div class="sider">
@@ -70,6 +70,7 @@ export default {
   components: { userInfoEdit },
   data() {
     return {
+      appTitle: import.meta.env.VITE_APP_TITLE,
       collapsed: false,
       menus: [],
       defaultOpenedsArray: [],

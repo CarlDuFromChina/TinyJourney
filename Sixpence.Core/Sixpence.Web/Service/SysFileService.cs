@@ -11,6 +11,7 @@ using Sixpence.Web.Entity;
 using Sixpence.Common.Crypto;
 using Sixpence.Web.Utils;
 using Sixpence.ORM;
+using Sixpence.ORM.Entity;
 
 namespace Sixpence.Web.Service
 {
@@ -74,7 +75,7 @@ FROM
         {
             var id = Guid.NewGuid().ToString();
             var hash_code = SHAUtil.GetFileSHA1(stream);
-            var newFileName = $"{id}.{fileSuffix}"; // GUID 生成文件名
+            var newFileName = $"{EntityCommon.GenerateGuidNumber()}.{fileSuffix}"; // GUID 生成文件名
 
             // 保存图片到本地
             // TODO：执行失败回滚操作

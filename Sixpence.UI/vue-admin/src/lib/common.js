@@ -54,7 +54,7 @@ export function getDownloadUrl(value, isUrl = true) {
   }
   const url = isUrl ? value : `/api/sys_file/download?objectId=${value}`;
   if (url.charAt(0) === '/') {
-    return `${getServerUrl().trimLast('/')}${url}`;
+    return `${trimLast(getServerUrl(), '/')}${url}`;
   }
   return `${getServerUrl()}${url}`;
 }
@@ -73,6 +73,13 @@ export function getUserId() {
 
 export function isTrue(val) {
   return val === 'true' || val === true;
+}
+
+function trimLast(str, char) {
+  if (str.charAt(str.length - 1) === char) {
+    return str.substring(0, str.length - 1);
+  }
+  return str;
 }
 
 export default {

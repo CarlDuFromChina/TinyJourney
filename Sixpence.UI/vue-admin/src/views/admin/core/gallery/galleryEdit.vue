@@ -112,24 +112,24 @@ export default {
         const thumbnail = resp[1];
 
         this.data.imageid = image.id;
-        this.data.image_url = image.downloadUrl;
+        this.data.image_url = image.download_url;
         this.bigImage = [
           {
             uid: '0',
             status: 'done',
             name: 'big_image',
-            url: sp.getDownloadUrl(image.downloadUrl)
+            url: sp.getDownloadUrl(image.download_url)
           }
         ];
 
         this.data.previewid = thumbnail.id;
-        this.data.preview_url = thumbnail.downloadUrl;
+        this.data.preview_url = thumbnail.download_url;
         this.smallImage = [
           {
             uid: '0',
             status: 'done',
             name: 'small_image',
-            url: sp.getDownloadUrl(thumbnail.downloadUrl)
+            url: sp.getDownloadUrl(thumbnail.download_url)
           }
         ];
       });

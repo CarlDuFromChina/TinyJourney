@@ -16,6 +16,7 @@ using Sixpence.Web.Utils;
 using Sixpence.ORM;
 using Sixpence.Common.Extensions;
 using Sixpence.Common.Crypto;
+using Sixpence.ORM.Entity;
 
 namespace Sixpence.Web.Service
 {
@@ -58,7 +59,7 @@ namespace Sixpence.Web.Service
                 var id = Guid.NewGuid().ToString();
                 var originFileName = url.Substring(url.LastIndexOf("/") + 1); // 原始图片名
                 var fileType = originFileName.GetFileType(); // 文件类型
-                var fileName = $"{id}.{fileType}"; // 新文件名
+                var fileName = $"{EntityCommon.GenerateGuidNumber()}.{fileType}"; // 新文件名
                 ServiceFactory.Resolve<IStoreStrategy>(config?.Type).Upload(stream, fileName, out var filePath);
 
                 var data = new SysFile()

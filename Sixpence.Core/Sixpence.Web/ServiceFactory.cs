@@ -14,7 +14,8 @@ namespace Sixpence.Web
 
         public static T Resolve<T>(string name)
         {
-            return Provider.GetServices<T>().Where(x => x.GetType().Name == name).FirstOrDefault();
+            var result = Provider.GetServices<T>();
+            return result.Where(x => x.GetType().Name == name).FirstOrDefault();
         }
 
         public static T Resolve<T>(Func<T, bool> predicate)
