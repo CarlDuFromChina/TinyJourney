@@ -41,6 +41,30 @@ namespace Sixpence.Web
                     UserId = Role.Admin.GetIdentifier(),
                     IsLock = false,
                     TryTimes = 0
+                },
+                new SysAuthUser()
+                {
+                    Id = Role.User.GetIdentifier(),
+                    Name = "user",
+                    Code = "user",
+                    Password = SystemConfig.Config.DefaultPassword,
+                    RoleId = Role.User.GetIdentifier(),
+                    RoleName = Role.User.GetDescription(),
+                    UserId = Role.User.GetIdentifier(),
+                    IsLock = true,
+                    TryTimes = 0
+                },
+                new SysAuthUser()
+                {
+                    Id = Role.Guest.GetIdentifier(),
+                    Name = "guest",
+                    Code = "guest",
+                    Password = SystemConfig.Config.DefaultPassword,
+                    RoleId = Role.Guest.GetIdentifier(),
+                    RoleName = Role.Guest.GetDescription(),
+                    UserId = Role.Guest.GetIdentifier(),
+                    IsLock = true,
+                    TryTimes = 0
                 }
             };
         }
@@ -93,6 +117,32 @@ namespace Sixpence.Web
                     Realname = "系统",
                     RoleId = Role.System.GetIdentifier(),
                     RoleName = Role.System.GetDescription(),
+                    isActive = false,
+                    isActiveName = "否"
+                },
+                new SysUser()
+                {
+                    Id = Role.User.GetIdentifier(),
+                    Name = "user",
+                    Code = "user",
+                    Gender = 9,
+                    GenderName = "未知",
+                    Realname = "普通用户",
+                    RoleId = Role.User.GetIdentifier(),
+                    RoleName = Role.User.GetDescription(),
+                    isActive = false,
+                    isActiveName = "否"
+                },
+                new SysUser()
+                {
+                    Id = Role.Guest.GetIdentifier(),
+                    Name = "guest",
+                    Code = "guest",
+                    Gender = 9,
+                    GenderName = "未知",
+                    Realname = "游客",
+                    RoleId = Role.Guest.GetIdentifier(),
+                    RoleName = Role.Guest.GetDescription(),
                     isActive = false,
                     isActiveName = "否"
                 }
