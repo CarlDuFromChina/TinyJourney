@@ -65,11 +65,7 @@ namespace Sixpence.Web.EntityPlugin
         /// <param name="manager"></param>
         private void UpdateAuthInfo(SysUser entity, IEntityManager manager)
         {
-            var sql = @"
-SELECT * FROM auth_user
-WHERE user_id = @id
-";
-            var authInfo = manager.QueryFirst<SysAuthUser>(sql, new Dictionary<string, object>() { { "@id", entity.Id } });
+            var authInfo = manager.QueryFirst<SysAuthUser>(new { user_id = entity.Id });
             AssertUtil.IsNull(authInfo, "用户Id不能为空");
             authInfo.Name = entity.Name;
             authInfo.RoleId = entity.RoleId;
@@ -96,10 +92,7 @@ WHERE user_id = @id
         /// <param name="broker"></param>
         private void DeleteAuthInfo(SysUser entity, IEntityManager manager)
         {
-            var sql = @"
-DELETE FROM auth_user WHERE user_id = @id
-";
-            manager.Execute(sql, new Dictionary<string, object>() { { "@id", entity.Id } });
+            manager.Delete<SysAuthUser>(new { user_id = entity.Id });
         }
     }
 }

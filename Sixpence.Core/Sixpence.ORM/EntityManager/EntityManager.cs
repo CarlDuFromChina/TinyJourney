@@ -171,6 +171,28 @@ namespace Sixpence.ORM
             return result;
         }
 
+        public int Delete<TEntity>(string id) where TEntity : BaseEntity, new()
+        {
+            var t = new TEntity();
+            var tableName = t.EntityMap.Table;
+            var primaryKeyName = t.PrimaryColumn.DbPropertyMap.Name;
+            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} = {Driver.Dialect.ParameterPrefix}id";
+            return this.Execute(sql, new { id });
+        }
+
+        public int Delete<TEntity>(object param) where TEntity : BaseEntity, new()
+        {
+            var t = new TEntity();
+            var tableName = t.EntityMap.Table;
+            var sql = $"DELETE FROM {tableName} WHERE  1 = 1";
+            var keyValues = param.ToDictionary();
+            foreach (var item in keyValues)
+            {
+                sql += $" AND {item.Key} = {Driver.Dialect.ParameterPrefix}{item.Key}";
+            }
+            return this.Execute(sql, param);
+        }
+
         /// <summary>
         /// 保存实体记录
         /// </summary>

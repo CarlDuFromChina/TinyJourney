@@ -241,7 +241,7 @@ namespace Sixpence.Web.Service
         public void EditPassword(string password)
         {
             var sql = $@"
-UPDATE auth_user
+UPDATE sys_auth_user
 SET password = @password
 WHERE user_id = @id;
 ";
@@ -257,7 +257,7 @@ WHERE user_id = @id;
         public void ResetPassword(string id)
         {
             var sql = $@"
-UPDATE auth_user
+UPDATE sys_auth_user
 SET password = @password
 WHERE user_id = @id;
 ";

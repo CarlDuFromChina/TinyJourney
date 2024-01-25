@@ -12,7 +12,19 @@ services:
       - /docker_data/tj/admin/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - tj-network
-      
+
+  tj-vue-pc-public:
+    container_name: "tj-vue-pc-public"
+    image: carldu/tj-vue-pc-public:latest
+    links:
+      - tj-server
+    ports:
+      - "8007:80"
+    volumes:
+      - /docker_data/tj/pc/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - tj-network
+
   tj-db:
     image: postgres:12
     container_name: "tj-db"

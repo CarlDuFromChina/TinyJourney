@@ -62,6 +62,21 @@ namespace Sixpence.ORM
         /// </summary>
         int DeleteByWhere(string typeName, string where, Dictionary<string, object> paramList = null);
 
+        /// <summary>
+        /// 删除数据库的实体记录
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        int Delete<TEntity>(string id) where TEntity : BaseEntity, new();
+
+        /// <summary>
+        /// 删除数据库的实体记录
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        int Delete<TEntity>(object param) where TEntity : BaseEntity, new();
         #endregion
 
         #region Transcation

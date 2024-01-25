@@ -6,3 +6,8 @@ build-vue-admin:
 build-server:
 	docker buildx build --platform=linux/amd64 -t tj-server . -f Dockerfile
 	docker tag tj-server carldu/tj-server:1.0.0
+
+build-vue-pc-public:
+	cd ./Sixpence.UI/vue-pc-public \
+	&& docker buildx build --platform=linux/amd64 -t tj-vue-pc-public . -f Dockerfile \
+	&& docker tag tj-vue-pc-public carldu/tj-vue-pc-public:1.0.0
