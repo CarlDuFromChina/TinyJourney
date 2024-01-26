@@ -30,11 +30,11 @@ export default {
       },
       set(value) {
         this.$emit('input', value);
-        const arrs = this.options.filter(item => item.Value === value);
+        const arrs = this.options.filter(item => item.value === value);
         if (arrs.length > 0) {
           this.$emit('change', {
             value,
-            name: arrs[0].Name
+            name: arrs[0].name
           });
         }
       }

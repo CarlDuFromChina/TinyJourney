@@ -5,6 +5,7 @@ using Sixpence.PortalEntity;
 using Sixpence.PortalEntityOptionProvider;
 using Sixpence.PortalPlugin;
 using Sixpence.Web;
+using Sixpence.PortalSysConfig;
 
 namespace Sixpence.Portal
 {
@@ -16,7 +17,8 @@ namespace Sixpence.Portal
                 .AddEntity()
                 .AddInitData()
                 .AddEntityPlugin()
-                .AddEntityOptionProvider();
+                .AddEntityOptionProvider()
+                .AddSysConfig();
         }
 
         private static IServiceCollection AddEntity(this IServiceCollection services)
@@ -45,6 +47,13 @@ namespace Sixpence.Portal
         private static IServiceCollection AddInitData(this IServiceCollection services)
         {
             services.AddTransient<IInitDbData, InitDbBusinessData>();
+            return services;
+        }
+
+        private static IServiceCollection AddSysConfig(this IServiceCollection services)
+        {
+            services.AddTransient<ISysConfig, IndexUserConfig>();
+            services.AddTransient<ISysConfig, WebSiteInfoConfig>();
             return services;
         }
     }

@@ -4,10 +4,11 @@ using NLog.Extensions.Logging;
 using Sixpence.Portal;
 using Sixpence.Web;
 using Sixpence.Web.WebApi;
+using Sixpence.Web.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseUrls("http://*:5000");
+builder.WebHost.UseUrls(SystemConfig.Config.LocalUrls);
 
 builder.Services.AddCors(options =>
 {

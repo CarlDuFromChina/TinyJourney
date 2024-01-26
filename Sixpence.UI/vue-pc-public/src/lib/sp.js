@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { trimLast } from './common.js';
 
 function getServerUrl() {
   let url = axios.defaults.baseURL || window.origin;
@@ -11,7 +12,7 @@ function getDownloadUrl(value, isUrl = true) {
   }
   const url = isUrl ? value : `/api/sys_file/download?objectId=${value}`;
   if (url.charAt(0) === '/') {
-    return `${getServerUrl().trimLast('/')}${url}`;
+    return `${trimLast(getServerUrl(), '/')}${url}`;
   }
   return `${getServerUrl()}${url}`;
 }

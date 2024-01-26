@@ -69,7 +69,7 @@ export function isTrue(val) {
   return val === 'true' || val === true;
 }
 
-function trimLast(str, char) {
+export function trimLast(str, char) {
   if (str.charAt(str.length - 1) === char) {
     return str.substring(0, str.length - 1);
   }
@@ -86,5 +86,6 @@ export default {
   getServerUrl,
   getDownloadUrl,
   getAvatar,
-  isTrue
+  isTrue,
+  trimLast
 }

@@ -18,10 +18,6 @@
       <idea :pageSize="5" style="margin-bottom:20px;"></idea>
       <!-- 想法 -->
 
-      <!-- 项目链接 -->
-      <links style="margin-bottom:20px;"></links>
-      <!-- 项目链接 -->
-
       <div class="more">
         <p>作者：{{ website.author }}</p>
         <p>我的邮箱：<a :href="`mailto:${website.email}`">{{ website.email }}</a></p>
