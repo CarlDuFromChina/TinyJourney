@@ -27,10 +27,9 @@ namespace Sixpence.Web.Controllers
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
         [Route("Download")]
-        public Task<IActionResult> Download(string objectId)
+        public async Task<IActionResult> DownloadAsync(string objectId)
         {
-            var config = StoreConfig.Config;
-            return ServiceFactory.Resolve<IStoreStrategy>(config?.Type).DownLoad(objectId);
+            return await AppContext.Storage.DownloadAsync(objectId);
         }
 
         /// <summary>

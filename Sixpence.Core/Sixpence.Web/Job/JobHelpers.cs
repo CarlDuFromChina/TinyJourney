@@ -23,7 +23,7 @@ namespace Sixpence.Web.Job
         static JobHelpers()
         {
             var config = DBSourceConfig.Config;
-            var driverType = config.DriverType.GetEnum<DriverType>();
+            var driverType = config.DriverType.ToEnum<DriverType>();
             var properties = new NameValueCollection()
             {
                 { "quartz.scheduler.instanceName", "MyClusteredScheduler"},

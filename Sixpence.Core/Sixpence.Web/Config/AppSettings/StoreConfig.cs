@@ -11,7 +11,7 @@ namespace Sixpence.Web.Config
     public class StoreConfig : BaseAppConfig<StoreConfig>
     {
         /// <summary>
-        /// 存储方式（SystemStore、MinIOStore）
+        /// 存储方式（SystemLocalStore、MinIOStore）
         /// </summary>
         public string Type { get; set; }
 

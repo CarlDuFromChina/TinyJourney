@@ -44,7 +44,7 @@ namespace Sixpence.Portal
 
         private static IServiceCollection AddInitData(this IServiceCollection services)
         {
-            services.AddSingleton<IInitDbData, InitDbBusinessData>();
+            services.AddTransient<IInitDbData, InitDbBusinessData>();
             return services;
         }
     }

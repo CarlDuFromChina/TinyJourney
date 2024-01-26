@@ -60,7 +60,7 @@ namespace Sixpence.Web.Service
                 var originFileName = url.Substring(url.LastIndexOf("/") + 1); // 原始图片名
                 var fileType = originFileName.GetFileType(); // 文件类型
                 var fileName = $"{EntityCommon.GenerateGuidNumber()}.{fileType}"; // 新文件名
-                ServiceFactory.Resolve<IStoreStrategy>(config?.Type).Upload(stream, fileName, out var filePath);
+                var filePath = AppContext.Storage.UploadAsync(stream, fileName).Result;
 
                 var data = new SysFile()
                 {

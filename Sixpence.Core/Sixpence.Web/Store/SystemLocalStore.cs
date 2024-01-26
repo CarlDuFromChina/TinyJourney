@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Sixpence.Web.Entity;
@@ -13,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Sixpence.Web.Store
 {
-    public class SystemLocalStore : IStoreStrategy
+    public class SystemLocalStore : IStorage
     {
         private readonly IEntityManager manager;
         private readonly ILogger<SystemLocalStore> logger;
@@ -29,20 +28,20 @@ namespace Sixpence.Web.Store
         /// 批量删除文件
         /// </summary>
         /// <param name="fileName"></param>
-        public void Delete(IList<string> fileName)
+        public async Task DeleteAsync(IList<string> fileName)
         {
-            fileName.ToList().ForEach(item =>
+            foreach (var item in fileName)
             {
                 var filePath = SysFile.GetFilePath(item);
-                FileUtil.DeleteFile(filePath);
-            });
+                await FileUtil.DeleteFileAsync(filePath);
+            }
         }
 
         /// <summary>
         /// 下载文件
         /// </summary>
         /// <param name="filePath"></param>
-        public async Task<IActionResult> DownLoad(string objectId)
+        public async Task<IActionResult> DownloadAsync(string objectId)
         {
             var data = manager.QueryFirst<SysFile>(objectId) ?? manager.QueryFirst<SysFile>(new { hash_code = objectId } );
             var fileInfo = new FileInfo(data.GetFilePath());
@@ -61,10 +60,10 @@ namespace Sixpence.Web.Store
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Stream GetStream(string id)
+        public async Task<Stream> GetStreamAsync(string id)
         {
             var data = manager.QueryFirst<SysFile>(id);
-            return FileUtil.GetFileStream(data.GetFilePath());
+            return await FileUtil.GetFileStreamAsync(data.GetFilePath());
         }
 
         /// <summary>
@@ -72,10 +71,11 @@ namespace Sixpence.Web.Store
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="fileName"></param>
-        public void Upload(Stream stream, string fileName, out string filePath)
+        public async Task<string> UploadAsync(Stream stream, string fileName)
         {
-            filePath = $"{Path.AltDirectorySeparatorChar}storage{Path.AltDirectorySeparatorChar}{fileName}"; // 相对路径
-            FileUtil.SaveFile(stream, SysFile.GetFilePath(fileName));
+            var filePath = $"{Path.AltDirectorySeparatorChar}storage{Path.AltDirectorySeparatorChar}{fileName}"; // 相对路径
+            await FileUtil.SaveFileAsync(stream, SysFile.GetFilePath(fileName));
+            return filePath;
         }
     }
 }

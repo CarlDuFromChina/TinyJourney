@@ -12,8 +12,17 @@ namespace Sixpence.Web
     {
         internal static IServiceProvider Provider { get; set; }
 
+        public static T Resolve<T>()
+        {
+            return Provider.GetService<T>();
+        }
+
         public static T Resolve<T>(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return default;
+            }
             var result = Provider.GetServices<T>();
             return result.Where(x => x.GetType().Name == name).FirstOrDefault();
         }

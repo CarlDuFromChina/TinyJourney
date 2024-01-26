@@ -70,8 +70,7 @@ namespace Sixpence.Web.Service
             var user = Manager.QueryFirst<SysUser>(id);
             if (!string.IsNullOrEmpty(user?.Avatar))
             {
-                var config = StoreConfig.Config;
-                return ServiceFactory.Resolve<IStoreStrategy>(config?.Type).DownLoad(user.Avatar)?.Result;
+                return AppContext.Storage.DownloadAsync(user.Avatar).Result;
             }
             return IdenticonResult.FromValue(id, 64);
         }

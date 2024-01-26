@@ -66,7 +66,7 @@ namespace Sixpence.Web.Service
                 var config = StoreConfig.Config;
                 var id = Guid.NewGuid().ToString();
                 var fileName = $"{EntityCommon.GenerateGuidNumber()}.png";
-                ServiceFactory.Resolve<IStoreStrategy>(config?.Type).Upload(stream, fileName, out var filePath);
+                AppContext.Storage.UploadAsync(stream, fileName).Wait();
 
                 var data = new SysFile()
                 {

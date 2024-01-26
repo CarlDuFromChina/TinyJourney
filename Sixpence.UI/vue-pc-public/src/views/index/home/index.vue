@@ -33,12 +33,12 @@
 </template>
 
 <script>
-import { Links, Idea, BlogList, SeriesList, Me } from './components'
+import { Idea, BlogList, SeriesList, Me } from './components'
 import packageConfig from '../../../../package.json';
 
 export default {
   name: 'home',
-  components: { Links, Idea, BlogList, SeriesList, Me },
+  components: { Idea, BlogList, SeriesList, Me },
   data() {
     return {
       loading: 'false',

@@ -12,6 +12,7 @@ using Sixpence.Common.Crypto;
 using Sixpence.Web.Utils;
 using Sixpence.ORM;
 using Sixpence.ORM.Entity;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
@@ -73,29 +74,36 @@ FROM
 
         public SysFile UploadFile(Stream stream, string fileSuffix, string fileType, string contentType, string objectId, string fileName = "")
         {
-            var id = Guid.NewGuid().ToString();
-            var hash_code = SHAUtil.GetFileSHA1(stream);
-            var newFileName = $"{EntityCommon.GenerateGuidNumber()}.{fileSuffix}"; // GUID 生成文件名
-
-            // 保存图片到本地
-            // TODO：执行失败回滚操作
-            var config = StoreConfig.Config;
-            ServiceFactory.Resolve<IStoreStrategy>(config.Type).Upload(stream, newFileName, out var filePath);
-
-            var sysFile = new SysFile()
+            try
             {
-                Id = id,
-                Name = fileName,
-                RealName = newFileName,
-                HashCode = hash_code,
-                FileType = fileType,
-                ObjectId = objectId,
-                ContentType = contentType,
-                DownloadUrl = GetDownloadUrl(id)
-            };
-            CreateData(sysFile);
+                var id = Guid.NewGuid().ToString();
+                var hash_code = SHAUtil.GetFileSHA1(stream);
+                var newFileName = $"{EntityCommon.GenerateGuidNumber()}.{fileSuffix}"; // GUID 生成文件名
 
-            return sysFile;
+                // 保存图片到本地
+                // TODO：执行失败回滚操作
+                AppContext.Storage.UploadAsync(stream, newFileName).Wait();
+
+                var sysFile = new SysFile()
+                {
+                    Id = id,
+                    Name = fileName,
+                    RealName = newFileName,
+                    HashCode = hash_code,
+                    FileType = fileType,
+                    ObjectId = objectId,
+                    ContentType = contentType,
+                    DownloadUrl = GetDownloadUrl(id)
+                };
+                CreateData(sysFile);
+
+                return sysFile;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new SpException("文件上传失败");
+            }
         }
 
         /// <summary>

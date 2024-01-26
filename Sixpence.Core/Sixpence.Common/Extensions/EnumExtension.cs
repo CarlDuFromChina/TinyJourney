@@ -72,7 +72,7 @@ namespace Sixpence.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static T GetEnum<T>(this string value)
+        public static T ToEnum<T>(this string value)
         {
             Type type = typeof(T);
             var fields = type.GetFields();

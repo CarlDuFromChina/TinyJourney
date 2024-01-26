@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace Sixpence.Web.WebApi
 {
     [ApiController]
-    [WebApiExceptionFilter]
     [Route("api/[controller]")]
     [EnableCors("CorsPolicy")]
     public class BaseApiController : ControllerBase

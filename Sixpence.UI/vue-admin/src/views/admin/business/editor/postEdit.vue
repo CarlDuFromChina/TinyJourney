@@ -348,12 +348,7 @@ export default {
       this.html = render; // render 为 markdown 解析后的结果[html]
     },
     saveData() {
-      // 草稿编辑保存
-      if (this.$route.params.draftId) {
-        this.saveDraft();
-      } else {
-        this.publishModalVisible = true;
-      }
+      this.publishModalVisible = true;
     },
     // 保存博客
     savePost() {

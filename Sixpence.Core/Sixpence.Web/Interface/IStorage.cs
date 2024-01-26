@@ -11,31 +11,31 @@ namespace Sixpence.Web
     /// <summary>
     /// 存储策略接口
     /// </summary>
-    public interface IStoreStrategy
+    public interface IStorage
     {
         /// <summary>
         /// 上传文件
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="fileName"></param>
-        void Upload(Stream stream, string fileName, out string filePath);
+        Task<string> UploadAsync(Stream stream, string fileName);
 
         /// <summary>
         /// 下载文件
         /// </summary>
-        Task<IActionResult> DownLoad(string objectId);
+        Task<IActionResult> DownloadAsync(string objectId);
 
         /// <summary>
         /// 删除文件
         /// </summary>
         /// <param name="fileName"></param>
-        void Delete(IList<string> fileName);
+        Task DeleteAsync(IList<string> fileName);
 
         /// <summary>
         /// 获取文件流
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Stream GetStream(string id);
+        Task<Stream> GetStreamAsync(string id);
     }
 }

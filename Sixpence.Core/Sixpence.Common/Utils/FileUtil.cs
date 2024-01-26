@@ -35,7 +35,7 @@ namespace Sixpence.Common.Utils
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="filePath"></param>
-        public static void SaveFile(Stream stream, string filePath)
+        public async static Task SaveFileAsync(Stream stream, string filePath)
         {
             // 文件已存在
             if (File.Exists(filePath))
@@ -48,8 +48,8 @@ namespace Sixpence.Common.Utils
                 try
                 {
                     var bytes = stream.ToByteArray();
-                    fs.Write(bytes, 0, bytes.Length);
-                    fs.Flush();
+                    await fs.WriteAsync(bytes, 0, bytes.Length);
+                    await fs.FlushAsync();
                 }
                 catch(Exception ex)
                 {
@@ -66,6 +66,14 @@ namespace Sixpence.Common.Utils
         {
             if (File.Exists(filePath))
                 File.Delete(filePath);
+        }
+
+        public async static Task DeleteFileAsync(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                await Task.Run(() => File.Delete(filePath));
+            }
         }
 
         /// <summary>
@@ -130,7 +138,6 @@ namespace Sixpence.Common.Utils
             return null;
         }
 
-        /// <summary>
         /// 获取文件流
         /// </summary>
         /// <param name="filePath"></param>

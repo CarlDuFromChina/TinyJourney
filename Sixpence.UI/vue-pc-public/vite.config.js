@@ -19,33 +19,33 @@ export default defineConfig(( mode ) => {
           {
             name: 'vue',
             var: 'Vue',
-            path: 'https://gcore.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js'
+            path: 'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js'
           },
           {
             name: 'vue-router',
             var: 'VueRouter',
-            path: 'https://gcore.jsdelivr.net/npm/vue-router@3.5.3/dist/vue-router.min.js'
+            path: 'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue-router/3.5.3/vue-router.min.js'
           },
           {
             name: 'vuex',
             var: 'Vuex',
-            path: 'https://gcore.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.min.js'
+            path: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vuex/3.6.2/vuex.min.js'
           },
           {
             name: 'moment',
             var: 'moment',
-            path: 'https://gcore.jsdelivr.net/npm/moment@2.29.1/moment.min.js'
+            path: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/moment.js/2.29.1/moment.min.js'
           },
           {
             name: 'ant-design-vue',
             var: 'antd',
-            path: 'https://gcore.jsdelivr.net/npm/ant-design-vue@1.7.8/dist/antd.min.js',
-            css: 'https://gcore.jsdelivr.net/npm/ant-design-vue@1.7.8/dist/antd.min.css'
+            path: 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/ant-design-vue/1.7.8/antd.min.js',
+            css: 'https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/ant-design-vue/1.7.8/antd.min.css'
           },
           {
             name: 'marked',
             var: 'marked',
-            path: 'https://gcore.jsdelivr.net/npm/marked@2.1.3/marked.min.js'
+            path: 'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/marked/2.1.3/marked.min.js'
           }
         ]
       }),

@@ -4,6 +4,7 @@ using Sixpence.ORM.Entity;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sixpence.Web.EntityPlugin
 {
@@ -32,10 +33,15 @@ namespace Sixpence.Web.EntityPlugin
                             hash_code = entity.HashCode,
                             id = entity.Id
                         };
-                        var dataList = context.EntityManager.Query<SysFile>(param);
-                        if (dataList.IsEmpty())
+
+                        var fileList = context.EntityManager
+                            .Query<SysFile>(param)
+                            .Select(item => item.RealName)
+                            .ToList();
+
+                        if (fileList.IsNotEmpty())
                         {
-                            ServiceFactory.Resolve<IStoreStrategy>(StoreConfig.Config.Type).Delete(new List<string>() { entity.RealName });
+                            AppContext.Storage.DeleteAsync(fileList).Wait();
                         }
                         break;
                         #endregion

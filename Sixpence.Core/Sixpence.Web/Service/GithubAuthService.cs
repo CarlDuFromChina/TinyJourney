@@ -89,10 +89,9 @@ namespace Sixpence.Web.Service
             var stream = result.ToStream();
             var hash_code = SHAUtil.GetFileSHA1(stream);
 
-            var config = StoreConfig.Config;
             var id = Guid.NewGuid().ToString();
             var fileName = $"{EntityCommon.GenerateGuidNumber()}.jpg";
-            ServiceFactory.Resolve<IStoreStrategy>(config?.Type).Upload(stream, fileName, out var filePath);
+            AppContext.Storage.UploadAsync(stream, fileName).Wait();
 
             var data = new SysFile()
             {

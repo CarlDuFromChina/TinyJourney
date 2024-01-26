@@ -121,22 +121,22 @@ namespace Sixpence.Web
 
         private static IServiceCollection AddStorage(this IServiceCollection services)
         {
-            services.AddSingleton<IStoreStrategy, SystemLocalStore>();
+            services.AddSingleton<IStorage, SystemLocalStore>();
             return services;
         }
 
         private static IServiceCollection AddRole(this IServiceCollection services)
         {
-            services.AddSingleton<IRole, AdminRole>();
-            services.AddSingleton<IRole, GuestRole>();
-            services.AddSingleton<IRole, UserRole>();
-            services.AddSingleton<IRole, SystemRole>();
+            services.AddTransient<IRole, AdminRole>();
+            services.AddTransient<IRole, GuestRole>();
+            services.AddTransient<IRole, UserRole>();
+            services.AddTransient<IRole, SystemRole>();
             return services;
         }
 
         private static IServiceCollection AddInitData(this IServiceCollection services)
         {
-            services.AddSingleton<IInitDbData, InitDbData>();
+            services.AddTransient<IInitDbData, InitDbData>();
             return services;
         }
 
@@ -150,8 +150,8 @@ namespace Sixpence.Web
 
         public static IServiceCollection AddSSO(this IServiceCollection services)
         {
-            services.AddScoped<IThirdPartyBindStrategy, GithubUserBind>();
-            services.AddScoped<IThirdPartyBindStrategy, GiteeUserBind>();
+            services.AddTransient<IThirdPartyBindStrategy, GithubUserBind>();
+            services.AddTransient<IThirdPartyBindStrategy, GiteeUserBind>();
             return services;
         }
 

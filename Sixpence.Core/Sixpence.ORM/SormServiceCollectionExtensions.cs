@@ -15,7 +15,7 @@ namespace Sixpence.ORM
 
         public static IServiceCollection AddSorm(this IServiceCollection services, Action<ServiceCollectionOptions> action)
         {
-            services.AddSingleton<IEntityManager, EntityManager>();
+            services.AddTransient<IEntityManager, EntityManager>();
             services.AddTransient<IEntityManagerBeforeCreateOrUpdate, EntityManagerBeforeCreateOrUpdate>();
 
             Options = new ServiceCollectionOptions();

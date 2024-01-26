@@ -7,11 +7,19 @@ using System.Net;
 using System.Security.Authentication;
 using System.Text;
 using Sixpence.Common;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.WebApi
 {
     public class WebApiExceptionFilter : ExceptionFilterAttribute
     {
+        private readonly ILogger<WebApiExceptionFilter> _logger;
+        public WebApiExceptionFilter(IServiceProvider provider)
+        {
+            _logger = provider.GetService<ILoggerFactory>().CreateLogger<WebApiExceptionFilter>();
+        }
+
         // 重写基类的异常处理方法
         public override void OnException(ExceptionContext context)
         {
@@ -77,6 +85,7 @@ namespace Sixpence.Web.WebApi
                 context.Result = result;
                 context.ExceptionHandled = true;
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                _logger.LogError(exception, exception.Message);
             }
 
             base.OnException(context);
