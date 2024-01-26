@@ -34,6 +34,7 @@ namespace Sixpence.ORM.Entity
                     Name = propertyMap.Name,
                     Value = property.GetValue(this) ?? "",
                     DbPropertyMap = propertyMap,
+                    PrimaryType = propertyMap.PrimaryType.GetValueOrDefault(PrimaryType.GUID)
                 };
             }
         }

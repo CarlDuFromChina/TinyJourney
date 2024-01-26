@@ -17,6 +17,7 @@ using Sixpence.ORM;
 using Sixpence.Common.Extensions;
 using Sixpence.Common.Crypto;
 using Sixpence.ORM.Entity;
+using System.Web;
 
 namespace Sixpence.Web.Service
 {
@@ -102,11 +103,12 @@ namespace Sixpence.Web.Service
         /// <summary>
         /// 获取随机图片
         /// </summary>
-        public Gallery GetRandomImage()
+        public async Task<Gallery> GetRandomImage()
         {
-            var result = HttpUtil.Get("https://api.ixiaowai.cn/api/api.php?return=json");
+            var result = await HttpUtil.GetAsync("https://api.aixiaowai.cn/api/api.php?return=json", new Dictionary<string, string>());
             var model = JsonConvert.DeserializeObject<RandomImageModel>(result);
-            var originFileName = model.imgurl.Substring(model.imgurl.LastIndexOf("/") + 1); // 原始图片名
+            // https://api.aixiaowai.cn/api/ap.php?url=0072Vf1pgy1foxlnx4mk0j31hc0u07k9.jpg
+            var originFileName = HttpUtility.ParseQueryString(new Uri(model.imgurl).Query).Get("url");
             var imgBytes = HttpUtil.DownloadImage(model.imgurl, out var contentType);
             var imgStream = imgBytes.ToStream();
             var suffix = model.imgurl.GetFileType();

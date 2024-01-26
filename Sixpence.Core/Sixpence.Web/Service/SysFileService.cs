@@ -157,7 +157,7 @@ FROM
         {
             AssertUtil.IsNullOrEmpty(fileName, "上传文件文件名不能为空");
             var fileNameArr = fileName.Split(".");
-            AssertUtil.IsTrue(fileNameArr.Length != 2, "上传文件文件名格式错误");
+             AssertUtil.IsTrue(fileNameArr.Length != 2, "上传文件文件名格式错误");
             return $"{fileNameArr[0]}_small.{fileNameArr[1]}";
         }
     }

@@ -111,7 +111,7 @@ export default {
         const image = resp[0];
         const thumbnail = resp[1];
 
-        this.data.imageid = image.id;
+        this.data.image_id = image.id;
         this.data.image_url = image.download_url;
         this.bigImage = [
           {
@@ -122,7 +122,7 @@ export default {
           }
         ];
 
-        this.data.previewid = thumbnail.id;
+        this.data.preview_id = thumbnail.id;
         this.data.preview_url = thumbnail.download_url;
         this.smallImage = [
           {
@@ -141,12 +141,12 @@ export default {
       return true;
     },
     removeSmallImg() {
-      this.data.previewid = '';
+      this.data.preview_id = '';
       this.data.preview_url = '';
       this.smallImage = [];
     },
     removeBigImg() {
-      this.data.imageid = '';
+      this.data.image_id = '';
       this.data.image_url = '';
       this.bigImage = [];
     }

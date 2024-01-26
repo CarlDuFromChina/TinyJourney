@@ -140,27 +140,31 @@ namespace Sixpence.Common.Utils
         #endregion
 
         #region 异步
-        /// <summary>
-        /// 异步Get请求
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="headerList"></param>
-        /// <returns></returns>
         public async static Task<string> GetAsync(string url, IDictionary<string, string> headerList)
         {
-            var request = new HttpClient();
-            return await request.GetStringAsync(url);
-        }
-
-        /// <summary>
-        /// 异步Get请i去
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public async static Task<string> GetAsync(string url)
-        {
-            var request = new HttpClient();
-            return await GetAsync(url, null);
+            using (var httpClient = new HttpClient())
+            {
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+                requestMessage.Headers.UserAgent.ParseAdd(DEFAULT_USER_AGENT);
+                if (headerList != null)
+                {
+                    foreach (var header in headerList)
+                    {
+                        requestMessage.Headers.Add(header.Key, header.Value);
+                    }
+                }
+                try
+                {
+                    HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+                    response.EnsureSuccessStatusCode();
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    return responseContent;
+                }
+                catch (HttpRequestException e)
+                {
+                    throw e;
+                }
+            }
         }
 
         /// <summary>

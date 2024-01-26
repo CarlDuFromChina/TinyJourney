@@ -92,9 +92,9 @@ export default {
           id: item.id,
           previewURL: sp.getDownloadUrl(item.preview_url),
           preview_url: item.preview_url,
-          previewid: item.previewid,
+          preview_id: item.preview_id,
           image_url: item.image_url,
-          imageid: item.imageid
+          image_id: item.image_id
         }));
         this.total = resp.count;
       });
@@ -108,7 +108,10 @@ export default {
         )
         .then(resp => {
           if (resp) {
-            this.dataList = resp.hits;
+            this.dataList = resp.hits.map(item => {
+              item.previewURL = item.preview_url;
+              return item;
+            });
             this.total = resp.total;
           }
         });
@@ -147,9 +150,9 @@ export default {
             return;
           }
           this.$emit('selected', {
-            surfaceid: this.selected.previewid,
+            surface_id: this.selected.preview_id,
             surface_url: this.selected.preview_url,
-            big_surfaceid: this.selected.imageid,
+            big_surface_id: this.selected.image_id,
             big_surface_url: this.selected.image_url
           });
           break;
@@ -160,9 +163,9 @@ export default {
           }
           var resp = await this.uploadImages();
           this.$emit('selected', {
-            surfaceid: resp[0],
+            surface_id: resp[0],
             surface_url: `api/sys_file/download?objectId=${resp[0]}`,
-            big_surfaceid: resp[1],
+            big_surface_id: resp[1],
             big_surface_url: `api/sys_file/download?objectId=${resp[1]}`
           });
           break;
@@ -170,9 +173,9 @@ export default {
         case 3: {
           var gallery = await this.getRandomImage();
           this.$emit('selected', {
-            surfaceid: gallery.previewid,
+            surface_id: gallery.preview_id,
             surface_url: gallery.preview_url,
-            big_surfaceid: gallery.imageid,
+            big_surface_id: gallery.imageid,
             big_surface_url: gallery.image_url
           });
           break;

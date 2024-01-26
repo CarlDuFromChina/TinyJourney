@@ -14,12 +14,10 @@ namespace Sixpence.Web.Store
 {
     public class SystemLocalStore : IStorage
     {
-        private readonly IEntityManager manager;
         private readonly ILogger<SystemLocalStore> logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public SystemLocalStore(IEntityManager manager, ILogger<SystemLocalStore> logger, IHttpContextAccessor contextAccessor)
         {
-            this.manager = manager;
             this.logger = logger;
             _httpContextAccessor = contextAccessor;
         }
@@ -43,6 +41,7 @@ namespace Sixpence.Web.Store
         /// <param name="filePath"></param>
         public async Task<IActionResult> DownloadAsync(string objectId)
         {
+            var manager = ServiceFactory.Resolve<IEntityManager>();
             var data = manager.QueryFirst<SysFile>(objectId) ?? manager.QueryFirst<SysFile>(new { hash_code = objectId } );
             var fileInfo = new FileInfo(data.GetFilePath());
             if (fileInfo.Exists)
@@ -62,6 +61,7 @@ namespace Sixpence.Web.Store
         /// <returns></returns>
         public async Task<Stream> GetStreamAsync(string id)
         {
+            var manager = ServiceFactory.Resolve<IEntityManager>();
             var data = manager.QueryFirst<SysFile>(id);
             return await FileUtil.GetFileStreamAsync(data.GetFilePath());
         }

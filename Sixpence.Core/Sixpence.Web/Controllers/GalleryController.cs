@@ -5,6 +5,7 @@ using Sixpence.Web.Model.Pixabay;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Service;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Sixpence.Web.Controllers
 {
@@ -39,9 +40,9 @@ namespace Sixpence.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("random_image"), AllowAnonymous]
-        public Gallery RandomImage()
+        public async Task<Gallery> RandomImage()
         {
-            return new GalleryService().GetRandomImage();
+            return await new GalleryService().GetRandomImage();
         }
     }
 }
