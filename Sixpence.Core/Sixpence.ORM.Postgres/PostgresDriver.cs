@@ -7,8 +7,8 @@ namespace Sixpence.ORM.Postgres
     {
         public string Name => "Postgres";
         public IFieldMapping FieldMapping => new PostgresFieldMapping();
-        public IDbDialect Dialect => new PostgresDialect();
-        public IDbBatch Batch => new PostgresBatch();
+        public ISqlBuilder SqlBuilder => new PostgresSqlBuilder();
+        public IDbOperator Operator => new PostgresOperator();
 
         public DbConnection GetDbConnection(string connectionString)
         {

@@ -97,7 +97,7 @@ namespace Sixpence.ORM.Entity
                 return attribute.Schema;
             }
 
-            return SormServiceCollectionExtensions.Options?.DbSetting?.Driver?.Dialect?.Schema;
+            return SormServiceCollectionExtensions.Options?.DbSetting?.Driver?.SqlBuilder?.Schema;
         }
 
         #region 根据数据库字段名读写

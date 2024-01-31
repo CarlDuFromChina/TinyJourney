@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Sixpence.ORM.Postgres
 {
-    public class PostgresDialect : IDbDialect
+    public class PostgresSqlBuilder : ISqlBuilder
     {
         public char ParameterPrefix => '@';
 
@@ -23,7 +23,7 @@ namespace Sixpence.ORM.Postgres
         /// <param name="tableName">目标表</param>
         /// <param name="tempTableName">临时表表名</param>
         /// <returns></returns>
-        public string GetCreateTemporaryTableSql(string tableName, string tempTableName)
+        public string BuildCreateTemporaryTableSql(string tableName, string tempTableName)
         {
             return $@"CREATE TEMP TABLE {tempTableName}
 ON COMMIT DROP AS SELECT * FROM {tableName}
@@ -36,7 +36,7 @@ WHERE 1!=1;";
         /// <param name="tableName"></param>
         /// <param name="columns"></param>
         /// <returns></returns>
-        public string GetAddColumnSql(string tableName, IList<IDbPropertyMap> columns)
+        public string BuildAddColumnSql(string tableName, IList<IDbPropertyMap> columns)
         {
             var sql = new StringBuilder();
             var tempSql = $@"ALTER TABLE {tableName}";
@@ -57,7 +57,7 @@ WHERE 1!=1;";
         /// <param name="tableName"></param>
         /// <param name="columns"></param>
         /// <returns></returns>
-        public string GetDropColumnSql(string tableName, IList<string> columns)
+        public string BuildDropColumnSql(string tableName, IList<string> columns)
         {
             var sql = $@"
 ALTER TABLE {tableName}
@@ -76,7 +76,7 @@ ALTER TABLE {tableName}
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public string GetTableExsitSql(string tableName)
+        public string BuildTableExsitSql(string tableName)
         {
             return $@"
 SELECT COUNT(1) > 0 FROM pg_tables
@@ -89,7 +89,7 @@ WHERE schemaname = '{Schema}' AND tablename = '{tableName}'";
         /// <param name="sql"></param>
         /// <param name="index"></param>
         /// <param name="size"></param>
-        public string GetPageSql(int? index, int size)
+        public string BuildPageSql(int? index, int size)
         {
             if (index.HasValue)
             {
@@ -102,30 +102,6 @@ WHERE schemaname = '{Schema}' AND tablename = '{tableName}'";
         }
 
         /// <summary>
-        /// 查询表的字段
-        /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        public string GetTableColumnsSql(string tableName)
-        {
-            var sql = $@"
-SELECT 
-	A.attname AS Name,
-	A.attnotnull AS IsRequired,
-	format_type ( A.atttypid, A.atttypmod ) AS Type
-FROM
-	pg_class AS C,
-	pg_attribute AS A 
-WHERE
-	C.relname = '{tableName}' 
-	AND A.attrelid = C.oid 
-	AND A.attnum > 0
-	AND A.atttypid <> 0";
-            return sql;
-        }
-
-        /// <summary>
         /// 创建或更新SQL
         /// </summary>
         /// <param name="tableName"></param>
@@ -134,7 +110,7 @@ WHERE
         /// <param name="primaryKeys"></param>
         /// <param name="updatedValues"></param>
         /// <returns></returns>
-        public string GetCreateOrUpdateSQL(string tableName, string updatedColumns, string values, string primaryKeys, string updatedValues)
+        public string BuildCreateOrUpdateSQL(string tableName, string updatedColumns, string values, string primaryKeys, string updatedValues)
         {
             var templateSQL = $@"INSERT INTO {tableName} ({updatedColumns}) VALUES ({values})
 ON CONFLICT ({primaryKeys}) DO UPDATE SET {updatedValues};";
@@ -146,7 +122,7 @@ ON CONFLICT ({primaryKeys}) DO UPDATE SET {updatedValues};";
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public string GetDropTableSql(string tableName)
+        public string BuildDropTableSql(string tableName)
         {
             return $"DROP TABLE IF EXISTS {tableName}";
         }
@@ -167,7 +143,7 @@ ON CONFLICT ({primaryKeys}) DO UPDATE SET {updatedValues};";
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public string GetInClauseSql(string parameter)
+        public string BuildInClauseSql(string parameter)
         {
             return $"= ANY({parameter})";
         }

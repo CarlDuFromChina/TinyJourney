@@ -59,7 +59,7 @@ WHERE message_type = 'system'",
             var sql = $@"
 UPDATE message_remind
 SET	is_read = true
-WHERE id {Manager.Driver.Dialect.GetInClauseSql("@ids")}
+WHERE id {Manager.Driver.SqlBuilder.BuildInClauseSql("@ids")}
 ";
             Manager.Execute(sql, new { ids = ids.ToArray() });
         }

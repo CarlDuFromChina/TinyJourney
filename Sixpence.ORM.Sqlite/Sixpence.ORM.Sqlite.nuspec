@@ -3,15 +3,15 @@
 	<metadata>
 		<id>$id$</id>
 		<version>3.4.0-preview1</version>
-		<title>Sixpence.ORM.Sqlite</title>
+		<title>Sixpence.ORM.Postgres</title>
 		<authors>Karl Du</authors>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<license type="expression">MIT</license>
 		<!-- <icon>icon.png</icon> -->
 		<projectUrl>https://github.com/CarlDuFromChina/Sixpence.ORM</projectUrl>
-		<description>Sixpence ORM 的 Sqlite 驱动</description>
+		<description>Sixpence ORM 的 Postgres 驱动</description>
 		<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
 		<copyright>$copyright$</copyright>
-		<tags>Dapper ORM Sqlite</tags>
+		<tags>Dapper ORM PostgreSql</tags>
 	</metadata>
 </package>

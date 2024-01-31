@@ -23,8 +23,8 @@ namespace Sixpence.ORM
         public int? CommandTimeout => commandTimeout;
         public IDbConnection DbConnection { get; private set; }
         public IDbDriver Driver => driver; // 数据库驱动
-        public IDbDialect Dialect => driver.Dialect; // 数据库方言
-        public IDbBatch Batch => driver.Batch; // 数据库批量操作
+        public ISqlBuilder SqlBuilder => driver.SqlBuilder; // 数据库方言
+        public IDbOperator Operator => driver.Operator; // 数据库批量操作
 
         internal DbClient(IDbDriver dbDriver, string connectionString, int? commandTimeout)
         {
@@ -229,7 +229,7 @@ namespace Sixpence.ORM
         public string CreateTemporaryTable(string tableName)
         {
             var tempTableName = $"{tableName}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
-            var sql = Driver.Dialect.GetCreateTemporaryTableSql(tableName, tempTableName);
+            var sql = Driver.SqlBuilder.BuildCreateTemporaryTableSql(tableName, tempTableName);
 
             if (EnableLogging)
                 Logger.LogDebug(sql);
@@ -244,7 +244,7 @@ namespace Sixpence.ORM
         /// <param name="tableName"></param>
         public void DropTable(string tableName)
         {
-            var sql = Dialect.GetDropTableSql(tableName);
+            var sql = SqlBuilder.BuildDropTableSql(tableName);
 
             if (EnableLogging)
                 Logger.LogDebug(sql);
@@ -264,6 +264,6 @@ namespace Sixpence.ORM
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
         public void BulkCopy(DataTable dataTable, string tableName)
-            => Batch.BulkCopy(DbConnection, dataTable, tableName);
+            => Operator.BulkCopy(DbConnection, dataTable, tableName);
     }
 }

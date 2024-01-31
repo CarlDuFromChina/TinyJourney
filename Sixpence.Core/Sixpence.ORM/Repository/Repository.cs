@@ -131,13 +131,13 @@ namespace Sixpence.ORM.Repository
             var paramList = new Dictionary<string, object>();
             var tableName = new E().EntityMap.Table;
             var primaryKey = new E().PrimaryColumn.Name;
-            var inClause = string.Join(",", ids.Split(',').Select((id, index) => $"{Manager.Driver.Dialect.ParameterPrefix}id" + index));
+            var inClause = string.Join(",", ids.Split(',').Select((id, index) => $"{Manager.Driver.SqlBuilder.ParameterPrefix}id" + index));
             var sql = $"SELECT * FROM {tableName} WHERE {primaryKey} IN ({inClause})";
             var count = 0;
             ids.Split(',')
                 .Each((id) =>
                 {
-                    paramList.Add($"{Manager.Driver.Dialect.ParameterPrefix}id{count++}", id);
+                    paramList.Add($"{Manager.Driver.SqlBuilder.ParameterPrefix}id{count++}", id);
                 });
             return NativeQuery(sql, paramList);
         }
@@ -173,7 +173,7 @@ namespace Sixpence.ORM.Repository
         /// </summary>
         public void Clear()
         {
-            Manager.Execute($"TRUNCATE TABLE {new E().EntityMap.Table}");
+            Manager.Execute($"TRUNCATE TABLE {new E().EntityMap.FullQualifiedName}");
         }
     }
 }

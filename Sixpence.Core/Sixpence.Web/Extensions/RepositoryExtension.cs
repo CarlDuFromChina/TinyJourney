@@ -20,7 +20,7 @@ namespace Sixpence.Web.Extensions
         public static IEnumerable<E> GetAllEntity<E>(this IRepository<E> repository)
             where E : BaseEntity, new()
         {
-            var sql = $"SELECT *  FROM {new E().EntityMap.Table}";
+            var sql = $"SELECT *  FROM {new E().EntityMap.FullQualifiedName}";
             var data = repository.Manager.Query<E>(sql);
             return data;
         }
@@ -46,7 +46,7 @@ namespace Sixpence.Web.Extensions
 
             var recordCountSql = $"SELECT COUNT(1) FROM ({sql}) AS table1";
             recordCount = repository.Manager.QueryCount(recordCountSql, paramList);
-            sql += repository.Manager.Driver.Dialect.GetPageSql(pageIndex, pageSize);
+            sql += repository.Manager.Driver.SqlBuilder.BuildPageSql(pageIndex, pageSize);
             var data = repository.Manager.FilteredQuery<E>(sql, paramList);
             return data;
         }
@@ -136,7 +136,7 @@ namespace Sixpence.Web.Extensions
         public static IEnumerable<E> FilteredQuery<E>(this IRepository<E> repository)
             where E : BaseEntity, new()
         {
-            return repository.Manager.FilteredQuery<E>($"select * from {new E().EntityMap.Table}");
+            return repository.Manager.FilteredQuery<E>($"select * from {new E().EntityMap.FullQualifiedName}");
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Sixpence.Web.Extensions
         private static void GetSql<E>(ref string sql, IList<SearchCondition> searchList, ref Dictionary<string, object> paramList, string orderBy, EntityView view, string searchValue)
             where E : BaseEntity, new()
         {
-            var entityName = new E().EntityMap.Table;
+            var entityName = new E().EntityMap.FullQualifiedName;
             var count = 0;
 
             var index = sql.IndexOf("where", StringComparison.CurrentCultureIgnoreCase);

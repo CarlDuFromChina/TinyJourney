@@ -1,4 +1,6 @@
-﻿using Npgsql;
+﻿using Dapper;
+using Npgsql;
+using Sixpence.ORM.Mappers;
 using Sixpence.ORM.Postgres.Utils;
 using Sixpence.ORM.Utils;
 using System;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Sixpence.ORM.Postgres
 {
-    public class PostgresBatch : IDbBatch
+    public class PostgresOperator : IDbOperator
     {
         public void BulkCopy(IDbConnection conn, DataTable dataTable, string tableName)
         {
@@ -56,6 +58,25 @@ namespace Sixpence.ORM.Postgres
                 }
                 writer.Complete();
             }
+        }
+
+        public IEnumerable<IDbPropertyMap> GetTableColumns(IDbConnection connection, string tableName)
+        {
+            var sql = $@"
+SELECT 
+	A.attname AS Name,
+	NOT A.attnotnull AS CanBeNull,
+	format_type ( A.atttypid, A.atttypmod ) AS DbType
+FROM
+	pg_class AS C,
+	pg_attribute AS A 
+WHERE
+	C.relname = @relname 
+	AND A.attrelid = C.oid 
+	AND A.attnum > 0
+	AND A.atttypid <> 0";
+            var result = connection.Query<DbPropertyMap>(sql, new { relname = tableName });
+            return result;
         }
     }
 }

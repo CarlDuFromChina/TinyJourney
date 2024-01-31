@@ -6,6 +6,7 @@ using Quartz;
 using Sixpence.Common;
 using Sixpence.ORM;
 using Sixpence.ORM.Postgres;
+using Sixpence.ORM.Sqlite;
 using Sixpence.ORM.Repository;
 using Sixpence.Web.Auth.Gitee;
 using Sixpence.Web.Auth.Github;
@@ -79,10 +80,13 @@ namespace Sixpence.Web
             // 4. 添加数据库连接
             services.AddSorm(options =>
             {
-                switch (DriverType.Postgresql)
+                switch (DBSourceConfig.Config.DriverType.ToEnum<DriverType>())
                 {
                     case DriverType.Postgresql:
                         options.UsePostgres(DBSourceConfig.Config.ConnectionString, DBSourceConfig.Config.CommandTimeOut);
+                        break;
+                    case DriverType.Sqlite:
+                        options.UseSqlite(DBSourceConfig.Config.ConnectionString, DBSourceConfig.Config.CommandTimeOut);
                         break;
                     default:
                         throw new SpException("unsupported driver type");

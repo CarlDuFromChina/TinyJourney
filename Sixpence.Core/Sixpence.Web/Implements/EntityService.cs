@@ -55,7 +55,7 @@ namespace Sixpence.Web
         /// <returns></returns>
         public virtual IList<EntityView> GetViewList()
         {
-            var sql = $"SELECT * FROM {new T().EntityMap.Table} WHERE 1=1";
+            var sql = $"SELECT * FROM {new T().EntityMap.FullQualifiedName} WHERE 1=1";
             return new List<EntityView>()
             {
                 new EntityView()

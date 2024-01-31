@@ -70,12 +70,12 @@ namespace Sixpence.ORM
                 foreach (var attr in EntityCommon.GetDbColumns(entity))
                 {
                     var attrName = attr.Key; // 列名
-                    var keyValue = Driver.Dialect.HandleParameter($"{Driver.Dialect.ParameterPrefix}{attrName}", attr.Value); // 值
+                    var keyValue = Driver.SqlBuilder.HandleParameter($"{Driver.SqlBuilder.ParameterPrefix}{attrName}", attr.Value); // 值
                     attrs.Add(attrName);
                     values.Add(keyValue.name);
                     paramList.Add(keyValue.name, keyValue.value);
                 }
-                sql = string.Format(sql, $"{entity.EntityMap.Schema}.{entity.EntityMap.Table}", string.Join(",", attrs), string.Join(",", values));
+                sql = string.Format(sql, $"{entity.EntityMap.FullQualifiedName}", string.Join(",", attrs), string.Join(",", values));
                 this.Execute(sql, paramList);
 
                 #region 创建后 Plugin
@@ -102,7 +102,7 @@ namespace Sixpence.ORM
         {
             var entity = ServiceContainer.Provider.GetServices<IEntity>().FirstOrDefault(item => item.EntityMap.Table == tableName) as BaseEntity;
             AssertUtil.IsNull(entity, $"未找到实体：{tableName}");
-            var sql = $"SELECT * FROM {tableName} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefix}id";
+            var sql = $"SELECT * FROM {tableName} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPrefix}id";
             var dataList = DbClient.Query(sql, new { id });
 
             if (dataList.Rows.Count == 0) return 0;
@@ -115,7 +115,7 @@ namespace Sixpence.ORM
 
             plugins?.Each(item => item.Execute(new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PreDelete }));
 
-            sql = $"DELETE FROM {tableName} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefix}id";
+            sql = $"DELETE FROM {tableName} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPrefix}id";
             int result = this.Execute(sql, new { id });
 
             plugins?.Each(item => item.Execute(new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PostDelete }));
@@ -136,7 +136,7 @@ namespace Sixpence.ORM
 
                 plugins?.Each(item => item.Execute(new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = entity.EntityMap.Table, Action = EntityAction.PreDelete }));
                 
-                var sql = $"DELETE FROM {entity.EntityMap.Table} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefix}id";
+                var sql = $"DELETE FROM {entity.EntityMap.Table} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPrefix}id";
                 int result = this.Execute(sql, new { id = entity.PrimaryColumn?.Value });
 
                 plugins?.Each(item => item.Execute(new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = entity.EntityMap.Table, Action = EntityAction.PostDelete }));
@@ -174,21 +174,21 @@ namespace Sixpence.ORM
         public int Delete<TEntity>(string id) where TEntity : BaseEntity, new()
         {
             var t = new TEntity();
-            var tableName = t.EntityMap.Table;
+            var tableName = t.EntityMap.FullQualifiedName;
             var primaryKeyName = t.PrimaryColumn.DbPropertyMap.Name;
-            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} = {Driver.Dialect.ParameterPrefix}id";
+            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} = {Driver.SqlBuilder.ParameterPrefix}id";
             return this.Execute(sql, new { id });
         }
 
         public int Delete<TEntity>(object param) where TEntity : BaseEntity, new()
         {
             var t = new TEntity();
-            var tableName = t.EntityMap.Table;
+            var tableName = t.EntityMap.FullQualifiedName;
             var sql = $"DELETE FROM {tableName} WHERE  1 = 1";
             var keyValues = param.ToDictionary();
             foreach (var item in keyValues)
             {
-                sql += $" AND {item.Key} = {Driver.Dialect.ParameterPrefix}{item.Key}";
+                sql += $" AND {item.Key} = {Driver.SqlBuilder.ParameterPrefix}{item.Key}";
             }
             return this.Execute(sql, param);
         }
@@ -201,8 +201,8 @@ namespace Sixpence.ORM
         public string Save(BaseEntity entity)
         {
             var sql = $@"
-SELECT * FROM {entity.EntityMap.Table}
-WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefix}id;
+SELECT * FROM {entity.EntityMap.FullQualifiedName}
+WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPrefix}id;
 ";
             var dataList = this.Query(sql, new { id = entity.PrimaryColumn?.Value });
 
@@ -223,9 +223,9 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
         {
             return this.ExecuteTransaction(() =>
             {
-                var tableName = entity.EntityMap.Table;
+                var tableName = entity.EntityMap.FullQualifiedName;
                 var primaryKeyName = entity.PrimaryColumn.DbPropertyMap.Name;
-                var prefix = Driver.Dialect.ParameterPrefix;
+                var prefix = Driver.SqlBuilder.ParameterPrefix;
 
                 #region 更新前 Plugin
                 var context = new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PreUpdate };
@@ -248,7 +248,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
                     var parameterName = $"{prefix}{item.DbPropertyMap.Name}"; // 定义参数化 @user_name
 
                     // 处理特殊类型
-                    var parameter = Driver.Dialect.HandleParameter(parameterName, item.Value);
+                    var parameter = Driver.SqlBuilder.HandleParameter(parameterName, item.Value);
                     if (string.IsNullOrEmpty(parameter.name))
                         parameter.name = parameterName;
                     if (parameter.value == null)
@@ -361,9 +361,9 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
         public T QueryFirst<T>(string id) where T : BaseEntity, new()
         {
             var t = new T();
-            var tableName = t.EntityMap.Table;
+            var tableName = t.EntityMap.FullQualifiedName;
             var primaryKeyName = t.PrimaryColumn.DbPropertyMap.Name;
-            var sql = $"SELECT * FROM {tableName} WHERE {primaryKeyName} = {Driver.Dialect.ParameterPrefix}id";
+            var sql = $"SELECT * FROM {tableName} WHERE {primaryKeyName} = {Driver.SqlBuilder.ParameterPrefix}id";
             return QueryFirst<T>(sql, new { id });
         }
 
@@ -388,10 +388,10 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
         public T QueryFirst<T>(object? param = null) where T : BaseEntity, new()
         {
             var entityMap = new T().EntityMap;
-            var sql = new StringBuilder($"SELECT * FROM {entityMap.Schema}.{entityMap.Table} WHERE 1 = 1");
+            var sql = new StringBuilder($"SELECT * FROM {entityMap.FullQualifiedName} WHERE 1 = 1");
             param
                 .ToDictionary()
-                .Each(item => sql.Append($" AND {item.Key} = {Driver.Dialect.ParameterPrefix}{item.Key}"));
+                .Each(item => sql.Append($" AND {item.Key} = {Driver.SqlBuilder.ParameterPrefix}{item.Key}"));
 
             return DbClient.QueryFirst<T>(sql.ToString(), param);
         }
@@ -440,10 +440,10 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
         public IEnumerable<T> Query<T>(object? param = null) where T : BaseEntity, new()
         {
             var entityMap = new T().EntityMap;
-            var sql = new StringBuilder($"select * from {entityMap.Schema}.{entityMap.Table} where 1 = 1");
+            var sql = new StringBuilder($"select * from {entityMap.FullQualifiedName} where 1 = 1");
             param
                 .ToDictionary()
-                .Each(item => sql.Append($" and {item.Key} = {Driver.Dialect.ParameterPrefix}{item.Key}"));
+                .Each(item => sql.Append($" and {item.Key} = {Driver.SqlBuilder.ParameterPrefix}{item.Key}"));
 
             return DbClient.Query<T>(sql.ToString(), param);
         }
@@ -468,7 +468,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
                     sql += $" {orderby}";
             }
 
-            sql += $" {DbClient.Driver.Dialect.GetPageSql(pageIndex, pageSize)}";
+            sql += $" {DbClient.Driver.SqlBuilder.BuildPageSql(pageIndex, pageSize)}";
             return Query<T>(sql, param);
         }
 
@@ -500,12 +500,12 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
         public IEnumerable<T> Query<T>(IList<string> ids) where T : BaseEntity, new()
         {
             var paramList = new Dictionary<string, object>();
-            var tableName = new T().EntityMap.Table;
+            var tableName = new T().EntityMap.FullQualifiedName;
             var primaryKey = new T().PrimaryColumn?.DbPropertyMap.Name;
-            var inClause = string.Join(",", ids.Select((id, index) => $"{Driver.Dialect.ParameterPrefix}id" + index));
+            var inClause = string.Join(",", ids.Select((id, index) => $"{Driver.SqlBuilder.ParameterPrefix}id" + index));
             var sql = $"SELECT * FROM {tableName} WHERE {primaryKey} IN ({inClause})";
             var count = 0;
-            ids.Each((id) => paramList.Add($"{Driver.Dialect.ParameterPrefix}id{count++}", id));
+            ids.Each((id) => paramList.Add($"{Driver.SqlBuilder.ParameterPrefix}id{count++}", id));
             return Query<T>(sql, paramList);
         }
         #endregion
@@ -612,7 +612,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
             if (dataList.IsEmpty()) return;
 
             var t = new TEntity();
-            var tableName = t.EntityMap.Table;
+            var tableName = t.EntityMap.FullQualifiedName;
             var primaryKey = t.PrimaryColumn?.DbPropertyMap.Name;
             var dt = Query($"select * from {tableName} WHERE 1 <> 1");
             dataList.ForEach(entity =>
@@ -665,7 +665,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.Dialect.ParameterPrefi
 
             var t = new TEntity();
             var mainKeyName = t.PrimaryColumn?.DbPropertyMap.Name; // 主键
-            var tableName = t.EntityMap.Table; // 表名
+            var tableName = t.EntityMap.FullQualifiedName; // 表名
             var dt = DbClient.Query($"SELECT * FROM {tableName} WHERE 1 <> 1");
             dataList.ForEach(entity =>
             {
@@ -735,7 +735,7 @@ AND {tempTableName}.{primaryKeyName} IS NOT NULL
             if (dataList.IsEmpty()) return;
 
             var primaryKeyName = new TEntity().PrimaryColumn?.DbPropertyMap.Name; // 主键
-            var tableName = new TEntity().EntityMap.Table; // 表名
+            var tableName = new TEntity().EntityMap.FullQualifiedName; // 表名
             var dt = DbClient.Query($"SELECT * FROM {tableName} WHERE 1 <> 1");
 
             BulkCreateOrUpdate(tableName, primaryKeyName, EntityCommon.ParseToDataTable(dataList, dt.Columns), updateFieldList);
@@ -807,12 +807,12 @@ AND {tempTableName}.{primaryKeyName} IS NOT NULL
             }
 
             var t = new TEntity();
-            var dialect = Driver.Dialect;
-            var tableName = t.EntityMap.Table;
+            var dialect = Driver.SqlBuilder;
+            var tableName = t.EntityMap.FullQualifiedName;
             var primaryKeyName = t.PrimaryColumn.DbPropertyMap.Name;
             var idList = dataList.Select(item => item.PrimaryColumn.Value.ToString()).ToArray();
 
-            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} {dialect.GetInClauseSql(dialect.ParameterPrefix + "ids")}";
+            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} {dialect.BuildInClauseSql(dialect.ParameterPrefix + "ids")}";
             DbClient.Execute(sql, new { ids = idList });
         }
         #endregion

@@ -62,7 +62,7 @@ namespace Sixpence.Web.Extensions
         public static string FilteredCreateOrUpdateData(this IEntityManager manager, BaseEntity entity)
         {
             var id = entity.PrimaryColumn.Value?.ToString();
-            var isExist = manager.QueryCount($"select count(1) from {entity.EntityMap.Table} where {entity.PrimaryColumn.Name?.ToString()} = @id", new Dictionary<string, object>() { { "@id", entity.PrimaryColumn.Value?.ToString() } }) > 0;
+            var isExist = manager.QueryCount($"select count(1) from {entity.EntityMap.FullQualifiedName} where {entity.PrimaryColumn.Name?.ToString()} = @id", new Dictionary<string, object>() { { "@id", entity.PrimaryColumn.Value?.ToString() } }) > 0;
             if (isExist)
             {
                 manager.Update(entity);

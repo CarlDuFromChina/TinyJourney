@@ -77,7 +77,7 @@ FROM
                 var dataList = Manager.Query<SysEntity>(ids).ToList();
                 base.DeleteData(ids); // 删除实体
                 var sql = $@"
-DELETE FROM sys_attrs WHERE entity_id {Manager.Driver.Dialect.GetInClauseSql("@ids")};
+DELETE FROM sys_attrs WHERE entity_id {Manager.Driver.SqlBuilder.BuildInClauseSql("@ids")};
 ";
                 Manager.Execute(sql, new { ids }); // 删除级联字段
                 dataList.ForEach(data =>

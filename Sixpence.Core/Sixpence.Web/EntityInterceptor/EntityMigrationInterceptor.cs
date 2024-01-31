@@ -78,7 +78,7 @@ namespace Sixpence.Web.EntityInterceptor
                     {
                         var sql = @"DELETE FROM sys_attrs WHERE lower(code) = @code AND entityid = @entityid";
                         manager.Execute(sql, new Dictionary<string, object>() { { "@code", attr.ToLower() }, { "@entityid", entity.Id } });
-                        sql = manager.Driver.Dialect.GetDropColumnSql(item.EntityMap.Table, new List<string>() { attr });
+                        sql = manager.Driver.SqlBuilder.BuildDropColumnSql(item.EntityMap.Table, new List<string>() { attr });
                         manager.Execute(sql);
                         logger.LogDebug($"实体{entity.Name} （{entity.Code}）删除字段：{attr}");
                     }

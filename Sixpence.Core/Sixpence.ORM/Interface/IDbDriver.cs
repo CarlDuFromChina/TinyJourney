@@ -23,12 +23,12 @@ namespace Sixpence.ORM
         /// <summary>
         /// 数据库方言
         /// </summary>
-        IDbDialect Dialect { get; }
+        ISqlBuilder SqlBuilder { get; }
 
         /// <summary>
         /// 批量操作
         /// </summary>
-        IDbBatch Batch { get; }
+        IDbOperator Operator { get; }
 
         /// <summary>
         /// 获取数据库连接对象

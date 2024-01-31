@@ -67,10 +67,9 @@ namespace Sixpence.ORM
                 {
                     var entityMap = item.EntityMap;
                     var tableName = entityMap.Table;
-                    var schema = entityMap.Schema;
                     var propertyMapList = entityMap.Properties.ToList();
 
-                    var tableExsit = ConvertUtil.ConToBoolean(manager.ExecuteScalar(driver.Dialect.GetTableExsitSql(tableName)));
+                    var tableExsit = ConvertUtil.ConToBoolean(manager.ExecuteScalar(driver.SqlBuilder.BuildTableExsitSql(tableName)));
 
                     // 表未创建则创建，否则自动添加字段
                     if (!tableExsit)
@@ -92,7 +91,7 @@ namespace Sixpence.ORM
                                 return $"{e.Name} {e.DbType}{lengthSQL} {requireSQL} {uniqueSQL} {primaryKeySQL} {defaultValueSQL}";
                             })
                             .Aggregate((a, b) => a + ",\r\n" + b);
-                        manager.Execute($@"CREATE TABLE {schema}.{tableName} ({attrSql})");
+                        manager.Execute($@"CREATE TABLE {entityMap.FullQualifiedName} ({attrSql})");
 
                         context.Action = EntityMigrationAction.PostUpdateEntity;
                         interceptor?.Execute(context);
@@ -102,8 +101,7 @@ namespace Sixpence.ORM
                     }
                     else
                     {
-                        var getTableColumnsSql = driver.Dialect.GetTableColumnsSql(tableName);
-                        var columns = manager.Query<DbPropertyMap>(getTableColumnsSql).ToList();
+                        var columns = driver.Operator.GetTableColumns(manager.DbClient.DbConnection, tableName).ToList();
                         var addColumns = new List<IDbPropertyMap>(); // 表需要添加的字段
                         var removeColumns = new List<IDbPropertyMap>(); // 表需要删除的字段
 
@@ -129,11 +127,11 @@ namespace Sixpence.ORM
 
                         // 删除字段
                         if (removeColumns.IsNotEmpty())
-                            manager.Execute(driver.Dialect.GetDropColumnSql(tableName, removeColumns.Select(item => item.Name).ToList()));
+                            manager.Execute(driver.SqlBuilder.BuildDropColumnSql(tableName, removeColumns.Select(item => item.Name).ToList()));
 
                         // 新增字段
                         if (addColumns.IsNotEmpty())
-                            manager.Execute(driver.Dialect.GetAddColumnSql(tableName, addColumns));
+                            manager.Execute(driver.SqlBuilder.BuildAddColumnSql(tableName, addColumns));
                     }
                 });
 

@@ -55,13 +55,13 @@ namespace Sixpence.Web
             switch (driverType)
             {
                 case DriverType.Postgresql:
-                    this.DbDialect = new PostgresDialect();
+                    this.DbDialect = new PostgresSqlBuilder();
                     break;
                 default:
                     throw new SpException("不支持的数据库类型");
             }
         }
         public DriverType DriverType { get; set; }
-        public IDbDialect DbDialect { get; set; }
+        public ISqlBuilder DbDialect { get; set; }
     }
 }
