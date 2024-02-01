@@ -80,14 +80,21 @@ namespace Sixpence.Web
             // 4. 添加数据库连接
             services.AddSorm(options =>
             {
-                switch (DBSourceConfig.Config.DriverType.ToEnum<DriverType>())
+                var driverType = DBSourceConfig.Config.DriverType.ToEnum<DriverType>();
+                var connectionString = DBSourceConfig.Config.ConnectionString;
+                var timeout = DBSourceConfig.Config.CommandTimeOut;
+
+                switch (driverType)
                 {
                     case DriverType.Postgresql:
-                        options.UsePostgres(DBSourceConfig.Config.ConnectionString, DBSourceConfig.Config.CommandTimeOut);
+                        options.UsePostgres(connectionString, timeout);
                         break;
                     case DriverType.Sqlite:
-                        options.UseSqlite(DBSourceConfig.Config.ConnectionString, DBSourceConfig.Config.CommandTimeOut);
+                        options.UseSqlite(connectionString, timeout);
                         break;
+                    case DriverType.MySql:
+                    case DriverType.SqlServer:
+                    case DriverType.Oracle:
                     default:
                         throw new SpException("unsupported driver type");
                 }

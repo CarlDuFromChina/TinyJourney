@@ -71,7 +71,7 @@ namespace Sixpence.ORM
                 {
                     var attrName = attr.Key; // 列名
                     var keyValue = Driver.SqlBuilder.HandleParameter($"{Driver.SqlBuilder.ParameterPrefix}{attrName}", attr.Value); // 值
-                    attrs.Add(attrName);
+                    attrs.Add($@"""{attrName}""");
                     values.Add(keyValue.name);
                     paramList.Add(keyValue.name, keyValue.value);
                 }
@@ -257,7 +257,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
                     paramList.Add(parameter.name, parameter.value); // :user_name, 'admin'
                     if (item.Name != entity.PrimaryColumn.Name)
                     {
-                        attributes.Add($"{item.DbPropertyMap.Name} = {parameter.name}"); // user_name = :user_name
+                        attributes.Add($@"""{item.DbPropertyMap.Name}"" = {parameter.name}"); // user_name = :user_name
                     }
                     else
                     {
@@ -807,13 +807,13 @@ AND {tempTableName}.{primaryKeyName} IS NOT NULL
             }
 
             var t = new TEntity();
-            var dialect = Driver.SqlBuilder;
+            var sqlBuilder = Driver.SqlBuilder;
             var tableName = t.EntityMap.FullQualifiedName;
             var primaryKeyName = t.PrimaryColumn.DbPropertyMap.Name;
             var idList = dataList.Select(item => item.PrimaryColumn.Value.ToString()).ToArray();
-
-            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} {dialect.BuildInClauseSql(dialect.ParameterPrefix + "ids")}";
-            DbClient.Execute(sql, new { ids = idList });
+            var inSqlResult = sqlBuilder.BuildInClauseSql("ids", 1, idList.Cast<object>().ToList());
+            var sql = $"DELETE FROM {tableName} WHERE {primaryKeyName} {inSqlResult.sql}";
+            DbClient.Execute(sql, inSqlResult.param);
         }
         #endregion
     }

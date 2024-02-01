@@ -123,7 +123,7 @@ FROM
             {
                 // 上传大图
                 var image = UploadFile(stream, suffix, fileType, contentType, objectId, file.FileName);
-                var thumbStream = ImageHelper.GetThumbnail(image.GetFilePath());
+                var thumbStream = ImageHelper.CreateThumbnail(image.GetFilePath(), 240, 160);
                 var image2 = UploadFile(thumbStream, suffix, fileType, contentType, objectId, GetPreviewImageFileName(file.FileName));
                 return new List<FileInfoModel>()
                 {

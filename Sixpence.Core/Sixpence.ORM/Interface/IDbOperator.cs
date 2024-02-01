@@ -18,7 +18,7 @@ namespace Sixpence.ORM
         /// <param name="conn"></param>
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
-        void BulkCopy(IDbConnection conn, DataTable dataTable, string tableName);
+        void BulkCopy(IDbConnection conn, IDbTransaction transaction, DataTable dataTable, string tableName);
 
         /// <summary>
         /// 获取表字段

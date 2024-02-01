@@ -14,7 +14,7 @@ namespace Sixpence.ORM.Postgres
 {
     public class PostgresOperator : IDbOperator
     {
-        public void BulkCopy(IDbConnection conn, DataTable dataTable, string tableName)
+        public void BulkCopy(IDbConnection conn, IDbTransaction transaction, DataTable dataTable, string tableName)
         {
             var columnNameList = (from DataColumn column in dataTable.Columns select column.ColumnName.ToLower())
                 .ToList();

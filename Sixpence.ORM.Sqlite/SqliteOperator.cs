@@ -1,9 +1,9 @@
 ﻿using Dapper;
+using Microsoft.Data.Sqlite;
 using Sixpence.ORM.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,55 +12,77 @@ namespace Sixpence.ORM.Sqlite
 {
     internal class SqliteOperator : IDbOperator
     {
-        public void BulkCopy(IDbConnection conn, DataTable dataTable, string tableName)
+        public void BulkCopy(IDbConnection conn, IDbTransaction transaction, DataTable dataTable, string tableName)
         {
-            // 确保连接是 SQLiteConnection 类型
-            if (conn is SQLiteConnection sqliteConn)
+            // 构建插入命令的文本
+            var commandText = BuildInsertCommandText(dataTable, tableName);
+
+            // 打开数据库连接
+            if (conn.State != ConnectionState.Open)
             {
-                // 打开连接（如果尚未打开）
-                if (sqliteConn.State != ConnectionState.Open)
+                conn.Open();
+            }
+
+            bool needCommit = false;
+
+            try
+            {
+                if (transaction == null)
                 {
-                    sqliteConn.Open();
+                    transaction = conn.BeginTransaction();
+                    needCommit = true;
                 }
 
-                // 开始一个事务
-                using (var transaction = sqliteConn.BeginTransaction())
+                foreach (DataRow row in dataTable.Rows)
                 {
-                    // 构建插入命令的基本部分
-                    var columns = string.Join(", ", dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
-                    var parameters = string.Join(", ", dataTable.Columns.Cast<DataColumn>().Select(c => "@" + c.ColumnName));
-                    var cmdText = $"INSERT INTO {tableName} ({columns}) VALUES ({parameters})";
-
-                    using (var command = new SQLiteCommand(cmdText, sqliteConn))
+                    using (var cmd = new SqliteCommand(commandText, conn as SqliteConnection))
                     {
-                        // 为命令添加参数
+                        cmd.Transaction = transaction as SqliteTransaction;
                         foreach (DataColumn column in dataTable.Columns)
                         {
-                            command.Parameters.Add(new SQLiteParameter("@" + column.ColumnName));
+                            cmd.Parameters.AddWithValue($"@{column.ColumnName}", row[column]);
                         }
-
-                        // 遍历 DataTable 中的所有行
-                        foreach (DataRow row in dataTable.Rows)
-                        {
-                            // 更新参数值
-                            foreach (SQLiteParameter parameter in command.Parameters)
-                            {
-                                parameter.Value = row[parameter.ParameterName.Substring(1)] ?? DBNull.Value;
-                            }
-
-                            // 执行命令
-                            command.ExecuteNonQuery();
-                        }
+                        cmd.ExecuteNonQuery();
                     }
+                }
 
-                    // 提交事务
+                if (needCommit)
+                {
                     transaction.Commit();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                throw new ArgumentException("The provided IDbConnection is not a SQLiteConnection.");
+                if (needCommit)
+                {
+                    transaction.Rollback();
+                    transaction.Dispose();
+                }
+                else
+                {
+                    throw ex;
+                }
             }
+        }
+
+        private string BuildInsertCommandText(DataTable dataTable, string tableName)
+        {
+            var columnNames = new StringBuilder();
+            var values = new StringBuilder();
+
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                if (columnNames.Length > 0)
+                {
+                    columnNames.Append(", ");
+                    values.Append(", ");
+                }
+
+                columnNames.Append(column.ColumnName);
+                values.Append($"@{column.ColumnName}");
+            }
+
+            return $"INSERT INTO {tableName} ({columnNames}) VALUES ({values})";
         }
 
         public IEnumerable<IDbPropertyMap> GetTableColumns(IDbConnection connection, string tableName)

@@ -83,10 +83,9 @@ WHERE sys_param_group.code = @code
         {
             Manager.ExecuteTransaction(() =>
             {
-                var sql = $@"
-DELETE FROM sys_param WHERE sys_param_group_id {Manager.Driver.SqlBuilder.BuildInClauseSql("@ids")}
-";
-                Manager.Execute(sql, new { ids });
+                var inSqlResult = Manager.Driver.SqlBuilder.BuildInClauseSql("sys_param_group_id", 0, ids.Cast<object>().ToList());
+                var sql = $@"DELETE FROM sys_param WHERE sys_param_group_id {inSqlResult.sql}";
+                Manager.Execute(sql, inSqlResult.param);
                 base.DeleteData(ids);
             });
         }

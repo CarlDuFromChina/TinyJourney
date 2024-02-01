@@ -80,7 +80,7 @@ namespace Sixpence.ORM
         #region 事务
 
         private IDbTransaction _trans;
-        private int _transCounter;
+        private int _transCounter = 0;
 
         /// <summary>
         /// 开启事务
@@ -264,6 +264,6 @@ namespace Sixpence.ORM
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
         public void BulkCopy(DataTable dataTable, string tableName)
-            => Operator.BulkCopy(DbConnection, dataTable, tableName);
+            => Operator.BulkCopy(DbConnection, _trans, dataTable, tableName);
     }
 }

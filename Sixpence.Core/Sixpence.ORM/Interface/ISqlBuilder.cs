@@ -86,10 +86,12 @@ namespace Sixpence.ORM
         (string name, object value) HandleParameter(string name, object value);
 
         /// <summary>
-        /// 获取不同数据库的 IN 语法，例如：PG 里使用 Any 代替 IN
+        /// 获取不同数据库的 IN 语法，例如：PG 里使用 Any 代替 IN，SQL Server 里使用 In
+        /// Any([1, 2, 3])
+        /// IN (1, 2, 3)
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        string BuildInClauseSql(string parameter);
+        (string sql, Dictionary<string, object> param) BuildInClauseSql(string parameter, int count, List<object> value, bool isNotIn = false);
     }
 }

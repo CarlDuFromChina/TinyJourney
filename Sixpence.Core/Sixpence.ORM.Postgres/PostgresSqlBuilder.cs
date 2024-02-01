@@ -143,9 +143,13 @@ ON CONFLICT ({primaryKeys}) DO UPDATE SET {updatedValues};";
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public string BuildInClauseSql(string parameter)
+        public (string sql, Dictionary<string, object> param) BuildInClauseSql(string parameter, int count, List<object> value, bool isNotIn = false)
         {
-            return $"= ANY({parameter})";
+            if (isNotIn)
+            {
+                return ($@"<> ANY({ParameterPrefix}{parameter}{count})", new Dictionary<string, object>() { { $"{ParameterPrefix}{parameter}", value } });
+            }
+            return ($@"= ANY({ParameterPrefix}{parameter}{count})", new Dictionary<string, object>() { { $"{ParameterPrefix}{parameter}", value } });
         }
     }
 }

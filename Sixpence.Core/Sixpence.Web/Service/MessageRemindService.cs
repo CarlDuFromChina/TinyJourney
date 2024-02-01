@@ -56,12 +56,13 @@ WHERE message_type = 'system'",
 
         public void ReadMessage(IEnumerable<string> ids)
         {
+            var inSqlResult = Manager.Driver.SqlBuilder.BuildInClauseSql("id", 0, ids.Cast<object>().ToList());
             var sql = $@"
 UPDATE message_remind
 SET	is_read = true
-WHERE id {Manager.Driver.SqlBuilder.BuildInClauseSql("@ids")}
+WHERE id {inSqlResult.sql}
 ";
-            Manager.Execute(sql, new { ids = ids.ToArray() });
+            Manager.Execute(sql, inSqlResult.param);
         }
 
         public override DataModel<MessageRemind> GetDataList(IList<SearchCondition> searchList, string orderBy, int pageSize, int pageIndex, string viewId = "", string searchValue = "")

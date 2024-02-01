@@ -10,8 +10,6 @@ namespace Sixpence.Web.Utils
 {
     public class ParseSqlUtil
     {
-        private char ParameterPrefix = AppContext.DB.DbDialect.ParameterPrefix;
-
         /// <summary>
         /// 获取筛选SQL
         /// </summary>
@@ -22,27 +20,36 @@ namespace Sixpence.Web.Utils
         /// <returns></returns>
         public static (string sql, Dictionary<string, object> paramsList) GetSearchCondition(SearchType type, string paramName, object value, ref int count)
         {
+            var sqlBuilder = AppContext.DbDriver.SqlBuilder;
+            var ParameterPrefix = sqlBuilder.ParameterPrefix;
+
             switch (type)
             {
                 case SearchType.Equals:
-                    return ($"= @{paramName}{count}", new Dictionary<string, object>() { { $"@{paramName}{count++}", value } });
+                    return ($"= {ParameterPrefix}{paramName}{count}", new Dictionary<string, object>() { { $"{ParameterPrefix}{paramName}{count++}", value } });
                 case SearchType.Like:
-                    return ($"LIKE @{paramName}{count}", new Dictionary<string, object>() { { $"@{paramName}{count++}", value } });
+                    return ($"LIKE {ParameterPrefix}{paramName}{count}", new Dictionary<string, object>() { { $"{ParameterPrefix}{paramName}{count++}", value } });
                 case SearchType.Greater:
-                    return ($"> @{paramName}{count}", new Dictionary<string, object>() { { $"@{paramName}{count++}", value } });
+                    return ($"> {ParameterPrefix}{paramName}{count}", new Dictionary<string, object>() { { $"{ParameterPrefix}{paramName}{count++}", value } });
                 case SearchType.Less:
-                    return ($"< @{paramName}{count}", new Dictionary<string, object>() { { $"@{paramName}{count++}", value } });
+                    return ($"< {ParameterPrefix}{paramName}{count}", new Dictionary<string, object>() { { $"{ParameterPrefix}{paramName}{count++}", value } });
                 case SearchType.Between:
-                    var param1 = $"@{paramName}{count++}";
-                    var param2 = $"@{paramName}{count++}";
+                    var param1 = $"{ParameterPrefix}{paramName}{count++}";
+                    var param2 = $"{ParameterPrefix}{paramName}{count++}";
                     var arr = JsonConvert.DeserializeObject<List<object>>(value?.ToString());
                     return ($"BETWEEN {param1} AND {param2}", new Dictionary<string, object>() { { param1, arr[0] }, { param2, arr[1] } });
                 case SearchType.Contains:
-                    var param = JsonConvert.DeserializeObject<List<object>>(value?.ToString());
-                    return ($"= ANY({paramName}{count})", new Dictionary<string, object>() { { $"@{paramName}{count++}", param } });
+                    {
+                        var param = JsonConvert.DeserializeObject<List<object>>(value?.ToString());
+                        var result = sqlBuilder.BuildInClauseSql(paramName, count, param, true);
+                        return (result.sql, result.param);
+                    }
                 case SearchType.NotContains:
-                    param = JsonConvert.DeserializeObject<List<object>>(value?.ToString());
-                    return ($"<> ANY({paramName}{count})", new Dictionary<string, object>() { { $"@{paramName}{count++}", param } });
+                    {
+                        var param = JsonConvert.DeserializeObject<List<object>>(value?.ToString());
+                        var result = sqlBuilder.BuildInClauseSql(paramName, count, param, false);
+                        return (result.sql, result.param);
+                    }
                 default:
                     return ("", new Dictionary<string, object>() { });
             }

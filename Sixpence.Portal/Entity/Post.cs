@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CsvHelper.Configuration.Attributes;
+using Newtonsoft.Json.Linq;
 using Sixpence.ORM.Entity;
 using Sixpence.Web;
 using System.ComponentModel;
@@ -61,13 +62,13 @@ namespace Sixpence.PortalEntity
         /// <summary>
         /// 是否是系列
         /// </summary>
-        [Column, Description("是否是系列")]
+        [Column(DefaultValue: false), Description("是否是系列")]
         public bool? IsSeries { get; set; }
 
         /// <summary>
         /// 是否是系列
         /// </summary>
-        [Column, Description("是否是系列")]
+        [Column(DefaultValue: "否"), Description("是否是系列")]
         public string? IsSeriesName { get; set; }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace Sixpence.PortalEntity
         /// <summary>
         /// 禁止评论
         /// </summary>
-        [Column, Description("禁止评论")]
+        [Column(DefaultValue: false), Description("禁止评论")]
         public bool? DisableComment { get; set; }
 
         /// <summary>
@@ -109,13 +110,13 @@ namespace Sixpence.PortalEntity
         /// <summary>
         /// 是否展示
         /// </summary>
-        [Column, Description("是否展示")]
+        [Column(DefaultValue: false), Description("是否展示")]
         public bool? IsShow { get; set; }
 
         /// <summary>
         /// 是否展示
         /// </summary>
-        [Column, Description("是否展示")]
+        [Column(DefaultValue: "否"), Description("是否展示")]
         public string? IsShowName { get; set; }
 
         /// <summary>
@@ -127,13 +128,13 @@ namespace Sixpence.PortalEntity
         /// <summary>
         /// 是否置顶
         /// </summary>
-        [Column, Description("是否置顶")]
+        [Column(DefaultValue: false), Description("是否置顶")]
         public bool? IsPop { get; set; }
 
         /// <summary>
         /// 是否置顶
         /// </summary>
-        [Column, Description("是否置顶")]
+        [Column(DefaultValue: "否"), Description("是否置顶")]
         public string? IsPopName { get; set; }
     }
 }

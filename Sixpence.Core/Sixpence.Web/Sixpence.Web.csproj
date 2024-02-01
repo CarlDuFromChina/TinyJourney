@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Sixpence.ORM.Sqlite\Sixpence.ORM.Sqlite.csproj" />
     <ProjectReference Include="..\Sixpence.Common\Sixpence.Common.csproj" />
     <ProjectReference Include="..\Sixpence.ORM.Postgres\Sixpence.ORM.Postgres.csproj" />
     <ProjectReference Include="..\Sixpence.ORM\Sixpence.ORM.csproj" />

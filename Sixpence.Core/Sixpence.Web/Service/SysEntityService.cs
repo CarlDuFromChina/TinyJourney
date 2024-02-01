@@ -76,10 +76,11 @@ FROM
             {
                 var dataList = Manager.Query<SysEntity>(ids).ToList();
                 base.DeleteData(ids); // 删除实体
+                var inSqlResult = Manager.Driver.SqlBuilder.BuildInClauseSql("entity_id", 0, ids.Cast<object>().ToList());
                 var sql = $@"
-DELETE FROM sys_attrs WHERE entity_id {Manager.Driver.SqlBuilder.BuildInClauseSql("@ids")};
+DELETE FROM sys_attrs WHERE entity_id {inSqlResult.sql};
 ";
-                Manager.Execute(sql, new { ids }); // 删除级联字段
+                Manager.Execute(sql, inSqlResult.param); // 删除级联字段
                 dataList.ForEach(data =>
                 {
                     Manager.Execute($"DROP TABLE {data.Code}");

@@ -47,6 +47,7 @@ namespace Sixpence.ORM
             var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
             var manager = app.ApplicationServices.GetRequiredService<IEntityManager>();
             var logger = loggerFactory?.CreateLogger(typeof(SormAppBuilderExtensions));
+            var dbSetting = SormServiceCollectionExtensions.Options?.DbSetting;
 
             var context = new EntityMigrationInterceptorContext()
             {
@@ -85,10 +86,11 @@ namespace Sixpence.ORM
                                 var lengthSQL = e.Length != null ? $"({e.Length})" : "";
                                 var requireSQL = e.CanBeNull == false ? " NOT NULL" : "";
                                 var uniqueSQL = e.IsUnique == true ? " UNIQUE" : "";
-                                var defaultValueSQL = e.DefaultValue == null ? "" : e.DefaultValue is string ? $"DEFAULT '{e.DefaultValue}'" : $"DEFAULT {e.DefaultValue}";
+                                var defaultValueSQL = e.DefaultValue == null ? "" : 
+                                    e.DefaultValue is string ? $"DEFAULT '{e.DefaultValue}'" : $"DEFAULT {e.DefaultValue}";
                                 var primaryKeySQL = e.Name == item.PrimaryColumn.DbPropertyMap.Name ? "PRIMARY KEY" : "";
 
-                                return $"{e.Name} {e.DbType}{lengthSQL} {requireSQL} {uniqueSQL} {primaryKeySQL} {defaultValueSQL}";
+                                return $@"""{e.Name}"" {e.DbType}{lengthSQL} {requireSQL} {uniqueSQL} {primaryKeySQL} {defaultValueSQL}";
                             })
                             .Aggregate((a, b) => a + ",\r\n" + b);
                         manager.Execute($@"CREATE TABLE {entityMap.FullQualifiedName} ({attrSql})");

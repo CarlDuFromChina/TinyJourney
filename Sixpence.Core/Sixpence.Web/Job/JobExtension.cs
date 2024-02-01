@@ -37,6 +37,14 @@ namespace Sixpence.Web.Job
             {
                 case DriverType.Postgresql:
                     return "Quartz.Impl.AdoJobStore.PostgreSQLDelegate, Quartz";
+                case DriverType.Sqlite:
+                    return "Quartz.Impl.AdoJobStore.SQLiteDelegate, Quartz";
+                case DriverType.SqlServer:
+                    return "Quartz.Impl.AdoJobStore.SqlServerDelegate, Quartz";
+                case DriverType.MySql:
+                    return "Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz";
+                case DriverType.Oracle:
+                    return "Quartz.Impl.AdoJobStore.OracleDelegate, Quartz";
                 default:
                     return null;
             }
@@ -48,6 +56,14 @@ namespace Sixpence.Web.Job
             {
                 case DriverType.Postgresql:
                     return "Npgsql";
+                case DriverType.Sqlite:
+                    return "SQLite-Microsoft";
+                case DriverType.SqlServer:
+                    return "SqlServer";
+                case DriverType.MySql:
+                    return "MySql";
+                case DriverType.Oracle:
+                    return "OracleODPManaged";
                 default:
                     return null;
             }

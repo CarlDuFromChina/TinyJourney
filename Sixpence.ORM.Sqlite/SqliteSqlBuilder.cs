@@ -59,9 +59,20 @@ ALTER TABLE {tableName}
             return $"DROP TABLE IF EXISTS {tableName}";
         }
 
-        public string BuildInClauseSql(string parameter)
+        public (string sql, Dictionary<string, object> param) BuildInClauseSql(string parameter, int count, List<object> value, bool isNotIn = false)
         {
-            return $"IN ({parameter})";
+            var parameters = new Dictionary<string, object>();
+            var parameterNames = new List<string>();
+            value.ForEach(item =>
+            {
+                var parameterName = $"{ParameterPrefix}{parameter}{count++}";
+                parameters.Add(parameterName, item);
+            });
+            if (isNotIn)
+            {
+                return ($@"NOT IN ({string.Join(",", parameterNames)})", parameters);
+            }
+            return ($@"IN ({string.Join(",", parameterNames)})", parameters);
         }
 
         public string BuildPageSql(int? index, int size)
@@ -78,7 +89,7 @@ ALTER TABLE {tableName}
 
         public string BuildTableExsitSql(string tableName)
         {
-            return $@"SELECT name
+            return $@"SELECT COUNT(1) > 0
 FROM sqlite_master
 WHERE type='table' AND name='{tableName}';";
         }
