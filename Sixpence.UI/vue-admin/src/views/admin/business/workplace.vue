@@ -118,7 +118,7 @@ export default {
       var option = {
         title: {
           top: 0,
-          text: `${year} 年贡献了 ${count} 篇文章`,
+          text: `${year} 年记录了了 ${count} 篇日志`,
           textStyle: {
             color: 'rgba(0, 0, 0, 0.65) '
           }

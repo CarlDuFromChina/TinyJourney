@@ -3,7 +3,7 @@
     <div class="sp-menu-header-wrapper">
       <slot name="logo">
         <sp-menu-item class="sp-menu-logo" @click="$router.push({ name: 'index' })">
-          <sp-icon name="sp-blog-leaf" :size="38"></sp-icon>
+          <sp-icon name="sp-blog-baby" :size="38"></sp-icon>
           <span>{{ APP_TITLE }}</span>
         </sp-menu-item>
       </slot>

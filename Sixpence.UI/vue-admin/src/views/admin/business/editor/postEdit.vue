@@ -364,9 +364,20 @@ export default {
           this.data.html_content = this.html;
           try {
             var id = await sp.post('api/post/save', this.data);
-            this.$message.success('发布成功！');
-            window.onbeforeunload = null;
-            window.location.href = `${import.meta.env.VITE_APP_INDEX_URL}/post/${id}`;
+            this.$confirm({
+              title: '是否查看?',
+              content: '是否查看该博客？',
+              okText: '是',
+              cancelText: '否',
+              onOk: () => {
+                window.onbeforeunload = null;
+                window.location.href = `${import.meta.env.VITE_APP_INDEX_URL}/post/${id}`;
+              },
+              onCancel: () => {
+                this.$message.success('发布成功！');
+                window.onbeforeunload = null;
+              }
+            });
           } catch (error) {
             this.$message.error(error);
           }

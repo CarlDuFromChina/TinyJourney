@@ -4,7 +4,7 @@
     <a-layout-sider v-model="collapsed" :trigger="null" :width="240" collapsible>
       <!--LOGO-->
       <div class="logo" @click="$router.push({ name: 'workplace' })">
-        <sp-icon name="sp-blog-leaf" :size="32"></sp-icon>
+        <sp-icon name="sp-blog-baby" :size="32"></sp-icon>
         <span v-if="!collapsed">{{ appTitle }}</span>
       </div>
       <!--菜单栏-->

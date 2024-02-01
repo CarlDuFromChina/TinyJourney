@@ -7,7 +7,7 @@
         </a-form-model-item>
       </a-col>
       <a-col :span="12">
-        <a-form-model-item label="编码" prop="code">
+        <a-form-model-item label="表名" prop="code">
           <a-input v-model="data.code" :disabled="pageState == 'edit'"></a-input>
         </a-form-model-item>
       </a-col>
@@ -38,7 +38,7 @@ const columns = [
     dataIndex: 'name'
   },
   {
-    title: '编码',
+    title: '字段名',
     dataIndex: 'code'
   },
   {
@@ -77,7 +77,7 @@ export default {
       editVisible: false,
       rules: {
         name: [{ required: true, message: '请输入实体名', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入编码', trigger: 'blur' }]
+        code: [{ required: true, message: '请输入表名', trigger: 'blur' }]
       },
       columns
     };

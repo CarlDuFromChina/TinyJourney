@@ -16,6 +16,9 @@ function _handleSuccess(res) {
   } else if (!isNullOrEmpty(res.data.ErrorCode) && !isNullOrEmpty(res.data.Message)) {
     return Promise.reject(new Error(res.data.Message));
   } else {
+    if (typeof res.data === 'number') {
+      return res.request.responseText;
+    }
     return res.data;
   }
 }

@@ -7,7 +7,7 @@
         </a-form-model-item>
       </a-col>
       <a-col :span="8">
-        <a-form-model-item label="编码" prop="code">
+        <a-form-model-item label="字段名" prop="code">
           <a-input v-model="data.code"></a-input>
         </a-form-model-item>
       </a-col>
@@ -80,8 +80,8 @@ export default {
         }
       ],
       rules: {
-        name: [{ required: true, message: '请输入字段名', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入编码', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入字段名', trigger: 'blur' }],
         attr_type: [{ required: true, message: '请选择字段类型', trigger: 'blur' }]
       }
     };

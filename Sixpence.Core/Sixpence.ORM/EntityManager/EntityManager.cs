@@ -233,7 +233,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
                     .Each(item => item.Execute(context));
 
                 ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, tableName))
+                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
                     .Each(item => item.Execute(context));
                 #endregion
 
@@ -273,7 +273,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
                 #region 更新后 Plugin
                 context.Action = EntityAction.PostUpdate;
                 ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, tableName))
+                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
                     .Each(item => item.Execute(context));
                 #endregion
                 return result;
