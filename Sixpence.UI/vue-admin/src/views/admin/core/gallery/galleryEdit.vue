@@ -8,10 +8,8 @@
               <a-upload
                 :action="baseUrl"
                 ref="files"
-                :customRequest="uploadBigImg"
                 :file-list="bigImage"
                 :beforeUpload="beforeUpload"
-                :remove="removeBigImg"
                 list-type="picture"
                 key="big-image-upload"
               >
@@ -23,6 +21,16 @@
       </a-row>
       <a-row>
         <a-col>
+          <vue-cropper
+            ref="cropper"
+            v-show="!!imgSrc"
+            :src="imgSrc"
+            :aspect-ratio="16 / 9"
+          ></vue-cropper>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col>
           <a-form-model-item label="标签">
             <sp-tag :tags="tags" @change="changeTags"></sp-tag>
           </a-form-model-item>
@@ -30,17 +38,20 @@
       </a-row>
     </a-form-model>
     <template slot="footer">
-      <a-button type="primary" @click="saveData">保存</a-button>
+      <a-button type="primary" @click="cropAndUploadImage">保存</a-button>
     </template>
   </a-modal>
 </template>
 
 <script>
 import { edit } from '@/mixins';
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css'
 
 export default {
   name: 'galleryEdit',
   mixins: [edit],
+  components: { VueCropper },
   model: {
     prop: 'visible',
     event: 'input'
@@ -58,7 +69,9 @@ export default {
       smallImage: [],
       bigImage: [],
       token: this.$store.getters.getToken,
-      tags: []
+      tags: [],
+      imgSrc: '',
+      file: null
     };
   },
   computed: {
@@ -107,7 +120,7 @@ export default {
     },
     // 上传大图
     uploadBigImg(param) {
-      this.upload(param).then(resp => {
+      return this.upload(param).then(resp => {
         const image = resp[0];
         const thumbnail = resp[1];
 
@@ -135,10 +148,26 @@ export default {
       });
     },
     beforeUpload(file, fileList) {
+      this.file = file;
       if (fileList && fileList.length > 1) {
         fileList = fileList.slice(-1);
       }
-      return true;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imgSrc = e.target.result;
+        this.$refs.cropper.replace(e.target.result);
+      };
+      reader.readAsDataURL(file);
+      // 阻止自动上传
+      return false;
+    },
+    cropAndUploadImage() {
+      var file = this.file;
+      this.$refs.cropper.getCroppedCanvas().toBlob(async (blob) => {
+        this.file = new File([blob], file.name, { type: blob.type, lastModified: Date.now() });
+        await this.uploadBigImg({ file: this.file });
+        await this.saveData();
+      });
     },
     removeSmallImg() {
       this.data.preview_id = '';

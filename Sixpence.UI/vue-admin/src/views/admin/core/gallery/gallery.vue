@@ -6,7 +6,7 @@
           <sp-button-list :buttons="buttons" @search-change="loadData" @unfold="showMore = true" @fold="showMore = false"></sp-button-list>
         </div>
       </sp-header>
-      <a-modal title="图片" v-model="readVisible" width="850px">
+      <a-modal title="图片" v-model="readVisible">
         <img class="big-image" :src="imgUrl" />
         <template slot="footer">
           <a-button type="primary" @click="downloadImg">点击下载</a-button>
