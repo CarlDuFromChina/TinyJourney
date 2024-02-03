@@ -1,3 +1,5 @@
+import Mint from 'mint-ui';
+
 export default {
   data() {
     return {
@@ -6,7 +8,6 @@ export default {
   },
   methods: {
     async loadData() {
-      var Mint = await import('mint-ui');
       var Indicator = Mint.Indicator;
       Indicator.open();
       this.loading = true;

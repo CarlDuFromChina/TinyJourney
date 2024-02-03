@@ -51,4 +51,9 @@ export default {
 h2 {
   font-size: 16px;
 }
+
+/deep/ .markdown-body img {
+  max-width: 100%;
+  height: auto;
+}
 </style>

@@ -1,4 +1,4 @@
-FROM node:14-alpine as node
+FROM node:20-alpine as node
 WORKDIR /app
 COPY ./ /app/
 RUN npm config set registry https://registry.npm.taobao.org \

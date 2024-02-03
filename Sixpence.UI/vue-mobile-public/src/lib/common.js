@@ -10,10 +10,7 @@ export function isNull(value) {
 }
 
 export function isNumber(value) {
-  return (
-    typeof value === 'number' ||
-    Object.prototype.toString.call(value) === '[Object Number]'
-  );
+  return typeof value === 'number' || Object.prototype.toString.call(value) === '[Object Number]';
 }
 
 export function isObject(value) {
@@ -40,7 +37,6 @@ export function isNullOrEmpty(value) {
       throw new TypeError();
   }
 }
-
 
 function getServerUrl() {
   let url = axios.defaults.baseURL || window.origin;
@@ -84,4 +80,4 @@ export default {
   getDownloadUrl,
   getUserId,
   isTrue
-}
+};

@@ -4,7 +4,7 @@ import common from './common.js';
 window.sp = Object.assign({}, common);
 
 // 开发环境修改后端服务地址
-const serverUrl = import.meta.env.VITE_APP_AXIOS_BASE_URL;
+const serverUrl = process.env.VUE_APP_BASE_API;
 if (process.env.NODE_ENV === 'development') {
   if (!sp.isNullOrEmpty(serverUrl)) {
     axios.defaults.baseURL = serverUrl;

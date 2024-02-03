@@ -17,9 +17,9 @@
 
 <script>
 const types = [
-  { name: 'fail', src: import('../assets/imgs/fail.png'), errorMessage: '系统开小差了~' },
-  { name: 'no-content', src: import('../assets/imgs/nocontent.png'), errorMessage: '暂无相关内容' },
-  { name: 'no-search', src: import('../assets/imgs/nosearch.png'), errorMessage: 'Sorry，没有搜索到相关信息~' }
+  { name: 'fail', src: require('../assets/imgs/fail.png'), errorMessage: '系统开小差了~' },
+  { name: 'no-content', src: require('../assets/imgs/nocontent.png'), errorMessage: '暂无相关内容' },
+  { name: 'no-search', src: require('../assets/imgs/nosearch.png'), errorMessage: 'Sorry，没有搜索到相关信息~' }
 ];
 
 export default {

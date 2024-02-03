@@ -10,6 +10,7 @@
           <div class="content">
             <div class="title">{{ row.title }}</div>
             <div class="info">
+              <div class="brief">{{ row.brief }}</div>
               <span><sp-icon name="sp-blog-view" style="padding-right: 8px"></sp-icon>{{ row.reading_times }}</span>
               <span style="float: right">{{ row.created_at | moment('YYYY-MM-DD') }}</span>
             </div>
@@ -85,8 +86,8 @@ export default {
   padding: 8px;
   .item {
     background: #fff;
-    padding: 15px;
-    margin-top: 10px;
+    padding: 8px;
+    margin-top: 8px;
   }
 }
 .card {
@@ -94,8 +95,8 @@ export default {
   .avatar {
     border-radius: 4px;
     img {
-      width: 104px;
-      height: 104px;
+      width: 160px;
+      height: 90px;
       border-radius: 4px;
     }
   }
@@ -104,20 +105,31 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     text-align: left;
     .title {
       display: inline-block;
+      width: 168px;
       color: #222222;
-      font-size: 16px;
-      word-break: break-all;
+      font-size: 14px;
+      height: 1.5em;
+      line-height: 1.5em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-bottom: 18px;
+    }
+    .brief {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      line-height: 1.5em;
+      height: 3em;
     }
     .info {
       bottom: 30px;
       color: #888888;
       font-size: 12px;
-      position: relative;
-      bottom: 10px;
       .rt-icon {
         vertical-align: middle;
         padding-right: 3px;
