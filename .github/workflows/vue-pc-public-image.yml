@@ -1,4 +1,4 @@
-name: build-vue-admin-image
+name: build-vue-pc-public-image
 
 on:
   push:
@@ -44,25 +44,27 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Configuare env
-        working-directory: ./Sixpence.UI/vue-admin
+        working-directory: ./Sixpence.UI/vue-pc-public
         run: |
           cat > .env.prod << eof
           NODE_ENV=production
           VITE_APP_INDEX_URL=${{ secrets.VITE_APP_INDEX_URL }}
           VITE_APP_AXIOS_BASE_URL=${{ secrets.VITE_APP_AXIOS_BASE_URL }}
           VITE_APP_TITLE=${{ secrets.VITE_APP_TITLE }}
+          VITE_APP_MOBILE_URL=${{ secrets.VITE_APP_MOBILE_URL }}
+          VITE_APP_DISQUS_SHORTNAME=
           eof
           
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./Sixpence.UI/vue-admin
-          file: ./Sixpence.UI/vue-admin/Dockerfile
+          context: ./Sixpence.UI/vue-pc-public
+          file: ./Sixpence.UI/vue-pc-public/Dockerfile
           # 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
           platforms: linux/amd64
           # 镜像推送时间
           push: true
           # 给清单打上多个标签
           tags: |
-            carldu/tj-vue-admin:latest
-            carldu/tj-vue-admin:1.0.0
+            carldu/tj-vue-pc-public:latest
+            carldu/tj-vue-pc-public:1.0.0

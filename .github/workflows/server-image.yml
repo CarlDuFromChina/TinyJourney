@@ -51,7 +51,7 @@ jobs:
           # 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
           platforms: linux/amd64
           # 镜像推送时间
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           labels: |
             com.microsoft.created-by=visual-studio
             com.microsoft.visual-studio.project-name=Sixpence.Portal
