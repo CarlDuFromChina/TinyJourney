@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sixpence.Core\Sixpence.ORM\Sixpence.ORM.csproj" />
+    <ProjectReference Include="..\Sixpence.ORM\Sixpence.ORM.csproj" />
   </ItemGroup>
 
 </Project>
