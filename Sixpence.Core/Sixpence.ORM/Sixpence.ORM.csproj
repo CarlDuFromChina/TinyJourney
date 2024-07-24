@@ -28,4 +28,8 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.aspNetCore.App" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sixpence.Common\Sixpence.Common.csproj" />
+  </ItemGroup>
 </Project>

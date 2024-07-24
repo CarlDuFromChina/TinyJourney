@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Sixpence.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -228,7 +229,7 @@ namespace Sixpence.ORM
         /// <returns></returns>
         public string CreateTemporaryTable(string tableName)
         {
-            var tempTableName = $"{tableName}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+            var tempTableName = $"{SchemaHelper.RemoveSchemaName(tableName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
             var sql = Driver.SqlBuilder.BuildCreateTemporaryTableSql(tableName, tempTableName);
 
             if (EnableLogging)
