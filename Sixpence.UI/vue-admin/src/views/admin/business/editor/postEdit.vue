@@ -270,9 +270,9 @@ export default {
   },
   methods: {
     selected(item) {
-      this.data.surfaceid = item.surfaceid;
+      this.data.surface_id = item.surface_id;
       this.data.surface_url = item.surface_url;
-      this.data.big_surfaceid = item.big_surfaceid;
+      this.data.big_surface_id = item.big_surface_id;
       this.data.big_surface_url = item.big_surface_url;
       this.fileList = [
         {
@@ -287,7 +287,7 @@ export default {
       this.$refs.cloudUpload.visible = true;
     },
     async loadComplete() {
-      if (!sp.isNullOrEmpty(this.data.surfaceid)) {
+      if (!sp.isNullOrEmpty(this.data.surface_id)) {
         this.fileList = [
           {
             uid: '0',
@@ -320,9 +320,9 @@ export default {
     },
     // 移除封页
     removeSurface() {
-      this.data.surfaceid = '';
+      this.data.surface_id = '';
       this.data.surface_url = '';
-      this.data.big_surfaceid = '';
+      this.data.big_surface_id = '';
       this.data.big_surface_url = '';
       this.fileList = [];
       this.$message.success('删除成功！');

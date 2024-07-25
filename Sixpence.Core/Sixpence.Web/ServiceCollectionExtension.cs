@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sixpence.Web.ImageResource;
 
 namespace Sixpence.Web
 {
@@ -40,7 +41,8 @@ namespace Sixpence.Web
                 .AddInitData()
                 .AddSysConfig()
                 .AddSSO()
-                .AddJwt();
+                .AddJwt()
+                .AddServices();
         }
 
         private static IServiceCollection AddSorm(this IServiceCollection services)
@@ -221,6 +223,13 @@ namespace Sixpence.Web
                      }
                  };
              });
+            return services;
+        }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IThirdPartyImageResourceDriver, ACGImageResourceDriver>();
+            services.AddSingleton<IThirdPartyImageResourceDriver, LandscapeImageResourceDriver>();
             return services;
         }
     }

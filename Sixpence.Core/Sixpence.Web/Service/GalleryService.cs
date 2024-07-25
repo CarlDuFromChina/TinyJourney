@@ -18,6 +18,7 @@ using Sixpence.Common.Extensions;
 using Sixpence.Common.Crypto;
 using Sixpence.ORM.Entity;
 using System.Web;
+using Sixpence.Web.ImageResource;
 
 namespace Sixpence.Web.Service
 {
@@ -105,27 +106,25 @@ namespace Sixpence.Web.Service
         /// </summary>
         public async Task<Gallery> GetRandomImage()
         {
-            var result = await HttpUtil.GetAsync("https://api.aixiaowai.cn/api/api.php?return=json", new Dictionary<string, string>());
-            var model = JsonConvert.DeserializeObject<RandomImageModel>(result);
-            // https://api.aixiaowai.cn/api/ap.php?url=0072Vf1pgy1foxlnx4mk0j31hc0u07k9.jpg
-            var originFileName = HttpUtility.ParseQueryString(new Uri(model.imgurl).Query).Get("url");
-            var imgBytes = HttpUtil.DownloadImage(model.imgurl, out var contentType);
-            var imgStream = imgBytes.ToStream();
-            var suffix = model.imgurl.GetFileType();
+            var result = await ServiceFactory.Resolve<IThirdPartyImageResourceDriver>("LandscapeImageResourceDriver").DownloadRandomImage();
+            if (result == null)
+            {
+                throw new SpException("图片下载失败，请重试");
+            }
             var sysFileService = new SysFileService(Manager);
 
             return Manager.ExecuteTransaction(() =>
             {
                 var galleryid = Guid.NewGuid().ToString();
-                var image = sysFileService.UploadFile(imgStream, suffix, "gallery", contentType, galleryid, originFileName);
-                var thumbStream = ImageHelper.CreateThumbnail(image.GetFilePath(), 240, 160);
-                var image2 = sysFileService.UploadFile(thumbStream, suffix, "gallery", contentType, galleryid, sysFileService.GetPreviewImageFileName(originFileName));
+                var image = sysFileService.UploadFile(result.Stream, result.Suffix, "gallery", result.ContentType, galleryid, result.FileName);
+                //var thumbStream = ImageHelper.CreateThumbnail(image.GetFilePath(), 240, 160);
+                //var image2 = sysFileService.UploadFile(thumbStream, result.Suffix, "gallery", result.ContentType, galleryid, sysFileService.GetPreviewImageFileName(result.FileName));
 
                 var gallery = new Gallery()
                 {
                     Id = galleryid,
-                    PreviewId = image2.Id,
-                    PreviewUrl = image2.DownloadUrl,
+                    PreviewId = image.Id,
+                    PreviewUrl = image.DownloadUrl,
                     ImageId = image.Id,
                     ImageUrl = image.DownloadUrl
                 };

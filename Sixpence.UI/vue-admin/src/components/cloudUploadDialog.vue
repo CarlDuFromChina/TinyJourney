@@ -175,7 +175,7 @@ export default {
           this.$emit('selected', {
             surface_id: gallery.preview_id,
             surface_url: gallery.preview_url,
-            big_surface_id: gallery.imageid,
+            big_surface_id: gallery.image_id,
             big_surface_url: gallery.image_url
           });
           break;
