@@ -6,6 +6,8 @@ using Sixpence.PortalEntityOptionProvider;
 using Sixpence.PortalPlugin;
 using Sixpence.Web;
 using Sixpence.PortalSysConfig;
+using Quartz;
+using Sixpence.Portal.Job;
 
 namespace Sixpence.Portal
 {
@@ -18,7 +20,8 @@ namespace Sixpence.Portal
                 .AddInitData()
                 .AddEntityPlugin()
                 .AddEntityOptionProvider()
-                .AddSysConfig();
+                .AddSysConfig()
+                .AddJob();
         }
 
         private static IServiceCollection AddEntity(this IServiceCollection services)
@@ -54,6 +57,12 @@ namespace Sixpence.Portal
         {
             services.AddTransient<ISysConfig, IndexUserConfig>();
             services.AddTransient<ISysConfig, WebSiteInfoConfig>();
+            return services;
+        }
+
+        private static IServiceCollection AddJob(this IServiceCollection services)
+        {
+            services.AddSingleton<IJob, CleanJob>();
             return services;
         }
     }

@@ -47,10 +47,7 @@ namespace Sixpence.Web
                 case FolderType.Bin:
                     break;
                 case FolderType.Log:
-                    folderPath += $"{Path.AltDirectorySeparatorChar}log";
-                    break;
-                case FolderType.LogArchive:
-                    folderPath += $"{Path.AltDirectorySeparatorChar}log{Path.AltDirectorySeparatorChar}Archive";
+                    folderPath += $"{Path.AltDirectorySeparatorChar}logs";
                     break;
                 case FolderType.Temp:
                     folderPath = temp;
@@ -83,8 +80,6 @@ namespace Sixpence.Web
         Bin,
         [Description("日志目录")]
         Log,
-        [Description("日志归档目录")]
-        LogArchive,
         [Description("临时目录")]
         Temp,
         [Description("文件存储目录")]
