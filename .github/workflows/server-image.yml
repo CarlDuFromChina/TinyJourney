@@ -1,21 +1,11 @@
 name: build-server-image
 
 on:
+  workflow_dispatch:
   push:
     tags:
     - "v[0-9]+.[0-9]+.[0-9]"
       
-# Allows you to run this workflow manually from the Actions tab
-  # 可以手动触发
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'
-        
 jobs:
   docker:
     runs-on: ubuntu-latest
