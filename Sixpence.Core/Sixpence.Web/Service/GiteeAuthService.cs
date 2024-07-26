@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sixpence.Common.Crypto;
 using Sixpence.Common.Extensions;
-using Sixpence.Common.Utils;
+using Sixpence.Common.Http;
 using Sixpence.ORM;
 using Sixpence.ORM.Entity;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model.Gitee;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Sixpence.Web.Service
 {
@@ -24,7 +27,7 @@ namespace Sixpence.Web.Service
             return JsonSerializer.Deserialize<GiteeConfig>(data);
         }
 
-        public GiteeAccessToken GetAccessToken(string code, string userid = "")
+        public async Task<GiteeAccessToken> GetAccessToken(string code, string userid = "")
         {
             var config = GetConfig();
             var client_id = config.client_id;
@@ -36,17 +39,20 @@ namespace Sixpence.Web.Service
             }
 
             _logger.LogDebug("GetAccessToken 请求入参：" + $"grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}&redirect_uri={redirect_uri}");
-            var response = HttpUtil.Post($"https://gitee.com/oauth/token?grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}&redirect_uri={redirect_uri}", "");
-            _logger.LogDebug("GetAccessToken 返回参数：" + response);
-            return JsonSerializer.Deserialize<GiteeAccessToken>(response);
+            var url = $"https://gitee.com/oauth/token?grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}&redirect_uri={redirect_uri}";
+            var response = await new HttpClient().PostAsync(url, null);
+            var result = await response.Content.ReadAsStringAsync();
+            _logger.LogDebug("GetAccessToken 返回参数：" + result);
+            return JsonSerializer.Deserialize<GiteeAccessToken>(result);
         }
 
-        public GiteeUserInfo GetGiteeUserInfo(GiteeAccessToken model)
+        public async Task<GiteeUserInfo> GetGiteeUserInfo(GiteeAccessToken model)
         {
             _logger.LogDebug("GetGiteeUserInfo 请求参数：" + model.access_token);
-            var response = HttpUtil.Get("https://gitee.com/api/v5/user?access_token=" + model.access_token);
-            var data = JsonSerializer.Deserialize<GiteeUserInfo>(response);
-            _logger.LogDebug("GetGiteeUserInfo 返回参数：" + response);
+            var response = await new HttpClient().GetAsync("https://gitee.com/api/v5/user?access_token=" + model.access_token);
+            var result = await response.Content.ReadAsStringAsync();
+            var data = JsonSerializer.Deserialize<GiteeUserInfo>(result);
+            _logger.LogDebug("GetGiteeUserInfo 返回参数：" + result);
             return data;
         }
 
@@ -56,9 +62,12 @@ namespace Sixpence.Web.Service
         /// <param name="url"></param>
         /// <param name="objectid"></param>
         /// <returns></returns>
-        public string DownloadImage(string url, string objectid)
+        public async Task<string> DownloadImage(string url, string objectid)
         {
-            var result = HttpUtil.DownloadImage(url, out var contentType);
+            var resp = await new HttpClient().GetAsync(url);
+            resp.EnsureSuccessStatusCode();
+            var contentType = resp.Content.Headers.ContentType.ToString();
+            var result = await resp.Content.ReadAsByteArrayAsync();
             using (var stream = result.ToStream())
             {
                 var hash_code = SHAUtil.GetFileSHA1(stream);

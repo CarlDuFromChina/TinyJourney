@@ -228,7 +228,6 @@ namespace Sixpence.Web
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<IThirdPartyImageResourceDriver, ACGImageResourceDriver>();
             services.AddSingleton<IThirdPartyImageResourceDriver, LandscapeImageResourceDriver>();
             return services;
         }

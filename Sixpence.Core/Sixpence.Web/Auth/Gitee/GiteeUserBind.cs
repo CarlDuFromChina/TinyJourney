@@ -19,8 +19,8 @@ namespace Sixpence.Web.Auth.Gitee
                 manager.ExecuteTransaction(() =>
                 {
                     var user = manager.QueryFirst<SysUser>(userid);
-                    var githubToken = giteeAuthService.GetAccessToken(code, userid);
-                    var githubUser = giteeAuthService.GetGiteeUserInfo(githubToken);
+                    var githubToken = giteeAuthService.GetAccessToken(code, userid).Result;
+                    var githubUser = giteeAuthService.GetGiteeUserInfo(githubToken).Result;
                     user.GiteeId = githubUser.id.ToString();
                     manager.Update(user);
                 });

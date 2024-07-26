@@ -23,8 +23,8 @@ namespace Sixpence.Web.Auth.Gitee
             try
             {
                 var code = param as string;
-                var giteeToken = giteeService.GetAccessToken(code);
-                var giteeUser = giteeService.GetGiteeUserInfo(giteeToken);
+                var giteeToken = giteeService.GetAccessToken(code).Result;
+                var giteeUser = giteeService.GetGiteeUserInfo(giteeToken).Result;
                 var user = manager.QueryFirst<SysUser>(new { gitee_id = giteeUser.id.ToString() });
                 
                 if (user != null)
@@ -43,7 +43,7 @@ namespace Sixpence.Web.Auth.Gitee
                 {
                     var role = sysRoleService.GetGuest();
                     var id = Guid.NewGuid().ToString();
-                    var avatarId = giteeService.DownloadImage(giteeUser.avatar_url, id);
+                    var avatarId = giteeService.DownloadImage(giteeUser.avatar_url, id).Result;
                     var user = new SysUser()
                     {
                         Id = id,

@@ -19,6 +19,7 @@ using Sixpence.Common.Crypto;
 using Sixpence.ORM.Entity;
 using System.Web;
 using Sixpence.Web.ImageResource;
+using Sixpence.Common.Http;
 
 namespace Sixpence.Web.Service
 {
@@ -50,10 +51,10 @@ namespace Sixpence.Web.Service
         /// <param name="url"></param>
         /// <param name="objectid"></param>
         /// <returns></returns>
-        private string DownloadImage(string url, string objectid, string source = "gallery")
+        private async Task<string> DownloadImage(string url, string objectid, string source = "gallery")
         {
-            var result = HttpUtil.DownloadImage(url, out var contentType);
-            using (var stream = result.ToStream())
+            var result = await HttpHelper.GetAsync(url);
+            using (var stream = result.Content.ReadAsStream())
             {
                 var hash_code = SHAUtil.GetFileSHA1(stream);
 
@@ -71,7 +72,7 @@ namespace Sixpence.Web.Service
                     RealName = fileName,
                     HashCode = hash_code,
                     FileType = source,
-                    ContentType = contentType,
+                    ContentType = result.Content.Headers.ContentType.MediaType,
                     ObjectId = objectid
                 };
                 return Manager.Create(data);
@@ -92,8 +93,8 @@ namespace Sixpence.Web.Service
                     Id = Guid.NewGuid().ToString(),
                     Tags = image.tags
                 };
-                data.PreviewId = DownloadImage(image.previewURL, data.Id);
-                data.ImageId = DownloadImage(image.largeImageURL, data.Id);
+                data.PreviewId = DownloadImage(image.previewURL, data.Id).Result;
+                data.ImageId = DownloadImage(image.largeImageURL, data.Id).Result;
                 data.PreviewUrl = SysFileService.GetDownloadUrl(data.PreviewId);
                 data.ImageUrl = SysFileService.GetDownloadUrl(data.ImageId);
                 base.CreateData(data);

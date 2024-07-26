@@ -23,8 +23,8 @@ namespace Sixpence.Web.Auth.Github
             try
             {
                 var code = param as string;
-                var githubToken = githubService.GetAccessToken(code);
-                var githubUser = githubService.GetUserInfo(githubToken);
+                var githubToken = githubService.GetAccessToken(code).Result;
+                var githubUser = githubService.GetUserInfo(githubToken).Result;
                 var user = manager.QueryFirst<SysUser>(new { github_id = githubUser.id.ToString() });
 
                 if (user != null)
@@ -43,7 +43,7 @@ namespace Sixpence.Web.Auth.Github
                 {
                     var role = sysRoleService.GetGuest();
                     var id = Guid.NewGuid().ToString();
-                    var avatarId = githubService.DownloadImage(githubUser.avatar_url, id);
+                    var avatarId = githubService.DownloadImage(githubUser.avatar_url, id).Result;
                     var user = new SysUser()
                     {
                         Id = id,

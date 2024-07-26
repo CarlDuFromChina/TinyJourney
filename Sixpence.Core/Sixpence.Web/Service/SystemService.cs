@@ -18,6 +18,7 @@ using Sixpence.Web.Model.System;
 using Sixpence.Web.Model;
 using Sixpence.Common.Crypto;
 using Sixpence.ORM;
+using Sixpence.Common.Http;
 
 namespace Sixpence.Web.Service
 {
@@ -52,8 +53,8 @@ namespace Sixpence.Web.Service
         /// <returns></returns>
         public string GetRandomImage()
         {
-            var result = HttpUtil.Get("https://api.ixiaowai.cn/api/api.php?return=json");
-            return result;
+            var result = HttpHelper.GetAsync("https://api.ixiaowai.cn/api/api.php?return=json").Result;
+            return result.Content.ReadAsStringAsync().Result;
         }
 
         /// <summary>
