@@ -1,4 +1,4 @@
-﻿using Sixpence.ORM.Entity;
+﻿using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Module.SysMenu;
 using Sixpence.Common;
 using Sixpence.Common.Utils;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model;
 using System.ComponentModel;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Extensions;
 
 namespace Sixpence.Web.Auth.Role
@@ -45,7 +45,7 @@ namespace Sixpence.Web.Auth.Role
             var key = $"{ROLE_PREFIX}_{RoleName}";
             return MemoryCacheUtil.GetOrAddCacheItem(key, () =>
             {
-                var role = Manager.QueryFirst<SysRole>( new { name = Role.GetDescription() });
+                var role = Manager.QueryFirst<SysRole>(new { name = Role.GetDescription() });
                 if (role == null)
                 {
                     role = new SysRole()
@@ -70,7 +70,7 @@ namespace Sixpence.Web.Auth.Role
             var key = $"{PRIVILEGE_PREFIX}_{Role.GetIdentifier()}";
             return MemoryCacheUtil.GetOrAddCacheItem(key, () =>
             {
-                var dataList = Manager.Query<SysRolePrivilege>(new { role_id = Role.GetIdentifier() } );
+                var dataList = Manager.Query<SysRolePrivilege>(new { role_id = Role.GetIdentifier() });
                 return dataList;
             }, DateTime.Now.AddHours(12));
         }

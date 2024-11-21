@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Service;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.EntityPlugin
 {

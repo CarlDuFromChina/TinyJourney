@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Entity;
 
 namespace Sixpence.Web.EntityPlugin

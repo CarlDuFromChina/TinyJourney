@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 
@@ -42,7 +42,7 @@ namespace Sixpence.Web.Store
         public async Task<IActionResult> DownloadAsync(string objectId)
         {
             var manager = ServiceFactory.Resolve<IEntityManager>();
-            var data = manager.QueryFirst<SysFile>(objectId) ?? manager.QueryFirst<SysFile>(new { hash_code = objectId } );
+            var data = manager.QueryFirst<SysFile>(objectId) ?? manager.QueryFirst<SysFile>(new { hash_code = objectId });
             var fileInfo = new FileInfo(data.GetFilePath());
             if (fileInfo.Exists)
             {

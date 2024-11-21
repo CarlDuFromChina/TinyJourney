@@ -6,7 +6,7 @@ using System.Text;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using System.Net.Mail;
 using Microsoft.Extensions.Logging;
 

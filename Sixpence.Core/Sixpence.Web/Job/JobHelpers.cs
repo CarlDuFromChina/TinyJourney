@@ -1,5 +1,5 @@
 ﻿using Sixpence.Web.Auth;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework.Entity;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -54,7 +54,8 @@ namespace Sixpence.Web.Job
             var logger = AppContext.GetLogger<AppContext>();
             var jobs = ServiceFactory.ResolveAll<IJob>().ToList();
             logger.LogInformation($"共发现{jobs.Count}个Job待运行");
-            jobs.Each(item => {
+            jobs.Each(item =>
+            {
                 if (item == null)
                 {
                     return;

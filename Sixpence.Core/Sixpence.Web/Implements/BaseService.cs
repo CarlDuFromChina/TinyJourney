@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;

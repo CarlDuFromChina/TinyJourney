@@ -1,4 +1,4 @@
-﻿using Sixpence.ORM.Entity;
+﻿using Sixpence.EntityFramework.Entity;
 using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;

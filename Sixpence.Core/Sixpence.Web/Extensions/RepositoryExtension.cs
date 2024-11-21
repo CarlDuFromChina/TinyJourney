@@ -1,7 +1,7 @@
 ﻿using Sixpence.Common;
-using Sixpence.ORM;
-using Sixpence.ORM.Entity;
-using Sixpence.ORM.Repository;
+using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
+using Sixpence.EntityFramework.Repository;
 using Sixpence.Web.Model;
 using Sixpence.Web.Utils;
 using System;

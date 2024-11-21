@@ -1,4 +1,4 @@
-﻿using Sixpence.ORM.Entity;
+﻿using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.WebApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -4,7 +4,7 @@ using System.Text;
 using Sixpence.Web.Service;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Auth.Github

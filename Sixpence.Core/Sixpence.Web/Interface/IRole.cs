@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Auth.Role;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web
 {

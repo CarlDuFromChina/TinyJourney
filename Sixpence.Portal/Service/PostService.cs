@@ -1,5 +1,5 @@
 ﻿using Sixpence.Common;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.PortalEntity;
 using Sixpence.PortalModel;
 using Sixpence.Web;

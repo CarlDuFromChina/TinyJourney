@@ -4,7 +4,7 @@ using System.Text;
 using Sixpence.Web.Model;
 using Sixpence.Web.Service;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Auth.Gitee
@@ -26,7 +26,7 @@ namespace Sixpence.Web.Auth.Gitee
                 var giteeToken = giteeService.GetAccessToken(code).Result;
                 var giteeUser = giteeService.GetGiteeUserInfo(giteeToken).Result;
                 var user = manager.QueryFirst<SysUser>(new { gitee_id = giteeUser.id.ToString() });
-                
+
                 if (user != null)
                 {
                     return new LoginResponse()

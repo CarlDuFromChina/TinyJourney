@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Sixpence.ORM.Repository;
+using Sixpence.EntityFramework.Repository;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Service
 {

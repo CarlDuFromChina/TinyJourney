@@ -1,16 +1,16 @@
 ﻿using Sixpence.Web.Auth;
 using Sixpence.Web.Extensions;
 using Sixpence.Web.Utils;
-using Sixpence.ORM.Repository;
+using Sixpence.EntityFramework.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Model;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Microsoft.Extensions.Logging;
 using Quartz.Logging;
 

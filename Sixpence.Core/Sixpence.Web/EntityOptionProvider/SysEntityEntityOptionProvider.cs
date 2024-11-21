@@ -1,9 +1,9 @@
-﻿using Sixpence.ORM.Entity;
+﻿using Sixpence.EntityFramework.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Sixpence.Web.Model;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.EntityOptionProvider
 {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Sixpence.Web.Service;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Auth.Gitee
 {
-    public  class GiteeUserBind : IThirdPartyBindStrategy
+    public class GiteeUserBind : IThirdPartyBindStrategy
     {
         public string GetName() => "Gitee";
 

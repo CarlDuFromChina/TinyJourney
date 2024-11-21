@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+	<metadata>
+		<id>$id$</id>
+		<version>3.4.0-preview1</version>
+		<title>Sixpence.EntityFramework.Sqllite</title>
+		<authors>Karl Du</authors>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<license type="expression">MIT</license>
+		<!-- <icon>icon.png</icon> -->
+		<projectUrl>https://github.com/CarlDuFromChina/Sixpence.EntityFramework</projectUrl>
+		<description>Sixpence EntityFramework 的 Sqllite 驱动</description>
+		<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+		<copyright>$copyright$</copyright>
+		<tags>Dapper EntityFramework Sqllite</tags>
+	</metadata>
+</package>

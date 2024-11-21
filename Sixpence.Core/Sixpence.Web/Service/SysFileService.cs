@@ -10,8 +10,8 @@ using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Sixpence.Common.Crypto;
 using Sixpence.Web.Utils;
-using Sixpence.ORM;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
 using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
@@ -157,7 +157,7 @@ FROM
         {
             AssertUtil.IsNullOrEmpty(fileName, "上传文件文件名不能为空");
             var fileNameArr = fileName.Split(".");
-             AssertUtil.IsTrue(fileNameArr.Length != 2, "上传文件文件名格式错误");
+            AssertUtil.IsTrue(fileNameArr.Length != 2, "上传文件文件名格式错误");
             return $"{fileNameArr[0]}_small.{fileNameArr[1]}";
         }
     }

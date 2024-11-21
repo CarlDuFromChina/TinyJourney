@@ -7,15 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.Portal", "Sixpence
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sixpence.Core", "Sixpence.Core", "{9E6E8367-AFFF-40A3-96FB-CD405D901F62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.ORM", "Sixpence.Core\Sixpence.ORM\Sixpence.ORM.csproj", "{4D6ED558-D508-4B7A-8923-F32709BD129D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.EntityFramework", "Sixpence.Core\Sixpence.EntityFramework\Sixpence.EntityFramework.csproj", "{4D6ED558-D508-4B7A-8923-F32709BD129D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.ORM.Postgres", "Sixpence.Core\Sixpence.ORM.Postgres\Sixpence.ORM.Postgres.csproj", "{A92D81EC-0F65-4E86-BD44-DF6B2025F9B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.EntityFramework.Postgres", "Sixpence.Core\Sixpence.EntityFramework.Postgres\Sixpence.EntityFramework.Postgres.csproj", "{A92D81EC-0F65-4E86-BD44-DF6B2025F9B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.Common", "Sixpence.Core\Sixpence.Common\Sixpence.Common.csproj", "{B466C66F-0840-428C-A99C-AFCD89E73003}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.Web", "Sixpence.Core\Sixpence.Web\Sixpence.Web.csproj", "{A862441E-311C-475B-BEDA-C94D1E447729}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sixpence.ORM.Sqlite", "Sixpence.Core\Sixpence.ORM.Sqlite\Sixpence.ORM.Sqlite.csproj", "{55284254-2473-4D13-80AB-1995310BBD2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.EntityFramework.Sqlite", "Sixpence.Core\Sixpence.EntityFramework.Sqlite\Sixpence.EntityFramework.Sqlite.csproj", "{55284254-2473-4D13-80AB-1995310BBD2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

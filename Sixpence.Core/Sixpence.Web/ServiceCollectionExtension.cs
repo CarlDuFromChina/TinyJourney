@@ -4,10 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
 using Sixpence.Common;
-using Sixpence.ORM;
-using Sixpence.ORM.Postgres;
-using Sixpence.ORM.Sqlite;
-using Sixpence.ORM.Repository;
+using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Postgres;
+using Sixpence.EntityFramework.Repository;
 using Sixpence.Web.Auth.Gitee;
 using Sixpence.Web.Auth.Github;
 using Sixpence.Web.Auth.Role;
@@ -25,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sixpence.Web.ImageResource;
+using Sixpence.EntityFramework.Sqlite;
 
 namespace Sixpence.Web
 {

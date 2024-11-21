@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Sixpence.PortalEntity;
-using Sixpence.ORM;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
 
 namespace Sixpence.PortalPlugin
 {

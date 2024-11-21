@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using Sixpence.Web.Module.SysMenu;
 using Sixpence.Web.Extensions;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 using Sixpence.Common;
 

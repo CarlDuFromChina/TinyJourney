@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Portal.Implements;
 using Sixpence.PortalEntity;
 using Sixpence.PortalEntityOptionProvider;

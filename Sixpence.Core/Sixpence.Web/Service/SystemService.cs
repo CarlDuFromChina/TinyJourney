@@ -17,7 +17,7 @@ using Sixpence.Web.Entity;
 using Sixpence.Web.Model.System;
 using Sixpence.Web.Model;
 using Sixpence.Common.Crypto;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Common.Http;
 
 namespace Sixpence.Web.Service

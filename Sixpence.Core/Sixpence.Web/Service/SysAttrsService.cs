@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Module.SysAttrs;
 using Sixpence.Web.Entity;
 

@@ -7,7 +7,7 @@ using System.Web;
 using System.Linq;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Auth;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Service
 {

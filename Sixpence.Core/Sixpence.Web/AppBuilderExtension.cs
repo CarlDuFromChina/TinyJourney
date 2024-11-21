@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Job;
 using Sixpence.Web.Service;
 using Sixpence.Common;

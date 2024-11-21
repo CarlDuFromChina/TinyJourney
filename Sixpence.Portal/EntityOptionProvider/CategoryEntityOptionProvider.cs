@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sixpence.Web.Model;
 using Sixpence.Web.EntityOptionProvider;
 using Sixpence.Web;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.PortalEntityOptionProvider
 {

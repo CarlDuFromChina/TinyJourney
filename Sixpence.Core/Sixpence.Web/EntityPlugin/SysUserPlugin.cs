@@ -1,5 +1,5 @@
 ﻿using Sixpence.Web.Config;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework.Entity;
 using Sixpence.Common;
 using Sixpence.Common.Utils;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Web;
 using Sixpence.Web.Service;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.EntityPlugin
 {

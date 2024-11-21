@@ -1,5 +1,5 @@
 ﻿using Sixpence.Web.Auth;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework.Entity;
 using Quartz;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Sixpence.Common.Current;
 using Sixpence.Web.Entity;
 using Microsoft.Extensions.Logging;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Job
 {

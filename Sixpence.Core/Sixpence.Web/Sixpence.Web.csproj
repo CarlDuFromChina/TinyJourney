@@ -44,17 +44,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sixpence.Common\Sixpence.Common.csproj" />
-    <ProjectReference Include="..\Sixpence.ORM.Postgres\Sixpence.ORM.Postgres.csproj" />
-    <ProjectReference Include="..\Sixpence.ORM.Sqlite\Sixpence.ORM.Sqlite.csproj" />
-    <ProjectReference Include="..\Sixpence.ORM\Sixpence.ORM.csproj" />
+    <ProjectReference Include="..\Sixpence.EntityFramework.Postgres\Sixpence.EntityFramework.Postgres.csproj" />
+    <ProjectReference Include="..\Sixpence.EntityFramework.Sqlite\Sixpence.EntityFramework.Sqlite.csproj" />
+    <ProjectReference Include="..\Sixpence.EntityFramework\Sixpence.EntityFramework.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Sixpence.ORM">
-      <HintPath>..\..\Sixpence.ORM\Sixpence.ORM\bin\Debug\net6.0\Sixpence.ORM.dll</HintPath>
+    <Reference Include="Sixpence.EntityFramework">
+      <HintPath>..\..\Sixpence.EntityFramework\Sixpence.EntityFramework\bin\Debug\net6.0\Sixpence.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Sixpence.ORM.Postgres">
-      <HintPath>..\..\Sixpence.ORM\Sixpence.ORM.Postgres\bin\Debug\net6.0\Sixpence.ORM.Postgres.dll</HintPath>
+    <Reference Include="Sixpence.EntityFramework.Postgres">
+      <HintPath>..\..\Sixpence.EntityFramework\Sixpence.EntityFramework.Postgres\bin\Debug\net6.0\Sixpence.EntityFramework.Postgres.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -5,7 +5,7 @@ using System.Text;
 using Sixpence.Web.Utils;
 using System.Data;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Service
 {

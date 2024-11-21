@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Auth.Role;
 
 namespace Sixpence.Web.Cache
@@ -18,7 +18,7 @@ namespace Sixpence.Web.Cache
         private const string UserPrivilegesPrefix = "UserPrivileges";
 
         private static readonly ConcurrentDictionary<string, IEnumerable<SysRolePrivilege>> UserPrivliege = new ConcurrentDictionary<string, IEnumerable<SysRolePrivilege>>();
-        
+
         /// <summary>
         /// 获取用户权限信息
         /// </summary>

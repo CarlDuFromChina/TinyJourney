@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sixpence.Common.Utils;
 using Sixpence.Web.Auth;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 
 namespace Sixpence.Web.Service

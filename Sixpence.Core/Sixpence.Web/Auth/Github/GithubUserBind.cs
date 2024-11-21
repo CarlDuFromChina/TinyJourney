@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sixpence.Web.Service;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Auth.Github
 {

@@ -1,4 +1,4 @@
-﻿using Sixpence.ORM.Entity;
+﻿using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Auth;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Module.SysMenu;

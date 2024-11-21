@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sixpence.Web.Module.SysMenu;
-using Sixpence.ORM.Repository;
+using Sixpence.EntityFramework.Repository;
 using Sixpence.Web.Entity;
-using Sixpence.ORM.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework.Entity;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Service
 {

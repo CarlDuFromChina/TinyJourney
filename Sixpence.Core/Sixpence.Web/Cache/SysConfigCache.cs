@@ -2,7 +2,7 @@
 using Sixpence.Web.Entity;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Cache
 {
@@ -10,7 +10,7 @@ namespace Sixpence.Web.Cache
     /// 系统参数缓存
     /// </summary>
 	public class SysConfigCache
-	{
+    {
         private const string CACHE_PREFIX = "SysConfig";
         private static readonly ConcurrentDictionary<string, Entity.SysConfig> settings = new ConcurrentDictionary<string, Entity.SysConfig>();
 

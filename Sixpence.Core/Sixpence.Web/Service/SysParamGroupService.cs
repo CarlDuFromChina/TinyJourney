@@ -5,7 +5,7 @@ using System.Linq;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Sixpence.Web.EntityOptionProvider;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Service
 {

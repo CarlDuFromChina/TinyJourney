@@ -2,8 +2,8 @@
 using Sixpence.Common.Crypto;
 using Sixpence.Common.Extensions;
 using Sixpence.Common.Http;
-using Sixpence.ORM;
-using Sixpence.ORM.Entity;
+using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model.Gitee;

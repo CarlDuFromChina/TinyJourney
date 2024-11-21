@@ -1,12 +1,12 @@
 ﻿using Sixpence.Common;
 using Sixpence.Common.Utils;
 using System.Collections.Generic;
-using Sixpence.ORM.Repository;
+using Sixpence.EntityFramework.Repository;
 using System.Linq;
 using Sixpence.Web.Model;
 using Sixpence.Web.Auth;
 using Sixpence.Web.Entity;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.Service
 {

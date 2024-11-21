@@ -1,5 +1,5 @@
-﻿using Sixpence.ORM;
-using Sixpence.ORM.Entity;
+﻿using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Entity;
 using System;
 using System.Collections.Concurrent;

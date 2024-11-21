@@ -5,7 +5,7 @@ using System.Text;
 using Sixpence.Web.Module.SysMenu;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Service;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.EntityPlugin
 {

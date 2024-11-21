@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Quartz.Impl.AdoJobStore.Common;
-using Sixpence.Common;
-using Sixpence.ORM;
-using Sixpence.ORM.Postgres;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Config;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +15,7 @@ namespace Sixpence.Web
         /// <summary>
         /// 数据库上下文
         /// </summary>
-        public static IDbDriver DbDriver = ORM.SormServiceCollectionExtensions.Options.DbSetting.Driver;
+        public static IDbDriver DbDriver = ServiceCollectionExtensions.Options.DbSetting.Driver;
 
         /// <summary>
         /// 文件存储服务

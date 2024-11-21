@@ -1,6 +1,6 @@
 ﻿using Sixpence.PortalService;
 using Sixpence.Common.Utils;
-using Sixpence.ORM;
+using Sixpence.EntityFramework;
 using Sixpence.PortalEntity;
 
 namespace Sixpence.PortalPlugin
