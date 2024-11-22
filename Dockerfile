@@ -11,22 +11,22 @@ RUN apt-get update && apt-get install -y vim
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Sixpence.Portal/Sixpence.Portal.csproj", "Sixpence.Portal/"]
+COPY ["Sixpence.TinyJourney/Sixpence.TinyJourney.csproj", "Sixpence.TinyJourney/"]
 COPY ["Sixpence.Core/Sixpence.Common/Sixpence.Common.csproj", "Sixpence.Core/Sixpence.Common/"]
 COPY ["Sixpence.Core/Sixpence.Web/Sixpence.Web.csproj", "Sixpence.Core/Sixpence.Web/"]
 COPY ["Sixpence.Core/Sixpence.EntityFramework.Postgres/Sixpence.EntityFramework.Postgres.csproj", "Sixpence.Core/Sixpence.EntityFramework.Postgres/"]
 COPY ["Sixpence.Core/Sixpence.EntityFramework/Sixpence.EntityFramework.csproj", "Sixpence.Core/Sixpence.EntityFramework/"]
 COPY ["Sixpence.Core/Sixpence.EntityFramework.Sqlite/Sixpence.EntityFramework.Sqlite.csproj", "Sixpence.Core/Sixpence.EntityFramework.Sqlite/"]
-RUN dotnet restore "./Sixpence.Portal/Sixpence.Portal.csproj"
+RUN dotnet restore "./Sixpence.TinyJourney/Sixpence.TinyJourney.csproj"
 COPY . .
-WORKDIR "/src/Sixpence.Portal"
-RUN dotnet build "./Sixpence.Portal.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Sixpence.TinyJourney"
+RUN dotnet build "./Sixpence.TinyJourney.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Sixpence.Portal.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Sixpence.TinyJourney.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Sixpence.Portal.dll"]
+ENTRYPOINT ["dotnet", "Sixpence.TinyJourney.dll"]

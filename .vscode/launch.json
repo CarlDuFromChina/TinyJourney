@@ -10,9 +10,9 @@
       "request": "launch",
       "preLaunchTask": "build",
       // 如果已更改目标框架，请确保更新程序路径。
-      "program": "${workspaceFolder}/Sixpence.Portal/bin/Debug/net6.0/Sixpence.Portal.dll",
+      "program": "${workspaceFolder}/Sixpence.TinyJourney/bin/Debug/net6.0/Sixpence.TinyJourney.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/Sixpence.Portal",
+      "cwd": "${workspaceFolder}/Sixpence.TinyJourney",
       "stopAtEntry": false,
       // 启用在启动 ASP.NET Core 时启动 Web 浏览器。有关详细信息: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
       "serverReadyAction": {

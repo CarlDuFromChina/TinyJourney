@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.Portal", "Sixpence.Portal\Sixpence.Portal.csproj", "{89B67552-86F1-4AEA-B291-0A8D35799FE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sixpence.TinyJourney", "Sixpence.TinyJourney\Sixpence.TinyJourney.csproj", "{89B67552-86F1-4AEA-B291-0A8D35799FE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sixpence.Core", "Sixpence.Core", "{9E6E8367-AFFF-40A3-96FB-CD405D901F62}"
 EndProject

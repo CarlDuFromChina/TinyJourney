@@ -44,7 +44,7 @@ jobs:
           push: true
           labels: |
             com.microsoft.created-by=visual-studio
-            com.microsoft.visual-studio.project-name=Sixpence.Portal
+            com.microsoft.visual-studio.project-name=Sixpence.TinyJourney
           # 给清单打上多个标签
           tags: |
             carldu/tj-server:latest
