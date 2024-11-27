@@ -5,9 +5,8 @@ build-vue-admin:
 	docker push carldu/tj-vue-admin:1.0.0
 
 build-server:
-	cd ./Sixpence.TinyJourney \
-	docker buildx build --platform=linux/amd64 -t tj-server . -f Dockerfile
-	docker tag tj-server carldu/tj-server:1.0.0
+	docker buildx build --platform=linux/amd64 -t tj-server . -f Dockerfile \
+	&& docker tag tj-server carldu/tj-server:1.0.0
 	docker push carldu/tj-server:1.0.0
 
 build-vue-pc-public:
