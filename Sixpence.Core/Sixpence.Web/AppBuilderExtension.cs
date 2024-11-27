@@ -22,7 +22,7 @@ namespace Sixpence.Web
         {
             ServiceFactory.Provider = builder.ApplicationServices;
 
-            builder.UseSorm(options =>
+            builder.UseEntityFramework(options =>
             {
                 options.EnableLogging = true;
                 options.MigrateDb = true;

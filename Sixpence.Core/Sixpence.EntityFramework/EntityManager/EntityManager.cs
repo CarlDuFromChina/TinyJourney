@@ -2,13 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Data;
 using System.IO;
 using Sixpence.EntityFramework.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using static Dapper.SqlMapper;
 using System.Text;
 
 namespace Sixpence.EntityFramework

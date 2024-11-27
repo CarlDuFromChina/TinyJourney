@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "用户")]
-    public partial class SysUser : SormEntity
+    public partial class SysUser : TrackedBaseEntity
     {
         /// <summary>
         /// 用户id

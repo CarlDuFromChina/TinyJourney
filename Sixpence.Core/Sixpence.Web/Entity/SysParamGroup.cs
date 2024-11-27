@@ -9,7 +9,7 @@ using System.Web;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "选项集")]
-    public partial class SysParamGroup : SormEntity
+    public partial class SysParamGroup : TrackedBaseEntity
     {
         /// <summary>
         /// 主键

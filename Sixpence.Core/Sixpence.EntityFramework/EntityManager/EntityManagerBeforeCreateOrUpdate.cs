@@ -11,7 +11,7 @@ namespace Sixpence.EntityFramework
     {
         public void Execute(EntityManagerPluginContext context)
         {
-            var entity = context.Entity as SormEntity;
+            var entity = context.Entity as TrackedBaseEntity;
             var manager = context.EntityManager;
 
             if (entity != null)

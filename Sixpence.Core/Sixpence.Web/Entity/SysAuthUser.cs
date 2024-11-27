@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "用户授权")]
-    public partial class SysAuthUser : SormEntity
+    public partial class SysAuthUser : TrackedBaseEntity
     {
         [PrimaryColumn]
         public string Id { get; set; }

@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "角色权限")]
-    public partial class SysRolePrivilege : SormEntity
+    public partial class SysRolePrivilege : TrackedBaseEntity
     {
         /// <summary>
         /// 实体id

@@ -11,7 +11,7 @@ namespace Sixpence.Web.Entity
     /// 版本脚本执行日志
     /// </summary>
     [Table(Description = "版本脚本执行记录")]
-    public class VersionScriptExecutionLog : SormEntity
+    public class VersionScriptExecutionLog : TrackedBaseEntity
     {
         /// <summary>
         /// 实体id

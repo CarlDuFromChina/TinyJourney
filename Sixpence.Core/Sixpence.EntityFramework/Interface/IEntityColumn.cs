@@ -11,7 +11,7 @@ namespace Sixpence.EntityFramework
     /// <summary>
     /// 普通字段
     /// </summary>
-    public interface ISormColumn
+    public interface IEntityColumn
     {
         /// <summary>
         /// 字段名，例如：public string PhoneNumber { get;set; }，则Name为PhoneNumber

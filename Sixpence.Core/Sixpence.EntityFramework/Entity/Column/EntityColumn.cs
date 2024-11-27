@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sixpence.EntityFramework.Entity
 {
-    internal class SormColumn : ISormColumn
+    internal class EntityColumn : IEntityColumn
     {
         public string Name { get; set; }
         public object Value { get; set; }

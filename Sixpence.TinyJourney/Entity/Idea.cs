@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Sixpence.TinyJourney.Entity
 {
     [Table("idea", "想法")]
-    public partial class Idea : AuditEntity
+    public partial class Idea : TrackedEntity
     {
         /// <summary>
         /// 主键

@@ -13,7 +13,7 @@ namespace Sixpence.Web.Implements
     {
         public void Execute(EntityManagerPluginContext context)
         {
-            var entity = context.Entity as AuditEntity;
+            var entity = context.Entity as TrackedEntity;
             if (entity != null)
             {
                 var user = UserIdentityUtil.GetCurrentUser();

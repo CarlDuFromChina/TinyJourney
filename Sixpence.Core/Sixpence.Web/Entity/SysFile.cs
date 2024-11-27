@@ -12,7 +12,7 @@ using System.Web;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "系统文件")]
-    public partial class SysFile : AuditEntity
+    public partial class SysFile : TrackedEntity
     {
         [PrimaryColumn]
         public string Id { get; set; }

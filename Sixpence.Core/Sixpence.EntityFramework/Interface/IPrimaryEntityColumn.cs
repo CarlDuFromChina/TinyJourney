@@ -6,13 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sixpence.EntityFramework.Entity
+namespace Sixpence.EntityFramework
 {
-    internal class SormPrimaryColumn : ISormPrimaryColumn
+    /// <summary>
+    /// 主键
+    /// </summary>
+    public interface IPrimaryEntityColumn : IEntityColumn
     {
-        public string Name { get; set; }
-        public object Value { get; set; }
+        /// <summary>
+        /// 主键类型
+        /// </summary>
         public PrimaryType PrimaryType { get; set; }
-        public IDbPropertyMap DbPropertyMap { get; set; }
     }
 }

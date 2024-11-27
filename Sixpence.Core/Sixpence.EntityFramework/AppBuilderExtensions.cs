@@ -17,12 +17,12 @@ namespace Sixpence.EntityFramework
         internal static AppBuilderOptions BuilderOptions = new AppBuilderOptions();
 
         /// <summary>
-        /// 添加 Sorm 中间件，并进行配置
+        /// 添加 EntityFramework 中间件，并进行配置
         /// </summary>
         /// <param name="app"></param>
         /// <param name="migrate"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseSorm(this IApplicationBuilder app, Action<AppBuilderOptions>? action)
+        public static IApplicationBuilder UseEntityFramework(this IApplicationBuilder app, Action<AppBuilderOptions>? action)
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             ServiceContainer.Configure(app);

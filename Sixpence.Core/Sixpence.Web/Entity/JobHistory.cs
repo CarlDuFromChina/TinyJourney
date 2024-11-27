@@ -8,7 +8,7 @@ using System.Text;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "作业执行记录")]
-    public class JobHistory : SormEntity
+    public class JobHistory : TrackedBaseEntity
     {
         [PrimaryColumn]
         public string Id { get; set; }

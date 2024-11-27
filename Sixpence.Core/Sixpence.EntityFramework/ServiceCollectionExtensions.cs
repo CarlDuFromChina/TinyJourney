@@ -13,7 +13,7 @@ namespace Sixpence.EntityFramework
     {
         public static ServiceCollectionOptions Options;
 
-        public static IServiceCollection AddSorm(this IServiceCollection services, Action<ServiceCollectionOptions> action)
+        public static IServiceCollection AddEntityFramework(this IServiceCollection services, Action<ServiceCollectionOptions> action)
         {
             services.AddTransient<IEntityManager, EntityManager>();
             services.AddTransient<IEntityManagerBeforeCreateOrUpdate, EntityManagerBeforeCreateOrUpdate>();

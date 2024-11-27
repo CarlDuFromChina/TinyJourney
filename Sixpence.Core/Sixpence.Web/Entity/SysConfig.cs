@@ -9,7 +9,7 @@ using System.Web;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "系统配置")]
-    public class SysConfig : SormEntity
+    public class SysConfig : TrackedBaseEntity
     {
         /// <summary>
         /// 实体id

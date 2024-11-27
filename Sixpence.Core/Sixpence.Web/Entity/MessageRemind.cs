@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Sixpence.Web.Entity
 {
     [Table(Description: "消息提醒")]
-    public partial class MessageRemind : SormEntity
+    public partial class MessageRemind : TrackedBaseEntity
     {
         /// <summary>
         /// 实体id

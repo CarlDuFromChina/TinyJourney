@@ -19,7 +19,7 @@ namespace Sixpence.EntityFramework.Entity
         public IDbEntityMap EntityMap => ServiceCollectionExtensions.Options.EntityMaps[this.GetType().FullName];
 
         [JsonIgnore]
-        public ISormPrimaryColumn PrimaryColumn
+        public IPrimaryEntityColumn PrimaryColumn
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Sixpence.EntityFramework.Entity
                 if (propertyMap == null)
                     throw new Exception("实体未定义主键");
 
-                return new SormPrimaryColumn()
+                return new PrimaryEntityColumn()
                 {
                     Name = propertyMap.Name,
                     Value = property.GetValue(this) ?? "",
@@ -40,17 +40,17 @@ namespace Sixpence.EntityFramework.Entity
         }
 
         [JsonIgnore]
-        public IList<ISormColumn> Columns
+        public IList<IEntityColumn> Columns
         {
             get
             {
-                var columns = new List<ISormColumn>();
+                var columns = new List<IEntityColumn>();
                 var attributes = EntityCommon.GetProperties(this);
                 foreach (var item in attributes)
                 {
                     if (item.Key != PrimaryColumn.Name)
                     {
-                        var column = new SormColumn()
+                        var column = new EntityColumn()
                         {
                             Name = item.Key,
                             Value = item.Value,

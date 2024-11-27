@@ -33,7 +33,7 @@ namespace Sixpence.Web
         public static void AddSixpenceWeb(this IServiceCollection services)
         {
             services
-                .AddSorm()
+                .AddEntityFramework()
                 .AddRepository()
                 .AddEntityOptionProvider()
                 .AddStorage()
@@ -45,7 +45,7 @@ namespace Sixpence.Web
                 .AddServices();
         }
 
-        private static IServiceCollection AddSorm(this IServiceCollection services)
+        private static IServiceCollection AddEntityFramework(this IServiceCollection services)
         {
             // 1. 添加实体
             services.AddTransient<IEntity, Gallery>();
@@ -80,7 +80,7 @@ namespace Sixpence.Web
             services.AddSingleton<IEntityManagerBeforeCreateOrUpdate, Implements.EntityManagerBeforeCreateOrUpdate>();
 
             // 4. 添加数据库连接
-            services.AddSorm(options =>
+            services.AddEntityFramework(options =>
             {
                 var driverType = DBSourceConfig.Config.DriverType.ToEnum<DriverType>();
                 var connectionString = DBSourceConfig.Config.ConnectionString;

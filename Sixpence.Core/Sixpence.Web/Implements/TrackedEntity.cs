@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sixpence.Web
 {
-    public class AuditEntity : SormEntity
+    public class TrackedEntity : TrackedBaseEntity
     {
         [Column]
         [Description("创建人 Id")]

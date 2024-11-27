@@ -11,7 +11,7 @@ namespace Sixpence.EntityFramework.Entity
     /// <summary>
     /// 标准实体
     /// </summary>
-    public class SormEntity : BaseEntity
+    public class TrackedBaseEntity : BaseEntity
     {
         /// <summary>
         /// 创建日期

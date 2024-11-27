@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Sixpence.TinyJourney.Entity
 {
     [Table(Description = "链接")]
-    public class Link : AuditEntity
+    public class Link : TrackedEntity
     {
         /// <summary>
         /// 主键
