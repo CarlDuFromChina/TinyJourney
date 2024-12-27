@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-row :gutter="[16,16]">
+    <a-row :gutter="[8,8]">
       <a-col :span="12" v-for="(item, index) in data" :key="index">
         <sp-card :title="item.category_name" :loading="loading" :empty="item.data.length === 0">
           <template slot="title">

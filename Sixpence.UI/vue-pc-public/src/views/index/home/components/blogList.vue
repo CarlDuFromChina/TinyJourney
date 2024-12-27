@@ -179,8 +179,8 @@ export default {
 }
 
 .blog_pic {
-  width: 120px;
-  height: 80px;
+  width: 160px;
+  height: 100px;
   border-radius: 2px;
 }
 </style>

@@ -4,11 +4,8 @@
     <div class="blog-body">
       <div class="bodyWrapper">
         <a-layout>
-          <!--左侧按钮：点赞、评论-->
-          <a-layout-sider width="10%" theme="light" style="text-align: center">
-          </a-layout-sider>
           <!--右侧内容-->
-          <a-layout-sider width="60%" theme="light">
+          <a-layout-sider width="70%" theme="light">
             <a-card>
               <a-skeleton :loading="loading">
                 <!--标题、作者-->
@@ -41,7 +38,7 @@
             </Disqus>
           </a-layout-sider>
           <!--右侧目录栏-->
-          <a-layout-sider width="20%" style="margin-left: 20px" theme="light">
+          <a-layout-sider width="30%" style="margin-left: 20px" theme="light">
             <sp-card id="catalog" :loading="false" class="catalog">
               <div slot="title" class="title">目录</div>
               <div id="content" class="block"></div>
@@ -206,6 +203,7 @@ export default {
         if (!sp.isNullOrEmpty(newVal)) {
           this.formatterContent = marked(newVal);
           const content = document.querySelector('#content');
+          console.log(tocObj.toHTML())
           const MyComponent = Vue.extend({
             template: tocObj.toHTML(),
             data() {
@@ -286,7 +284,7 @@ export default {
       padding-top: 24px;
       padding-bottom: 40px;
       .bodyWrapper {
-        width: 70%;
+        width: 1200px;
         min-height: 800px;
         margin: 0 auto;
         .ant-layout {

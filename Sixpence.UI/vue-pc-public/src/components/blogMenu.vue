@@ -1,5 +1,5 @@
 <template>
-  <sp-menu ref="menu" :menus="menus" @menu-change="menuChange">
+  <sp-menu ref="menu" :menus="menus" @menu-change="menuChange" class="blog-menu">
     <template slot="menus">
       <sp-menu-item>
         <a-input-search

@@ -86,7 +86,7 @@ export default {
   height: 100%;
 }
 .container {
-  max-width: 60%;
+  width: 1200px;
   margin: 10px auto 0;
   padding: 0 10px 0px 10px;
 }

@@ -88,6 +88,7 @@ export default {
   font-weight: 400;
   height: 50px;
   .sp-menu-logo {
+    padding-left: calc((100% - 1200px) / 2);
     cursor: pointer;
     float: left;
     > .svg-icon {
@@ -101,9 +102,9 @@ export default {
     }
   }
   .sp-menu-header-wrapper {
-    width: 100%;
     z-index: 100;
     .sp-menu-list {
+      padding-right: calc((100% - 1200px) / 2);
       background: transparent;
       border-bottom: none !important;
       float: right;
