@@ -49,13 +49,4 @@
     <ProjectReference Include="..\Sixpence.EntityFramework\Sixpence.EntityFramework.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Sixpence.EntityFramework">
-      <HintPath>..\..\Sixpence.EntityFramework\Sixpence.EntityFramework\bin\Debug\net6.0\Sixpence.EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Sixpence.EntityFramework.Postgres">
-      <HintPath>..\..\Sixpence.EntityFramework\Sixpence.EntityFramework.Postgres\bin\Debug\net6.0\Sixpence.EntityFramework.Postgres.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

@@ -85,7 +85,7 @@ export default {
       this.loadData();
     },
     getLocalData() {
-      let url = `api/${this.controllerName}/search?searchValue=&viewId=0F0DC786-CF7D-4997-B42C-47FB09B12AAE&searchList=&orderBy=`;
+      let url = `api/${this.controllerName}/search?searchValue=&viewId=0F0DC786-CF7D-4997-B42C-47FB09B12AAE&searchList=`;
       url += `&pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`;
       return sp.get(url).then(resp => {
         this.dataList = resp.data.map(item => ({

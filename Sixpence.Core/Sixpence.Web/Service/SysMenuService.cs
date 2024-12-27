@@ -18,9 +18,9 @@ namespace Sixpence.Web.Service
         public SysMenuService(IEntityManager manager) : base(manager) { }
         #endregion
 
-        public override IEnumerable<SysMenu> GetDataList(IList<SearchCondition> searchList, string orderBy, string viewId = "", string searchValue = "")
+        public override IEnumerable<SysMenu> GetDataList(IList<SearchCondition> searchList, string viewId = "", string searchValue = "")
         {
-            var data = base.GetDataList(searchList, orderBy, viewId).Filter().ToList();
+            var data = base.GetDataList(searchList, viewId).Filter().ToList();
             var firstMenu = data
                 .Where(e => string.IsNullOrEmpty(e.ParentId))
                 .Select(item =>
@@ -36,9 +36,9 @@ namespace Sixpence.Web.Service
             return firstMenu;
         }
 
-        public override DataModel<SysMenu> GetDataList(IList<SearchCondition> searchList, string orderBy, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
+        public override DataModel<SysMenu> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
         {
-            var model = base.GetDataList(searchList, orderBy, pageSize, pageIndex, viewId);
+            var model = base.GetDataList(searchList, pageSize, pageIndex, viewId);
             var data = model.Data.Filter().ToList();
             var firstMenu = data.Where(e => string.IsNullOrEmpty(e.ParentId)).ToList();
             firstMenu.ForEach(item =>

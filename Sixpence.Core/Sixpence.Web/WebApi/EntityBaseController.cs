@@ -38,13 +38,13 @@ namespace Sixpence.Web.WebApi
         /// <param name="searchValue"></param>
         /// <returns></returns>
         [HttpGet("search")]
-        public virtual DataModel<E> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? orderBy, string? viewId, string? searchValue)
+        public virtual DataModel<E> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? viewId, string? searchValue)
         {
             var _searchList = string.IsNullOrEmpty(searchList) ? null : JsonConvert.DeserializeObject<IList<SearchCondition>>(searchList);
 
             if (string.IsNullOrEmpty(pageSize) || string.IsNullOrEmpty(pageIndex))
             {
-                var list = new S().GetDataList(_searchList, orderBy, viewId, searchValue).ToList();
+                var list = new S().GetDataList(_searchList, viewId, searchValue).ToList();
                 return new DataModel<E>()
                 {
                     Data = list,
@@ -54,7 +54,7 @@ namespace Sixpence.Web.WebApi
 
             var size = ConvertUtil.ConToInt(pageSize);
             var index = ConvertUtil.ConToInt(pageIndex);
-            return new S().GetDataList(_searchList, orderBy, size, index, viewId, searchValue);
+            return new S().GetDataList(_searchList, size, index, viewId, searchValue);
         }
 
         /// <summary>

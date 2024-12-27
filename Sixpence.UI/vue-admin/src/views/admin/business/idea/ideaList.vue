@@ -95,7 +95,7 @@ export default {
       });
     },
     fetchData(callback) {
-      sp.get(`api/idea/search?orderBy=created_at desc&pageSize=${this.pageSize}&pageIndex=${this.pageIndex}&searchList=&searchValue=`).then(
+      sp.get(`api/idea/search?pageSize=${this.pageSize}&pageIndex=${this.pageIndex}&searchList=&searchValue=`).then(
         resp => {
           const dataList = resp.data.map(item => {
             item.avatar = `${sp.getServerUrl()}api/system/avatar/${item.created_by}`;

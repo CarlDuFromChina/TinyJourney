@@ -36,13 +36,13 @@ namespace Sixpence.Web.Extensions
         /// <param name="recordCount"></param>
         /// <param name="searchValue"></param>
         /// <returns></returns>
-        public static IEnumerable<E> GetDataList<E>(this IRepository<E> repository, EntityView view, IList<SearchCondition> searchList, string orderBy, int pageSize, int pageIndex, out int recordCount, string searchValue = "")
+        public static IEnumerable<E> GetDataList<E>(this IRepository<E> repository, EntityView view, IList<SearchCondition> searchList, int pageSize, int pageIndex, out int recordCount, string searchValue = "")
             where E : BaseEntity, new()
         {
             var sql = view.Sql;
             var paramList = new Dictionary<string, object>();
 
-            GetSql<E>(ref sql, searchList, ref paramList, orderBy, view, searchValue);
+            GetSql<E>(ref sql, searchList, ref paramList, view, searchValue);
 
             var recordCountSql = $"SELECT COUNT(1) FROM ({sql}) AS table1";
             recordCount = repository.Manager.QueryCount(recordCountSql, paramList);
@@ -58,13 +58,13 @@ namespace Sixpence.Web.Extensions
         /// <param name="searchList">搜索条件</param>
         /// <param name="orderBy">排序</param>
         /// <returns></returns>
-        public static IEnumerable<E> GetDataList<E>(this IRepository<E> repository, EntityView view, IList<SearchCondition> searchList, string orderBy, string searchValue = "")
+        public static IEnumerable<E> GetDataList<E>(this IRepository<E> repository, EntityView view, IList<SearchCondition> searchList, string searchValue = "")
             where E : BaseEntity, new()
         {
             var sql = view.Sql;
             var paramList = new Dictionary<string, object>();
 
-            GetSql<E>(ref sql, searchList, ref paramList, orderBy, view, searchValue);
+            GetSql<E>(ref sql, searchList, ref paramList, view, searchValue);
 
             var data = repository.Manager.FilteredQuery<E>(sql, paramList);
             return data;
@@ -176,7 +176,7 @@ namespace Sixpence.Web.Extensions
         /// <param name="paramList"></param>
         /// <param name="orderBy"></param>
         /// <param name="view"></param>
-        private static void GetSql<E>(ref string sql, IList<SearchCondition> searchList, ref Dictionary<string, object> paramList, string orderBy, EntityView view, string searchValue)
+        private static void GetSql<E>(ref string sql, IList<SearchCondition> searchList, ref Dictionary<string, object> paramList, EntityView view, string searchValue)
             where E : BaseEntity, new()
         {
             var entityName = new E().EntityMap.FullQualifiedName;
@@ -209,18 +209,10 @@ namespace Sixpence.Web.Extensions
                 }
             }
 
-            // 以ORDERBY的传入参数优先级最高
-            if (string.IsNullOrEmpty(orderBy))
+            if (!string.IsNullOrEmpty(view.OrderBy))
             {
-                orderBy = string.IsNullOrEmpty(view.OrderBy) ? "" : $" ORDER BY {view.OrderBy}";
+                sql += $" ORDER BY {view.OrderBy}";
             }
-            else
-            {
-                orderBy.Replace("ORDER BY", "", StringComparison.OrdinalIgnoreCase);
-                orderBy = $" ORDER BY {orderBy},{new E().PrimaryColumn.Name}";
-            }
-
-            sql += orderBy;
         }
     }
 }

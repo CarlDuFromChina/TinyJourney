@@ -31,8 +31,8 @@ export default {
       }
       this.loading = true;
       try {
-        let url = 'api/post/search?orderBy=created_at desc';
-        url += '&pageSize=5';
+        let url = 'api/post/search';
+        url += '?pageSize=5';
         url += '&pageIndex=1';
         url += '&searchList=';
         url += '&viewId=834F8083-47BC-42F3-A6B2-DE25BE755714';

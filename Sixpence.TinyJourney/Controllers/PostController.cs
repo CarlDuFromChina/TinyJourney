@@ -35,9 +35,9 @@ namespace Sixpence.TinyJourney.Controller
         /// <param name="viewId"></param>
         /// <returns></returns>
         [HttpGet("search"), AllowAnonymous]
-        public override DataModel<Post> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? orderBy, string? viewId, string? searchValue)
+        public override DataModel<Post> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? viewId, string? searchValue)
         {
-            return base.GetViewData(pageSize, pageIndex, searchList, orderBy, viewId, searchValue);
+            return base.GetViewData(pageSize, pageIndex, searchList, viewId, searchValue);
         }
 
         /// <summary>

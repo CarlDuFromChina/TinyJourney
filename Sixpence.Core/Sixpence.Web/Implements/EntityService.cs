@@ -81,20 +81,20 @@ namespace Sixpence.Web
         /// 获取所有实体记录
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<T> GetDataList(IList<SearchCondition> searchList, string orderBy, string viewId = "", string searchValue = "")
+        public virtual IEnumerable<T> GetDataList(IList<SearchCondition> searchList, string viewId = "", string searchValue = "")
         {
             var view = string.IsNullOrEmpty(viewId) ? GetViewList().ToList().FirstOrDefault() : GetViewList().ToList().Find(item => item.ViewId == viewId);
-            return Repository.GetDataList(view, searchList, orderBy);
+            return Repository.GetDataList(view, searchList);
         }
 
         /// <summary>
         /// 获取所有实体记录
         /// </summary>
         /// <returns></returns>
-        public virtual DataModel<T> GetDataList(IList<SearchCondition> searchList, string orderBy, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
+        public virtual DataModel<T> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
         {
             var view = string.IsNullOrEmpty(viewId) ? GetViewList().ToList().FirstOrDefault() : GetViewList().ToList().Find(item => item.ViewId == viewId);
-            var data = Repository.GetDataList(view, searchList, orderBy, pageSize, pageIndex, out var recordCount, searchValue);
+            var data = Repository.GetDataList(view, searchList, pageSize, pageIndex, out var recordCount, searchValue);
             return new DataModel<T>()
             {
                 Data = data.ToList(),

@@ -85,7 +85,7 @@ export default {
     fetchData() {
       try {
         sp.get(
-          `api/post/search?orderBy=&pageSize=${this.pageSize}&pageIndex=${this.pageIndex}&searchList=&viewId=${this.viewId}&searchValue=${this.searchValue}`
+          `api/post/search?pageSize=${this.pageSize}&pageIndex=${this.pageIndex}&searchList=&viewId=${this.viewId}&searchValue=${this.searchValue}`
         ).then(resp => {
           this.total = resp.count;
           this.listData = this.listData.concat(resp.data);

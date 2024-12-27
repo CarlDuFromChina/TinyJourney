@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     fetch() {
-      return sp.get(`api/idea/search?searchList=&orderBy=created_at desc&pageSize=${this.pageSize}&pageIndex=${this.pageIndex}`).then(resp => {
+      return sp.get(`api/idea/search?searchList=&pageSize=${this.pageSize}&pageIndex=${this.pageIndex}`).then(resp => {
         if (resp && resp.data) {
           this.dataList = resp.data;
           this.total = resp.count;

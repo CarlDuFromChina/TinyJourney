@@ -65,27 +65,27 @@ WHERE id {inSqlResult.sql}
             Manager.Execute(sql, inSqlResult.param);
         }
 
-        public override DataModel<MessageRemind> GetDataList(IList<SearchCondition> searchList, string orderBy, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
+        public override DataModel<MessageRemind> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
         {
             if (searchList.IsEmpty())
             {
                 searchList = new List<SearchCondition>();
             }
             searchList.Add(new SearchCondition() { Name = "receiver_id", Type = SearchType.Equals, Value = UserIdentityUtil.GetCurrentUserId() });
-            var model = base.GetDataList(searchList, orderBy, pageSize, pageIndex, viewId, searchValue);
+            var model = base.GetDataList(searchList, pageSize, pageIndex, viewId, searchValue);
             var ids = model.Data.Where(item => !item.IsRead.Value).Select(item => item.Id);
             ReadMessage(ids);
             return model;
         }
 
-        public override IEnumerable<MessageRemind> GetDataList(IList<SearchCondition> searchList, string orderBy, string viewId = "", string searchValue = "")
+        public override IEnumerable<MessageRemind> GetDataList(IList<SearchCondition> searchList, string viewId = "", string searchValue = "")
         {
             if (searchList.IsEmpty())
             {
                 searchList = new List<SearchCondition>();
             }
             searchList.Add(new SearchCondition() { Name = "receiver_id", Type = SearchType.Equals, Value = UserIdentityUtil.GetCurrentUserId() });
-            var model = base.GetDataList(searchList, orderBy, viewId, searchValue);
+            var model = base.GetDataList(searchList, viewId, searchValue);
             var ids = model.Where(item => !item.IsRead.Value).Select(item => item.Id);
             ReadMessage(ids);
             return model;

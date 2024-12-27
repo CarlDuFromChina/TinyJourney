@@ -61,7 +61,7 @@ export default {
     customApi() {
       return `api/${this.controllerName}/search?searchList=${JSON.stringify(
         this.searchList
-      )}&orderBy=&pageSize=$pageSize&pageIndex=$pageIndex&searchValue=$searchValue&viewId=ACCE50D6-81A5-4240-BD82-126A50764FAB`;
+      )}&pageSize=$pageSize&pageIndex=$pageIndex&searchValue=$searchValue&viewId=ACCE50D6-81A5-4240-BD82-126A50764FAB`;
     }
   },
   methods: {

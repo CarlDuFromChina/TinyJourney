@@ -271,7 +271,7 @@ export default {
       this.loading = true;
       let url = `api/${this.controllerName}/search?searchList=${JSON.stringify(
         this.searchList
-      )}&orderBy=&pageSize=$pageSize&pageIndex=$pageIndex&searchValue=$searchValue`;
+      )}&pageSize=$pageSize&pageIndex=$pageIndex&searchValue=$searchValue`;
       if (!sp.isNullOrEmpty(this.customApi)) {
         url = this.customApi;
       }

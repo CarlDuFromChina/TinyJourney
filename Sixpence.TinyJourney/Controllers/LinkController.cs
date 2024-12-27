@@ -14,9 +14,9 @@ namespace Sixpence.TinyJourney.Controller
     public class LinkController : EntityBaseController<Link, LinkService>
     {
         [HttpGet("search"), AllowAnonymous]
-        public override DataModel<Link> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? orderBy, string? viewId, string? searchValue)
+        public override DataModel<Link> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? viewId, string? searchValue)
         {
-            return base.GetViewData(pageSize, pageIndex, searchList, orderBy, viewId, searchValue);
+            return base.GetViewData(pageSize, pageIndex, searchList, viewId, searchValue);
         }
     }
 }
