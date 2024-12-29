@@ -33,12 +33,6 @@ const router = new VueRouter({
               meta: { title: '主页', keepAlive: true }
             },
             {
-              path: '/index/reading',
-              name: 'reading',
-              component: () => import('@/views/index/reading.vue'),
-              meta: { title: '读书笔记' }
-            },
-            {
               path: '/index/guidelines',
               name: 'guidelines',
               component: () => import('@/views/index/guidelines.vue'),
@@ -51,11 +45,6 @@ const router = new VueRouter({
           name: 'post',
           component: () => import('@/views/post.vue')
         },
-        {
-          path: '/reading-note/:id',
-          name: 'readingNote',
-          component: () => import('@/views/readingNote.vue')
-        }
       ],
       redirect: 'index'
     },

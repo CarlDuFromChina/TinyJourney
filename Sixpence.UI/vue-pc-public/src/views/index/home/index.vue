@@ -10,10 +10,6 @@
       <me style="margin-bottom:20px;"></me>
       <!-- 关于我 -->
 
-      <!-- 精品文章 -->
-      <series-list style="margin-bottom:20px;"></series-list>
-      <!-- 精品文章 -->
-
       <!-- 想法 -->
       <idea :pageSize="5" style="margin-bottom:20px;"></idea>
       <!-- 想法 -->
@@ -29,12 +25,12 @@
 </template>
 
 <script>
-import { Idea, BlogList, SeriesList, Me } from './components'
+import { Idea, BlogList, Me } from './components'
 import packageConfig from '../../../../package.json';
 
 export default {
   name: 'home',
-  components: { Idea, BlogList, SeriesList, Me },
+  components: { Idea, BlogList, Me },
   data() {
     return {
       loading: 'false',
@@ -64,7 +60,7 @@ export default {
           this.website.email = email;
           this.website.record_no = record_no;
         } catch {
-          this.$message.error('网站信息配置格式错误');          
+          this.$message.error('网站信息配置格式错误');
         }
       }
     })
