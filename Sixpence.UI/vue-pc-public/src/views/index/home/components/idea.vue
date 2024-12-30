@@ -1,8 +1,11 @@
 <template>
   <sp-card title="想法" :loading="loading" :empty="!data || data.length == 0">
-    <a-timeline>
+    <a-timeline style="padding-top: 8px;">
       <a-timeline-item v-for="(item, index) in data" :key="index">
-        <span>{{ item.created_at | moment('YYYY-MM-DD HH:mm') }}</span>
+        <div style="height: 35px;">
+          <a-avatar style="width: 30px; height: 30px; margin-right: 4px;" :src="getAvatar(item.created_by)" :alt="item.created_by_name" />
+          <span>{{ item.created_at | moment('YYYY-MM-DD HH:mm') }}</span>
+        </div>
         <span v-html="item.content"></span>
       </a-timeline-item>
     </a-timeline>
@@ -28,6 +31,9 @@ export default {
     this.loadData();
   },
   methods: {
+    getAvatar(id) {
+      return sp.getAvatar(id);
+    },
     loadData() {
       if (this.loading) {
         return;
