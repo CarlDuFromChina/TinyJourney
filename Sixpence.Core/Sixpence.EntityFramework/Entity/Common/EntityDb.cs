@@ -121,6 +121,10 @@ namespace Sixpence.EntityFramework.Entity
                         var attribute = AttributeUtil.GetAttribute<ColumnAttribute>(item);
                         var keyName = !string.IsNullOrEmpty(attribute?.Options?.Name) ? attribute.Options.Name : PascalToUnderline(item.Name);
                         var keyValue = item.GetValue(entity);
+                        if (keyValue == null && attribute?.Options?.DefaultValue != null)
+                        {
+                            keyValue = attribute.Options.DefaultValue;
+                        }
                         attributes.Add(keyName, keyValue);
                     }
                 });

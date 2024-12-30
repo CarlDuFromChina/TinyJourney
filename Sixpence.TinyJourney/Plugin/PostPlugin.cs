@@ -14,10 +14,6 @@ namespace Sixpence.TinyJourney.Plugin
             {
                 case EntityAction.PreCreate:
                 case EntityAction.PreUpdate:
-                    if (post.IsPop == null)
-                    {
-                        post.IsPop = false;
-                    }
                     post.IsShowName = post.IsShow == true ? "是" : "否";
                     post.IsSeriesName = post.IsSeries == true ? "是" : "否";
                     post.IsPopName = post.IsPop == true ? "是" : "否";

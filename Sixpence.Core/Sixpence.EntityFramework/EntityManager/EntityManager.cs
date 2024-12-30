@@ -237,35 +237,24 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
 
                 var paramList = new Dictionary<string, object>();
                 var setValueSql = "";
-                var whereSql = "";
 
                 #region 处理字段SQL
                 var attributes = new List<string>();
-                foreach (var item in entity.Columns)
+                var dbColumns = EntityCommon.GetDbColumns(entity);
+                foreach (var attr in dbColumns)
                 {
-                    var parameterName = $"{prefix}{item.DbPropertyMap.Name}"; // 定义参数化 @user_name
-
-                    // 处理特殊类型
-                    var parameter = Driver.SqlBuilder.HandleParameter(parameterName, item.Value);
-                    if (string.IsNullOrEmpty(parameter.name))
-                        parameter.name = parameterName;
-                    if (parameter.value == null)
-                        parameter.value = item.Value;
-
-                    paramList.Add(parameter.name, parameter.value); // :user_name, 'admin'
-                    if (item.Name != entity.PrimaryColumn.Name)
+                    var parameter = Driver.SqlBuilder.HandleParameter($"{prefix}{attr.Key}", attr.Value);
+                    paramList.Add(parameter.name, parameter.value);
+                    if (attr.Key != entity.PrimaryColumn.Name)
                     {
-                        attributes.Add($@"""{item.DbPropertyMap.Name}"" = {parameter.name}"); // user_name = :user_name
-                    }
-                    else
-                    {
-                        whereSql = $@"{primaryKeyName} = {parameter.name}";
+                        attributes.Add($@"{attr.Key} = {parameter.name}"); // user_name = :user_name
                     }
                 }
                 setValueSql = string.Join(',', attributes);
-                #endregion
 
                 var sql = $@"UPDATE {tableName} SET {setValueSql} WHERE {primaryKeyName} = {prefix}{primaryKeyName};";
+                #endregion
+
                 var result = this.Execute(sql, paramList);
 
                 #region 更新后 Plugin
