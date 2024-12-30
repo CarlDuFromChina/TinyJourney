@@ -374,8 +374,8 @@ export default {
                 window.location.href = `${import.meta.env.VITE_APP_INDEX_URL}/post/${id}`;
               },
               onCancel: () => {
-                this.$message.success('发布成功！');
                 window.onbeforeunload = null;
+                window.close();
               }
             });
           } catch (error) {
