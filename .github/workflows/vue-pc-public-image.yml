@@ -42,7 +42,7 @@ jobs:
           VITE_APP_AXIOS_BASE_URL=${{ secrets.VITE_APP_AXIOS_BASE_URL }}
           VITE_APP_TITLE=${{ secrets.VITE_APP_TITLE }}
           VITE_APP_MOBILE_URL=${{ secrets.VITE_APP_MOBILE_URL }}
-          VITE_APP_DISQUS_SHORTNAME=
+          VITE_APP_DISQUS_SHORTNAME=${{ secrets.VITE_APP_DISQUS_SHORTNAME}}
           eof
           
       - name: Build and push
