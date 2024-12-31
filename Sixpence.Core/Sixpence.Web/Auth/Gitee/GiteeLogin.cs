@@ -57,7 +57,6 @@ namespace Sixpence.Web.Auth.Gitee
                         RoleName = role.Name,
                         GiteeId = giteeUser.id.ToString(),
                         isActive = true,
-                        isActiveName = "启用"
                     };
                     manager.Create(user, false);
                     var _authUser = new SysAuthUser()

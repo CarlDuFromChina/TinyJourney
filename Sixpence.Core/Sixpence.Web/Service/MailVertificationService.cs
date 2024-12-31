@@ -64,7 +64,6 @@ AND mail_type = @type";
                     RoleId = role.Id,
                     RoleName = role.Name,
                     isActive = true,
-                    isActiveName = "启用"
                 };
                 Manager.Create(user, false);
                 var _authUser = new SysAuthUser()

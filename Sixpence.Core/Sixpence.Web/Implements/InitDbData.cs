@@ -105,7 +105,6 @@ namespace Sixpence.Web
                     RoleId = Role.Admin.GetIdentifier(),
                     RoleName = Role.Admin.GetDescription(),
                     isActive = true,
-                    isActiveName = "是"
                 },
                 new SysUser()
                 {
@@ -118,7 +117,6 @@ namespace Sixpence.Web
                     RoleId = Role.System.GetIdentifier(),
                     RoleName = Role.System.GetDescription(),
                     isActive = false,
-                    isActiveName = "否"
                 },
                 new SysUser()
                 {
@@ -131,7 +129,6 @@ namespace Sixpence.Web
                     RoleId = Role.User.GetIdentifier(),
                     RoleName = Role.User.GetDescription(),
                     isActive = false,
-                    isActiveName = "否"
                 },
                 new SysUser()
                 {
@@ -144,7 +141,6 @@ namespace Sixpence.Web
                     RoleId = Role.Guest.GetIdentifier(),
                     RoleName = Role.Guest.GetDescription(),
                     isActive = false,
-                    isActiveName = "否"
                 }
             };
         }

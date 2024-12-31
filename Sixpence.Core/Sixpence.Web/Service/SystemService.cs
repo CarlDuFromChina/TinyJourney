@@ -99,6 +99,17 @@ namespace Sixpence.Web.Service
             var pwd = model.Password;
             var publicKey = model.PublicKey;
 
+            var user = Manager.QueryFirst<SysUser>(new { code });
+            if (user == null)
+            {
+                return new LoginResponse() { result = false, message = "用户名或密码错误" };
+            }
+
+            if (user.isActive == false)
+            {
+                return new LoginResponse() { result = false, message = "用户已被锁定，请联系管理员" };
+            }
+
             var authUser = Manager.QueryFirst<SysAuthUser>(new { code });
 
             if (authUser == null)

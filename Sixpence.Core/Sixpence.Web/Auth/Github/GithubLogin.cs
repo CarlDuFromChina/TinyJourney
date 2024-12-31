@@ -57,7 +57,6 @@ namespace Sixpence.Web.Auth.Github
                         RoleName = role.Name,
                         GithubId = githubUser.id.ToString(),
                         isActive = true,
-                        isActiveName = "启用"
                     };
                     manager.Create(user, false);
                     var _authUser = new SysAuthUser()

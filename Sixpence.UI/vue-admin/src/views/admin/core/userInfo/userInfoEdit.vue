@@ -37,6 +37,13 @@
           </a-col>
         </a-row>
         <a-row :gutter="24">
+          <a-col :span="12">
+            <a-form-model-item label="出生日期">
+              <a-date-picker :format="dateFormat" :value="birthday" @change="handleBirthdayChange" style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="24">
           <a-col>
             <a-form-model-item label="自我介绍">
               <a-input v-model="data.introduction" type="textarea" placeholder="请介绍一下你自己...."></a-input>
@@ -186,6 +193,8 @@ export default {
     return {
       controllerName: 'sys_user',
       thirdPartyBind: thirdPartyBind,
+      dateFormat: 'YYYY/MM/DD',
+      birthday: null,
       avatarChange: false,
       lifePhotoChange: false,
       baseUrl: sp.getServerUrl(),
@@ -228,6 +237,12 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      return current && current > Date.now();
+    },
+    handleBirthdayChange(date, dateString) {
+      this.data.birthday = date.toISOString();
+    },
     handleChangeGender() {
       this.data.gender_name = this.data.gender === 0 ? '男' : '女';
     },
@@ -263,6 +278,11 @@ export default {
             url: sp.getDownloadUrl(image.id, false)
           }
         ];
+      }
+      if (!sp.isNullOrEmpty(this.data.birthday)) {
+        this.birthday = this.$moment(this.data.birthday);
+      } else {
+        this.birthday = null;
       }
     },
     beforeUpload(file) {

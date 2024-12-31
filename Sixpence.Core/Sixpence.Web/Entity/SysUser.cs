@@ -29,13 +29,13 @@ namespace Sixpence.Web.Entity
         /// <summary>
         /// 性别，1男，2女，9未知
         /// </summary>
-        [Column, Description("性别")]
+        [Column(DefaultValue: 9), Description("性别")]
         public int? Gender { get; set; }
 
         /// <summary>
         /// 性别
         /// </summary>
-        [Column, Description("性别")]
+        [Column(DefaultValue: "未知"), Description("性别")]
         public string GenderName { get; set; }
 
         /// <summary>
@@ -104,11 +104,8 @@ namespace Sixpence.Web.Entity
         [Column, Description("启用")]
         public bool? isActive { get; set; }
 
-        /// <summary>
-        /// 启用
-        /// </summary>
-        [Column, Description("启用")]
-        public string isActiveName { get; set; }
+        [Column, Description("出生日期")]
+        public DateTime? Birthday { get; set; }
     }
 
     public partial class SysUser
