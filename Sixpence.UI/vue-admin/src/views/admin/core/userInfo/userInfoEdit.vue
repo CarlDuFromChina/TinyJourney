@@ -39,7 +39,7 @@
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-model-item label="出生日期">
-              <a-date-picker :format="dateFormat" :value="birthday" @change="handleBirthdayChange" style="width: 100%" />
+              <a-date-picker :format="dateFormat" v-model="birthday" @change="handleBirthdayChange" :disabled-date="disabledDate" style="width: 100%" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -241,7 +241,10 @@ export default {
       return current && current > Date.now();
     },
     handleBirthdayChange(date, dateString) {
-      this.data.birthday = date.toISOString();
+      if (date)
+        this.data.birthday = date.toISOString();
+      else
+        this.data.birthday = null;
     },
     handleChangeGender() {
       this.data.gender_name = this.data.gender === 0 ? '男' : '女';
