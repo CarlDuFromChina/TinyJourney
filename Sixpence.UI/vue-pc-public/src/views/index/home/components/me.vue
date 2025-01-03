@@ -2,9 +2,13 @@
   <sp-card v-if="showUser" :loading="loading">
     <div class="about">
       <img :src="lifePhoto" alt="" />
-      <p>{{ name }}</p>
+      <div class="label-container">
+        <label><sp-icon name="sp-blog-nipple" style="padding-right: 2px;position: relative; "></sp-icon>{{ name }}</label>
+        <label><sp-icon name="sp-blog-birthday" style="padding-right: 2px;position: relative; top: -1px;"></sp-icon>{{ birthday }}</label>
+      </div>
       <p>{{ introduction }}</p>
     </div>
+
   </sp-card>
 </template>
 
@@ -17,6 +21,7 @@ export default {
       lifePhoto: import('../../../../assets/images/pic_err.png'),
       name: '',
       introduction: '',
+      birthday: '',
       loading: true
     };
   },
@@ -28,6 +33,8 @@ export default {
       }
       this.introduction = user.introduction;
       this.name = user.name;
+      if (user.birthday)
+        this.birthday = this.$moment(user.birthday).format('YYYY-MM-DD');
     } else {
       this.showUser = false;
     }
@@ -48,10 +55,16 @@ export default {
     margin-bottom: 24px;
     border-radius: 5px;
   }
-  p {
+  p, label {
     color: #bfbfbf;
     font-size: 14px;
     line-height: 1.2;
   }
+}
+
+.label-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0px;
 }
 </style>
