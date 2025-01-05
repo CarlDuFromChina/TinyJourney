@@ -83,5 +83,16 @@ namespace Sixpence.TinyJourney.Controller
         {
             return new PostService().GetIndexUser();
         }
+
+        /// <summary>
+        /// 生成摘要
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        [HttpPost, Route("generate_summary")]
+        public async Task<string> GenerateSummary([FromBody]string content)
+        {
+            return await new PostService().GenerateSummary(content);
+        }
     }
 }

@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sixpence.Core\Sixpence.AI\Sixpence.AI.csproj" />
     <ProjectReference Include="..\Sixpence.Core\Sixpence.Common\Sixpence.Common.csproj" />
     <ProjectReference Include="..\Sixpence.Core\Sixpence.Web\Sixpence.Web.csproj" />
   </ItemGroup>
