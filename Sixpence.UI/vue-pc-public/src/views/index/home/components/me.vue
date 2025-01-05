@@ -3,8 +3,8 @@
     <div class="about">
       <img :src="lifePhoto" alt="" />
       <div class="label-container">
-        <label><sp-icon name="sp-blog-nipple" style="padding-right: 2px;position: relative; "></sp-icon>{{ name }}</label>
-        <label><sp-icon name="sp-blog-birthday" style="padding-right: 2px;position: relative; top: -1px;"></sp-icon>{{ birthday }}</label>
+        <label style="color: #2A73CC"><sp-icon name="sp-blog-nipple" style="padding-right: 2px;position: relative; "></sp-icon>{{ name }}</label>
+        <label style="color: #FF7043"><sp-icon name="sp-blog-birthday" style="padding-right: 2px;position: relative; top: -1px;"></sp-icon>{{ birthday }}</label>
       </div>
       <p>{{ introduction }}</p>
     </div>
@@ -56,7 +56,7 @@ export default {
     border-radius: 5px;
   }
   p, label {
-    color: #bfbfbf;
+    color: rgba(0, 0, 0, 0.65);
     font-size: 14px;
     line-height: 1.2;
   }
