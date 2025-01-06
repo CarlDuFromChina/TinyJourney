@@ -226,5 +226,49 @@ WHERE
                 throw new SpException($"发生错误: {ex.Message}");
             }
         }
+        
+        /// <summary>
+        /// 根据提示词生成 Markdown 内容
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public async Task<string> GenerateMarkdownContent(string prompt)
+        {
+            string apiKey = WenxinApiConfig.Config.ApiKey;
+            string secretKey = WenxinApiConfig.Config.SecretKey;
+
+            // 初始化文心客户端
+            var wenxinClient = new WenxinClient(apiKey, secretKey);
+
+            // 获取 Access Token
+            if (!await wenxinClient.AuthenticateAsync())
+            {
+                throw new SpException("文心 API 认证失败，请检查 API Key 和 Secret Key。");
+            }
+
+            // 定义 Prompt 模板
+            string template = "根据提示词写一篇 Markdown 文章，文字里要夹杂图标：{question}";
+            PromptTemplate promptTemplate = new PromptTemplate(template);
+
+            // 创建 WenxinChain
+            WenxinChain chain = new WenxinChain(wenxinClient, promptTemplate);
+
+            // 设置输入变量
+            var variables = new Dictionary<string, string>
+            {
+                { "question", prompt }
+            };
+
+            // 执行链式调用
+            try
+            {
+                string result = await chain.RunAsync(variables);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new SpException($"发生错误: {ex.Message}");
+            }
+        }
     }
 }

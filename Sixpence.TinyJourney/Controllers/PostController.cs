@@ -100,5 +100,16 @@ namespace Sixpence.TinyJourney.Controller
             }
             return await new PostService().GenerateSummary(content);
         }
+
+        /// <summary>
+        /// 生成 Markdown 文章
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost, Route("generate_markdown")]
+        public async Task<string> GenerateMarkdownContent(AIInputDto dto)
+        {
+            return await new PostService().GenerateMarkdownContent(dto.Prompt);
+        }
     }
 }
