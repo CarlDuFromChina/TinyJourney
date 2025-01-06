@@ -49,3 +49,4 @@ jobs:
           tags: |
             carldu/tj-server:latest
             carldu/tj-server:1.0.0
+            carldu/tj-server:1.0.1
