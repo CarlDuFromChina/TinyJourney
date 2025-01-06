@@ -2,6 +2,7 @@
 using Sixpence.Common.Utils;
 using Sixpence.EntityFramework;
 using Sixpence.TinyJourney.Entity;
+using Sixpence.TinyJourney.Config;
 
 namespace Sixpence.TinyJourney.Plugin
 {

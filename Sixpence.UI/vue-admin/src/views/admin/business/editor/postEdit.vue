@@ -52,7 +52,8 @@
         <a-row>
           <a-col>
             <a-form-model-item label="摘要">
-              <a-textarea v-model="data.brief" placeholder="请输入摘要，若为空则自动生成" :auto-size="{ minRows: 2, maxRows: 4 }" allow-clear />
+              <a-input v-model="data.brief" type="textarea" placeholder="请输入摘要，若为空则自动生成" :auto-size="{ minRows: 2, maxRows: 4 }" allow-clear />
+              <a-button type="primary" style="float: right;" @click="generate">AI生成</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -435,6 +436,15 @@ export default {
         .finally(() => {
           this.seconds = 60;
           clearInterval(this.secondId);
+        });
+    },
+    generate() {
+      sp.post('api/post/generate_summary', this.data.content)
+        .then(resp => {
+          this.data.brief = resp;
+        })
+        .catch(() => {
+          this.$message.error('生成失败');
         });
     }
   }

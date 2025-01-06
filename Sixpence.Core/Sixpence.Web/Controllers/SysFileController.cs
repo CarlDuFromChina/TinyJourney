@@ -42,7 +42,8 @@ namespace Sixpence.Web.Controllers
         [HttpPost]
         [RequestSizeLimit(100 * 1024 * 1024)]
         [Route("Upload")]
-        public List<FileInfoModel> Upload([FromForm] List<IFormFile> files, [FromQuery] string fileType, [FromQuery] string objectId = "")
+        [Consumes("multipart/form-data")]
+        public List<FileInfoModel> Upload(List<IFormFile> files, [FromQuery] string fileType, [FromQuery] string objectId = "")
         {
             if (files == null || !files.Any())
                 throw new SpException("上传文件不能为空");
@@ -58,13 +59,18 @@ namespace Sixpence.Web.Controllers
             return fileList;
         }
 
+        /// <summary>
         /// 上传图片
         /// </summary>
+        /// <param name="file"></param>
+        /// <param name="fileType"></param>
+        /// <param name="objectId"></param>
         /// <returns></returns>
         [HttpPost]
         [RequestSizeLimit(100 * 1024 * 1024)]
         [Route("upload_image")]
-        public FileInfoModel UploadImage([FromForm] IFormFile file, [FromQuery] string fileType, [FromQuery] string objectId = "")
+        [Consumes("multipart/form-data")]
+        public FileInfoModel UploadImage(IFormFile file, [FromQuery] string fileType, [FromQuery] string objectId = "")
         {
             if (file == null)
                 return null;
@@ -84,7 +90,7 @@ namespace Sixpence.Web.Controllers
         [HttpPost]
         [RequestSizeLimit(100 * 1024 * 1024)]
         [Route("upload_big_image")]
-        public IEnumerable<FileInfoModel> UploadBigImage([FromForm] IFormFile file, [FromQuery] string fileType, [FromQuery] string objectId = "")
+        public IEnumerable<FileInfoModel> UploadBigImage(IFormFile file, [FromQuery] string fileType, [FromQuery] string objectId = "")
         {
             if (file == null)
                 return null;

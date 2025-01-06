@@ -10,6 +10,7 @@ using Sixpence.TinyJourney.Entity;
 using Sixpence.Web.Entity;
 using Newtonsoft.Json;
 using Sixpence.Web.Model;
+using System.Text.Json;
 
 namespace Sixpence.TinyJourney.Controller
 {
@@ -90,8 +91,13 @@ namespace Sixpence.TinyJourney.Controller
         /// <param name="content"></param>
         /// <returns></returns>
         [HttpPost, Route("generate_summary")]
-        public async Task<string> GenerateSummary([FromBody]string content)
+        public async Task<string> GenerateSummary()
         {
+            var content = "";
+            using (var reader = new System.IO.StreamReader(Request.Body))
+            {
+                content = await reader.ReadToEndAsync();
+            }
             return await new PostService().GenerateSummary(content);
         }
     }
