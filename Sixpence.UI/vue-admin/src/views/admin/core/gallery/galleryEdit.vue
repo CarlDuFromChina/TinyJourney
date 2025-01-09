@@ -26,6 +26,8 @@
             v-show="!!imgSrc"
             :src="imgSrc"
             :aspect-ratio="16 / 9"
+            :viewMode="1"
+            :autoCropArea="1"
           ></vue-cropper>
         </a-col>
       </a-row>
@@ -163,8 +165,9 @@ export default {
     },
     cropAndUploadImage() {
       var file = this.file;
+      var fileName = file.name.replace(/\.jpg$/, '.png');
       this.$refs.cropper.getCroppedCanvas().toBlob(async (blob) => {
-        this.file = new File([blob], file.name, { type: blob.type, lastModified: Date.now() });
+        this.file = new File([blob], fileName, { type: blob.type, lastModified: Date.now() });
         await this.uploadBigImg({ file: this.file });
         await this.saveData();
       });

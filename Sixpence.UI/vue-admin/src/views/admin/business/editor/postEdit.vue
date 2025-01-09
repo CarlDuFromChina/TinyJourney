@@ -20,10 +20,14 @@
                 <a-icon
                   :type="saveStatus?.icon"
                   :spin="saveStatusValue === 'wait'"
-                  :style="{ color: saveStatus?.color, paddingRight: '12px' }"
+                  :style="{ fontSize: '14px', color: saveStatus?.color, paddingRight: '8px' }"
                   @click="saveDraft">
                 </a-icon>
               </a-popover>
+              <a-tooltip>
+                <template slot="title">AI生成内容</template>
+                <a-icon type="code" :style="{ fontSize: '14px'}" @click="() => isAIGenerateVisible = true" />
+              </a-tooltip>
             </template>
           </mavon-editor>
         </div>
@@ -52,8 +56,10 @@
         <a-row>
           <a-col>
             <a-form-model-item label="摘要">
-              <a-input v-model="data.brief" type="textarea" placeholder="请输入摘要，若为空则自动生成" :auto-size="{ minRows: 2, maxRows: 4 }" allow-clear />
-              <a-button type="primary" style="float: right;" @click="generate">AI生成</a-button>
+              <a-spin :spinning="briefLoading">
+                <a-input v-model="data.brief" type="textarea" placeholder="请输入摘要，若为空则自动生成" :auto-size="{ minRows: 2, maxRows: 4 }" allow-clear />
+                <a-button type="primary" style="float: right;" @click="generate">AI生成</a-button>
+              </a-spin>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -110,6 +116,16 @@
         <a-button @click="publishModalVisible = false">取 消</a-button>
         <a-button type="primary" @click="savePost" :loading="loading">确 定</a-button>
       </span>
+    </a-modal>
+    <a-modal title="AI 自动生成" v-model="isAIGenerateVisible" @ok="generateContent">
+      <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="提示词">
+          <a-input
+            v-model="promptInputValue"
+            placeholder="输入提示词 AI 自动生成内容"
+          ></a-input>
+        </a-form-item>
+      </a-form>
     </a-modal>
     <cloud-upload ref="cloudUpload" @selected="selected"></cloud-upload>
   </div>
@@ -169,7 +185,10 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         post_type: [{ required: true, message: '请选择分类', trigger: 'blur' }],
-      }
+      },
+      briefLoading: false,
+      isAIGenerateVisible: false,
+      promptInputValue: ''
     };
   },
   async created() {
@@ -442,6 +461,24 @@ export default {
       sp.post('api/post/generate_summary', this.data.content)
         .then(resp => {
           this.data.brief = resp;
+          this.$message.success('生成成功');
+        })
+        .catch(() => {
+          this.$message.error('生成失败');
+        })
+        .finally(() => {
+          this.briefLoading = false;
+        });
+    },
+    generateContent() {
+      if (sp.isNullOrEmpty(this.promptInputValue)) {
+        this.$message.error('请输入提示词');
+        return;
+      }
+      sp.post('api/post/generate_markdown', this.promptInputValue)
+        .then(resp => {
+          this.data.content = resp;
+          this.$message.success('生成成功');
         })
         .catch(() => {
           this.$message.error('生成失败');
