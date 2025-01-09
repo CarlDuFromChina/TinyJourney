@@ -117,16 +117,18 @@
         <a-button type="primary" @click="savePost" :loading="loading">确 定</a-button>
       </span>
     </a-modal>
-    <a-modal title="AI 自动生成" v-model="isAIGenerateVisible" @ok="generateContent">
-      <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-        <a-form-item label="提示词">
-          <a-input
-            v-model="promptInputValue"
-            placeholder="输入提示词 AI 自动生成内容"
-          ></a-input>
-        </a-form-item>
-      </a-form>
-    </a-modal>
+      <a-modal title="AI 自动生成" v-model="isAIGenerateVisible" @ok="generateContent" @cancel="cancelGnenerateContent" :confirmLoading="aiGenerateLoading">
+        <a-spin tip="AI自动生成中" :spinning="aiGenerateLoading" :style="{ zIndex: '9999'}">
+          <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+            <a-form-item label="提示词">
+              <a-input
+                v-model="promptInputValue"
+                placeholder="输入提示词 AI 自动生成内容"
+              ></a-input>
+            </a-form-item>
+          </a-form>
+        </a-spin>
+      </a-modal>
     <cloud-upload ref="cloudUpload" @selected="selected"></cloud-upload>
   </div>
 </template>
@@ -135,6 +137,7 @@
 import { edit, select } from '@/mixins';
 import { htmlToText } from 'html-to-text';
 import { toolbar } from './mavon';
+import axios from 'axios';
 
 export default {
   name: 'post-edit',
@@ -188,6 +191,7 @@ export default {
       },
       briefLoading: false,
       isAIGenerateVisible: false,
+      aiGenerateLoading: false,
       promptInputValue: ''
     };
   },
@@ -475,14 +479,32 @@ export default {
         this.$message.error('请输入提示词');
         return;
       }
-      sp.post('api/post/generate_markdown', this.promptInputValue)
+      this.aiGenerateLoading = true;
+      this.cancelToken = axios.CancelToken.source();
+      sp.post('api/post/generate_markdown', { prompt: this.promptInputValue }, {
+        timeout: 60000,
+        cancelToken: this.cancelToken.token
+      })
         .then(resp => {
           this.data.content = resp;
           this.$message.success('生成成功');
         })
-        .catch(() => {
-          this.$message.error('生成失败');
+        .catch((error) => {
+          if (axios.isCancel(error) || error === '取消AI生成') {
+            this.$message.error('取消AI生成');
+          } else {
+            this.$message.error('生成失败');
+          }
+        })
+        .finally(() => {
+          this.aiGenerateLoading = false;
+          this.isAIGenerateVisible = false;
         });
+    },
+    cancelGnenerateContent() {
+      if (this.cancelToken) {
+        this.cancelToken.cancel('取消AI生成');
+      }
     }
   }
 };

@@ -1,17 +1,4 @@
-var editor = [
-  {
-    path: '/admin/editor/post/:id?',
-    name: 'postEdit',
-    component: () => import('./editor/postEdit.vue'),
-    meta: { title: '博客编辑' }
-  },
-  {
-    path: '/admin/editor/draft/:draftId?',
-    name: 'draftEdit',
-    component: () => import('./editor/postEdit.vue'),
-    meta: { title: '草稿编辑' }
-  }
-];
+import editorRouter from './editor';
 
 export default [
   {
@@ -61,4 +48,4 @@ export default [
     component: () => import('./draftList.vue'),
     meta: { title: '草稿管理' }
   }
-].concat(editor);
+].concat(editorRouter);
