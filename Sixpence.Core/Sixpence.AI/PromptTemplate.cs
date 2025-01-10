@@ -1,4 +1,4 @@
-namespace Sixpence.AI.Wenxin;
+namespace Sixpence.AI;
 
 public class PromptTemplate
 {

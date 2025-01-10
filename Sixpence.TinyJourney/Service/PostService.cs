@@ -1,4 +1,6 @@
-﻿using Sixpence.AI.Wenxin;
+﻿using Sixpence.AI;
+using Sixpence.AI.DeepSeek;
+using Sixpence.AI.Wenxin;
 using Sixpence.Common;
 using Sixpence.EntityFramework;
 using Sixpence.TinyJourney.Config;
@@ -8,6 +10,7 @@ using Sixpence.Web;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model;
 using Sixpence.Web.Service;
+using System.ComponentModel.Design;
 
 namespace Sixpence.TinyJourney.Service
 {
@@ -175,7 +178,7 @@ WHERE
         /// <returns></returns>
         public SysUser? GetIndexUser()
         {
-            var config = Manager.QueryFirst<SysConfig>("SELECT * FROM sys_config WHERE code = @code", new Dictionary<string, object>() { { "@code", "index_user" } });
+            var config = Manager.QueryFirst<SysConfig>(new { code = "index_user" });
             if (!string.IsNullOrEmpty(config?.Value))
             {
                 return new SysUserService(Manager).GetDataByCode(config?.Value);
@@ -190,35 +193,20 @@ WHERE
         /// <returns></returns>
         public async Task<string> GenerateSummary(string content)
         {
-            string apiKey = WenxinApiConfig.Config.ApiKey;
-            string secretKey = WenxinApiConfig.Config.SecretKey;
+            IAIService service = ServiceFactory.Resolve<IAIService>(AIServiceResolver.Resolve);
 
-            // 初始化文心客户端
-            var wenxinClient = new WenxinClient(apiKey, secretKey);
-
-            // 获取 Access Token
-            if (!await wenxinClient.AuthenticateAsync())
-            {
-                throw new SpException("文心 API 认证失败，请检查 API Key 和 Secret Key。");
-            }
-
-            // 定义 Prompt 模板
             string template = "根据以下内容写一个 100 字摘要：{question}";
-            PromptTemplate promptTemplate = new PromptTemplate(template);
 
-            // 创建 WenxinChain
-            WenxinChain chain = new WenxinChain(wenxinClient, promptTemplate);
+            PromptTemplate promptTemplate = new(template);
 
-            // 设置输入变量
-            var variables = new Dictionary<string, string>
+            Dictionary<string, string> variables = new ()
             {
                 { "question", content }
             };
 
-            // 执行链式调用
             try
             {
-                string result = await chain.RunAsync(variables);
+                string result = await service.ProcessChatTemplateAsync(promptTemplate, variables);
                 return result;
             }
             catch (Exception ex)
@@ -234,35 +222,20 @@ WHERE
         /// <returns></returns>
         public async Task<string> GenerateMarkdownContent(string prompt)
         {
-            string apiKey = WenxinApiConfig.Config.ApiKey;
-            string secretKey = WenxinApiConfig.Config.SecretKey;
+            IAIService service = ServiceFactory.Resolve<IAIService>(AIServiceResolver.Resolve);
 
-            // 初始化文心客户端
-            var wenxinClient = new WenxinClient(apiKey, secretKey);
-
-            // 获取 Access Token
-            if (!await wenxinClient.AuthenticateAsync())
-            {
-                throw new SpException("文心 API 认证失败，请检查 API Key 和 Secret Key。");
-            }
-
-            // 定义 Prompt 模板
             string template = "根据提示词写一篇 Markdown 文章，文字里要夹杂图标：{question}";
-            PromptTemplate promptTemplate = new PromptTemplate(template);
 
-            // 创建 WenxinChain
-            WenxinChain chain = new WenxinChain(wenxinClient, promptTemplate);
+            PromptTemplate promptTemplate = new(template);
 
-            // 设置输入变量
-            var variables = new Dictionary<string, string>
+            Dictionary<string, string> variables = new()
             {
                 { "question", prompt }
             };
 
-            // 执行链式调用
             try
             {
-                string result = await chain.RunAsync(variables);
+                string result = await service.ProcessChatTemplateAsync(promptTemplate, variables);
                 return result;
             }
             catch (Exception ex)

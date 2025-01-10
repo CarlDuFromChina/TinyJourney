@@ -7,6 +7,8 @@ using Sixpence.Web;
 using Quartz;
 using Sixpence.TinyJourney.Job;
 using Sixpence.TinyJourney.Config;
+using Sixpence.AI;
+using Sixpence.AI.Wenxin;
 
 namespace Sixpence.TinyJourney
 {
@@ -20,7 +22,8 @@ namespace Sixpence.TinyJourney
                 .AddEntityPlugin()
                 .AddEntityOptionProvider()
                 .AddSysConfig()
-                .AddJob();
+                .AddJob()
+                .AddAIService();
         }
 
         private static IServiceCollection AddEntity(this IServiceCollection services)
@@ -62,6 +65,12 @@ namespace Sixpence.TinyJourney
         private static IServiceCollection AddJob(this IServiceCollection services)
         {
             services.AddSingleton<IJob, CleanJob>();
+            return services;
+        }
+
+        public static IServiceCollection AddAIService(this IServiceCollection services)
+        {
+            services.AddSingleton<IAIService, WenxinAIService>();
             return services;
         }
     }
