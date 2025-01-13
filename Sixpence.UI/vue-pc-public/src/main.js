@@ -26,8 +26,8 @@ Vue.prototype.$moment = moment;
 // 如果是移动端则跳转到移动端应用
 if (window.device.mobile()) {
   const currentUrl = new URL(window.location.href);
-  currentUrl.origin = import.meta.env.VITE_APP_MOBILE_URL;
-  window.location.href = currentUrl.toString();
+  const newOrigin = import.meta.env.VITE_APP_MOBILE_URL;
+  window.location.href = newOrigin + currentUrl.pathname + currentUrl.search + currentUrl.hash;
 } else {
   /* eslint-disable no-new */
   new Vue({
