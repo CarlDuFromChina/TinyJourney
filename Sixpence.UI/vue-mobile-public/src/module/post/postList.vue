@@ -58,7 +58,6 @@ export default {
       return sp.getDownloadUrl(item.surface_url);
     },
     goReadonly(id) {
-      console.log(id);
       this.$router.push({ name: 'post', params: { id: id } });
     },
     fetch() {

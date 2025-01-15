@@ -29,7 +29,6 @@ export default {
         .then(resp => {
           this.data = resp;
           this.content = marked(resp.content);
-          console.log(this.content);
         })
         .finally(() => {
           setTimeout(() => {
