@@ -1,6 +1,6 @@
 <template>
   <mt-header ref="header" fixed :title="title">
-    <mt-button icon="back" @click="$router.back()" slot="left" v-if="back">返回</mt-button>
+    <mt-button icon="back" @click="goHome" slot="left" v-if="back">返回</mt-button>
     <mt-button icon="more" slot="right">
       <slot name="right"></slot>
     </mt-button>
@@ -26,6 +26,13 @@ export default {
   },
   destroyed() {
     this.$parent.headerRef = null;
+  },
+  methods: {
+    goHome() {
+      this.$router.push({
+        name: 'post-list'
+      });
+    }
   }
 };
 </script>
