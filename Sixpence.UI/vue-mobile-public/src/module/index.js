@@ -11,7 +11,4 @@ export default [{
   component: () => import('./index.vue'),
   children: [].concat(post, idea),
   redirect: '/index/postList'
-}, {
-  path: '/post/:id',
-  component: () => import('./post/postReadonly.vue')
 }].concat(error);
