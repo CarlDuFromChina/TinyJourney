@@ -29,10 +29,6 @@ namespace Sixpence.AI.DeepSeek
                 {
                     new DeepSeekChatMessage { Role = "user",   Content = message }
                 },
-                Parameters = new Dictionary<string, object>
-                {
-                    { "temperature", 0.7 }
-                }
             };
 
             var chatResponse = await client.ChatAsync(chatRequest);
@@ -53,7 +49,7 @@ namespace Sixpence.AI.DeepSeek
             {
                 BaseUrl = "https://api.deepseek.com",
                 ApiKey = AIPlatformConfig.Config.DeepSeek.ApiKey,
-                Timeout = TimeSpan.FromSeconds(60)
+                Timeout = TimeSpan.FromSeconds(120)
             };
 
             // 2. 初始化 DeepSeekClient
@@ -66,10 +62,7 @@ namespace Sixpence.AI.DeepSeek
                 {
                     new DeepSeekChatMessage { Role = "user",   Content = template.Format(variables) }
                 },
-                Parameters = new Dictionary<string, object>
-                {
-                    { "temperature", 0.7 }
-                }
+                Stream = false
             };
 
             var chatResponse = await client.ChatAsync(chatRequest);

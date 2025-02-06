@@ -9,6 +9,7 @@ using Sixpence.TinyJourney.Job;
 using Sixpence.TinyJourney.Config;
 using Sixpence.AI;
 using Sixpence.AI.Wenxin;
+using Sixpence.AI.DeepSeek;
 
 namespace Sixpence.TinyJourney
 {
@@ -71,6 +72,7 @@ namespace Sixpence.TinyJourney
         public static IServiceCollection AddAIService(this IServiceCollection services)
         {
             services.AddSingleton<IAIService, WenxinAIService>();
+            services.AddSingleton<IAIService, DeepSeekAIService>();
             return services;
         }
     }

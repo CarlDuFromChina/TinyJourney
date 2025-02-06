@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +19,14 @@ namespace Sixpence.AI.DeepSeek
         public List<DeepSeekChatMessage> Messages { get; set; } = new();
 
         /// <summary>
-        /// 一些可选的参数，如温度、top_p 等
+        /// 使用的模型的 ID。您可以使用 deepseek-chat, deepseek-reasoner
         /// </summary>
-        public Dictionary<string, object> Parameters { get; set; } = new();
+        public string Model { get; set; } = "deepseek-chat";
+
+        /// <summary>
+        /// 如果设置为 True，将会以 SSE（server-sent events）的形式以流式发送消息增量。消息流以 data: [DONE] 结尾。
+        /// </summary>
+        public bool Stream { get; set; } = false;
     }
 
 }

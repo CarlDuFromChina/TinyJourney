@@ -482,7 +482,7 @@ export default {
       this.aiGenerateLoading = true;
       this.cancelToken = axios.CancelToken.source();
       sp.post('api/post/generate_markdown', { prompt: this.promptInputValue }, {
-        timeout: 60000,
+        timeout: 2 * 60 * 1000,
         cancelToken: this.cancelToken.token
       })
         .then(resp => {

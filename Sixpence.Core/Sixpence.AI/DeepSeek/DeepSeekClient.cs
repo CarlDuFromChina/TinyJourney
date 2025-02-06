@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Sixpence.Common;
 
 namespace Sixpence.AI.DeepSeek;
 
@@ -44,7 +45,7 @@ public class DeepSeekClient : IDisposable
     /// <returns>返回完整的对话响应</returns>
     public async Task<DeepSeekChatResponse> ChatAsync(DeepSeekChatRequest request)
     {
-        string url = "/api/chat";  // 假设的非流式接口
+        string url = "/chat/completions";  // 假设的非流式接口
         using var content = BuildJsonContent(request);
         using var response = await _httpClient.PostAsync(url, content);
 
@@ -145,7 +146,13 @@ public class DeepSeekClient : IDisposable
     /// <returns>StringContent</returns>
     private StringContent BuildJsonContent(object obj)
     {
-        var json = JsonSerializer.Serialize(obj);
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
+        var json = JsonSerializer.Serialize(obj, options);
         return new StringContent(json, Encoding.UTF8, "application/json");
     }
 
