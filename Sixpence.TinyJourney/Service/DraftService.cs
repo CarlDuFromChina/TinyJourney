@@ -35,25 +35,15 @@ WHERE post_id NOT IN (
         /// </summary>
         /// <param name="post_id"></param>
         /// <returns></returns>
-        public Draft GetDataByPostId(string post_id)
-        {
-            var sql = @"
-SELECT * FROM draft
-WHERE post_id = @post_id
-";
-            return Manager.QueryFirst<Draft>(sql, new Dictionary<string, object>() { { "@post_id", post_id } });
-        }
+        public Draft GetDataByPostId(string post_id) =>
+            Repository.FindOne(new { post_id });
 
         /// <summary>
         /// 根据博客id删除草稿
         /// </summary>
         /// <param name="post_id"></param>
-        public void DeleteDataByPostId(string post_id)
-        {
-            var draft = Manager.QueryFirst<Draft>("select * from draft where post_id = @id or id = @id", new { id = post_id });
-            if (draft != null)
-                Manager.Delete(draft);
-        }
+        public void DeleteDataByPostId(string post_id) =>
+            Manager.Delete<Draft>(new { post_id });
 
         public override string CreateOrUpdateData(Draft t)
         {

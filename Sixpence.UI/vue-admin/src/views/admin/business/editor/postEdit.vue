@@ -196,6 +196,7 @@ export default {
     };
   },
   async created() {
+    // 开启监听
     this.$on('open-watch', () => {
       this.unwatch = this.$watch('data.content', (v1, v2) => {
           if (v1 === v2) {
@@ -222,6 +223,7 @@ export default {
       );
     });
 
+    // 编辑草稿，打开监听
     var draftid = this.$route.params.draftId;
     if (!sp.isNullOrEmpty(draftid)) {
       var resp = await sp.get(`api/draft/${draftid}`);
@@ -231,10 +233,12 @@ export default {
       this.data.content = content;
       this.data.title = title;
       this.$emit('open-watch');
+      return;
     }
 
-    if (sp.isNullOrEmpty(draftid) && sp.isNullOrEmpty(this.data.id)) {
-      this.$nextTick(() => this.$emit('open-watch'));
+    // 新建博客，打开监听
+    if (this.pageState === 'create') {
+      this.$emit('open-watch');
     }
   },
   mounted() {
@@ -326,10 +330,8 @@ export default {
         this.tags = this.data.tags;
       }
 
-      // true 创建博客，false 查找是否有草稿需要恢复
-      if (this.pageState === 'create') {
-        this.$emit('open-watch');
-      } else {
+      // 查找是否有草稿需要恢复
+      if (this.pageState === 'edit') {
         var draft = await sp.get(`api/draft/post/${this.data.id}`);
         if (draft) {
           this.draft = draft;
@@ -353,7 +355,7 @@ export default {
     },
     // 将图片上传到服务器，返回地址替换到md中
     imgAdd(pos, file) {
-      const url = '/api/sys_file/upload_image?fileType=blog_content&objectId=' + (this.data.id || this.draft.postid || '');
+      const url = '/api/sys_file/upload_image?fileType=blog_content&objectId=' + (this.data.id || this.draft.post_id || '');
       const formData = new FormData();
       formData.append('file', file);
       sp.post(url, formData, this.headers).then(resp => {
@@ -421,8 +423,8 @@ export default {
         okText: '恢复',
         cancelText: '取消',
         onOk: () => {
-          const { postid, content, title } = this.draft;
-          this.data.id = postid;
+          const { post_id, content, title } = this.draft;
+          this.data.id = post_id;
           this.data.content = content;
           this.data.title = title;
           sp.delete(`/api/draft/${this.draft.id}`)
@@ -443,7 +445,7 @@ export default {
       this.draft.content = this.data.content;
       this.draft.images = this.data.images;
       if (!sp.isNullOrEmpty(this.data.id)) {
-        this.draft.postid = this.data.id;
+        this.draft.post_id = this.data.id;
       }
       sp.post('api/draft/save', this.draft)
         .then(resp => {
