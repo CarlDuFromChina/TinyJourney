@@ -37,16 +37,4 @@ namespace Sixpence.EntityFramework.Entity
             };
         }
     }
-
-    public enum PrimaryType
-    {
-        /// <summary>
-        /// GUID
-        /// </summary>
-        GUID,
-        /// <summary>
-        /// GUID 转换为数字类型
-        /// </summary>
-        GUIDNumber,
-    }
 }

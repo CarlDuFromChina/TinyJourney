@@ -5,6 +5,11 @@ using System.Text;
 
 namespace Sixpence.EntityFramework
 {
+    /// <summary>
+    /// 仓储模型接口，定义了仓储模型的基本操作
+    /// 提供了对实体的增删改查的基本操作，以及更友好的业务化操作
+    /// </summary>
+    /// <typeparam name="E"></typeparam>
     public interface IRepository<E> where E : BaseEntity, new()
     {
         IEntityManager Manager { get; set; }

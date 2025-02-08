@@ -1,5 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using Newtonsoft.Json.Linq;
+using Sixpence.EntityFramework;
 using Sixpence.EntityFramework.Entity;
 using Sixpence.Web;
 using System.ComponentModel;

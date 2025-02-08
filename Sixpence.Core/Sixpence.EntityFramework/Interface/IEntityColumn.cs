@@ -17,10 +17,12 @@ namespace Sixpence.EntityFramework
         /// 字段名，例如：public string PhoneNumber { get;set; }，则Name为PhoneNumber
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// 值
         /// </summary>
         public object Value { get; set; }
+
         /// <summary>
         /// 数据库字段映射
         /// </summary>

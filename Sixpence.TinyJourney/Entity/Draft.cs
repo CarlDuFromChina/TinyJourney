@@ -1,4 +1,5 @@
-﻿using Sixpence.EntityFramework.Entity;
+﻿using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
 using Sixpence.Web;
 using System;
 using System.Collections.Generic;

@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace Sixpence.EntityFramework
 {
     /// <summary>
-    /// 数据库实例
+    /// 数据库客户端，SQL 查询的封装器，更为底层的数据库操作
+    /// 所有SQL日志记录均在此处进行
     /// </summary>
     public class DbClient : IDisposable
     {

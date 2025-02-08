@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace Sixpence.EntityFramework
 {
     /// <summary>
-    /// 数据库驱动接口
+    /// 不同数据库的驱动接口
     /// </summary>
     public interface IDbDriver
     {
@@ -26,12 +26,12 @@ namespace Sixpence.EntityFramework
         ISqlBuilder SqlBuilder { get; }
 
         /// <summary>
-        /// 批量操作
+        /// 数据库操作，例如：批量操作、获取表字段等，不同数据库的操作方式不同
         /// </summary>
         IDbOperator Operator { get; }
 
         /// <summary>
-        /// 获取数据库连接对象
+        /// 获取数据库连接对象（非常重要）
         /// </summary>
         /// <param name="connectionString"></param>
         /// <returns></returns>

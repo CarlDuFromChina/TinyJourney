@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Sixpence.EntityFramework
 {
+    /// <summary>
+    /// 数据库字段映射
+    /// </summary>
     public interface IDbPropertyMap
     {
         /// <summary>
