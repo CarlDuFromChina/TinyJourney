@@ -14,28 +14,34 @@ namespace Sixpence.Web.Controllers
     [Authorize(Policy = "Api")]
     public class JobController : BaseApiController
     {
+        private readonly JobService _jobService;
+        public JobController(JobService jobService)
+        {
+            _jobService = jobService;
+        }
+
         [HttpGet]
         public IList<JobModel> GetDataList()
         {
-            return new JobService().GetDataList();
+            return _jobService.GetDataList();
         }
 
         [HttpPost("run")]
         public void RunOnceNow(string name)
         {
-            new JobService().RunOnceNow(name);
+            _jobService.RunOnceNow(name);
         }
 
         [HttpPost("pause")]
         public void Pause(string name)
         {
-            new JobService().Pause(name);
+            _jobService.Pause(name);
         }
 
         [HttpPost("resume")]
         public void Resume(string name)
         {
-            new JobService().Resume(name);
+            _jobService.Resume(name);
         }
     }
 }

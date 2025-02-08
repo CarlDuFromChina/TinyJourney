@@ -20,6 +20,10 @@ namespace Sixpence.Web.Controllers
 {
     public class SysFileController : EntityBaseController<SysFile, SysFileService>
     {
+        public SysFileController(SysFileService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 通用下载接口
         /// </summary>
@@ -52,7 +56,7 @@ namespace Sixpence.Web.Controllers
 
             foreach (var file in files)
             {
-                var sysFile = new SysFileService().UploadFile(file.OpenReadStream(), file.FileName.GetFileType(), fileType, file.ContentType, objectId, file.FileName);
+                var sysFile = _service.UploadFile(file.OpenReadStream(), file.FileName.GetFileType(), fileType, file.ContentType, objectId, file.FileName);
                 fileList.Add(sysFile.ToFileInfoModel());
             }
 
@@ -78,7 +82,7 @@ namespace Sixpence.Web.Controllers
             var stream = file.OpenReadStream();
             var contentType = file.ContentType;
             var suffix = file.FileName.GetFileType();
-            var image = new SysFileService().UploadFile(stream, suffix, fileType, contentType, objectId, file.FileName);
+            var image = _service.UploadFile(stream, suffix, fileType, contentType, objectId, file.FileName);
 
             return image.ToFileInfoModel();
         }
@@ -95,7 +99,7 @@ namespace Sixpence.Web.Controllers
             if (file == null)
                 return null;
 
-            return new SysFileService().UploadBigImage(file, fileType, objectId);
+            return _service.UploadBigImage(file, fileType, objectId);
         }
     }
 }

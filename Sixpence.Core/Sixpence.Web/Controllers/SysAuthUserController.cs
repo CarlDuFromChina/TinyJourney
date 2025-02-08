@@ -13,6 +13,10 @@ namespace Sixpence.Web.Controllers
 {
     public class SysAuthUserController : EntityBaseController<SysAuthUser, SysAuthUserService>
     {
+        public SysAuthUserController(SysAuthUserService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 刷新Token
         /// </summary>
@@ -33,7 +37,7 @@ namespace Sixpence.Web.Controllers
         [HttpPut("{id}/lock")]
         public void LockUser(string id)
         {
-            new SysAuthUserService().LockUser(id);
+            _service.LockUser(id);
         }
 
         /// <summary>
@@ -43,7 +47,7 @@ namespace Sixpence.Web.Controllers
         [HttpPut("{id}/unlock")]
         public void UnlockUser(string id)
         {
-            new SysAuthUserService().UnlockUser(id);
+            _service.UnlockUser(id);
         }
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace Sixpence.Web.Controllers
         [HttpPost("bind")]
         public void BindThirdPartyAccount(string type, string userid, string code)
         {
-            new SysAuthUserService().BindThirdPartyAccount(type, userid, code);
+            _service.BindThirdPartyAccount(type, userid, code);
         }
     }
 }

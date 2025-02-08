@@ -25,6 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sixpence.Web.ImageResource;
 using Sixpence.EntityFramework.Sqlite;
+using Sixpence.Web.Service;
 
 namespace Sixpence.Web
 {
@@ -42,7 +43,8 @@ namespace Sixpence.Web
                 .AddSysConfig()
                 .AddSSO()
                 .AddJwt()
-                .AddServices();
+                .AddServices()
+                .AddEntityService();
         }
 
         private static IServiceCollection AddEntityFramework(this IServiceCollection services)
@@ -229,6 +231,32 @@ namespace Sixpence.Web
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSingleton<IThirdPartyImageResourceDriver, LandscapeImageResourceDriver>();
+            return services;
+        }
+
+        public static IServiceCollection AddEntityService(this IServiceCollection services)
+        {
+            services.AddScoped<GalleryService>();
+            services.AddScoped<GiteeAuthService>();
+            services.AddScoped<GithubAuthService>();
+            services.AddScoped<JobHistoryService>();
+            services.AddScoped<JobService>();
+            services.AddScoped<MailVertificationService>();
+            services.AddScoped<MessageRemindService>();
+            services.AddScoped<PixabayService>();
+            services.AddScoped<SysAttrsService>();
+            services.AddScoped<SysAuthUserService>();
+            services.AddScoped<SysConfigService>();
+            services.AddScoped<SysEntityService>();
+            services.AddScoped<SysFileService>();
+            services.AddScoped<SysMenuService>();
+            services.AddScoped<SysParamGroupService>();
+            services.AddScoped<SysParamService>();
+            services.AddScoped<SysRolePrivilegeService>();
+            services.AddScoped<SysRoleService>();
+            services.AddScoped<SystemService>();
+            services.AddScoped<SysUserService>();
+            services.AddScoped<VersionScriptExecutionLogService>();
             return services;
         }
     }

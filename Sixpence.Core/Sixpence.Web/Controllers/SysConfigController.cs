@@ -8,10 +8,14 @@ namespace Sixpence.Web.Controllers
 {
     public class SysConfigController : EntityBaseController<SysConfig, SysConfigService>
     {
+        public SysConfigController(SysConfigService service) : base(service)
+        {
+        }
+
         [HttpGet("value")]
         public object GetValue(string code)
         {
-            return new SysConfigService().GetValue(code);
+            return _service.GetValue(code);
         }
 
         /// <summary>
@@ -21,7 +25,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("is_enable_comment"), AllowAnonymous]
         public string EnableComment()
         {
-            return new SysConfigService().GetValue("enable_comment")?.ToString();
+            return _service.GetValue("enable_comment")?.ToString();
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("website_info"), AllowAnonymous]
         public string WebsiteInfo()
         {
-            return new SysConfigService().GetValue("website_info")?.ToString();
+            return _service.GetValue("website_info")?.ToString();
         }
     }
 }

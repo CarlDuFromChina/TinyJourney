@@ -12,9 +12,11 @@ namespace Sixpence.Web.Controllers
     public class SystemController : BaseApiController
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public SystemController(IHttpContextAccessor contextAccessor)
+        private readonly SystemService _systemService;
+        public SystemController(IHttpContextAccessor contextAccessor, SystemService systemService)
         {
             _httpContextAccessor = contextAccessor;
+            _systemService = systemService;
         }
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("public_key"), AllowAnonymous]
         public string GetPublicKey()
         {
-            return new SystemService().GetPublicKey();
+            return _systemService.GetPublicKey();
         }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("random_image"), AllowAnonymous]
         public string GetRandomImage()
         {
-            return new SystemService().GetRandomImage();
+            return _systemService.GetRandomImage();
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("avatar/{id}"), AllowAnonymous]
         public object GetAvatar(string id)
         {
-            return new SystemService().GetAvatar(id);
+            return _systemService.GetAvatar(id);
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Sixpence.Web.Controllers
         [HttpPost("login"), AllowAnonymous]
         public LoginResponse Login(LoginRequest model)
         {
-            return new SystemService().Login(model);
+            return _systemService.Login(model);
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("login_config"), AllowAnonymous]
         public LoginConfig LoginConfig()
         {
-            return new SystemService().GetLoginConfig();
+            return _systemService.GetLoginConfig();
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace Sixpence.Web.Controllers
         public LoginResponse Signup(LoginRequest model)
         {
             UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
-            return new SystemService().Signup(model);
+            return _systemService.Signup(model);
         }
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace Sixpence.Web.Controllers
         public LoginResponse SignInOrSignUp(LoginRequest model)
         {
             UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
-            return new SystemService().SignInOrSignUp(model);
+            return _systemService.SignInOrSignUp(model);
         }
 
         /// <summary>
@@ -118,7 +120,7 @@ namespace Sixpence.Web.Controllers
         [HttpPut("password")]
         public void EditPassword([FromBody] string password)
         {
-            new SystemService().EditPassword(password);
+            _systemService.EditPassword(password);
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Sixpence.Web.Controllers
         [HttpPut("password/reset")]
         public void ResetPassword(string id)
         {
-            new SystemService().ResetPassword(id);
+            _systemService.ResetPassword(id);
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("password/forget")]
         public void ForgetPassword(string code)
         {
-            new SystemService().ForgetPassword(code);
+            _systemService.ForgetPassword(code);
         }
 
         /// <summary>
@@ -148,7 +150,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("is_show_admin")]
         public bool GetShowAdmin()
         {
-            return new SystemService().GetShowAdmin();
+            return _systemService.GetShowAdmin();
         }
     }
 }

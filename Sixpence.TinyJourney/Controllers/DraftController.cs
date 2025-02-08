@@ -13,6 +13,10 @@ namespace Sixpence.TinyJourney.Controller
 {
     public class DraftController : EntityBaseController<Draft, DraftService>
     {
+        public DraftController(DraftService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 根据博客id获取草稿
         /// </summary>
@@ -21,7 +25,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpGet("post/{postid}")]
         public Draft GetDataByPostId(string postid)
         {
-            return new DraftService().GetDataByPostId(postid);
+            return _service.GetDataByPostId(postid);
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpGet("drafts")]
         public IList<Draft> GetDrafts()
         {
-            return new DraftService().GetDrafts();
+            return _service.GetDrafts();
         }
 
         [HttpPost]

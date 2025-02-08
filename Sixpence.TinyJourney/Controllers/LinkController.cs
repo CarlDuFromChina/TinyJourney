@@ -13,6 +13,10 @@ namespace Sixpence.TinyJourney.Controller
 {
     public class LinkController : EntityBaseController<Link, LinkService>
     {
+        public LinkController(LinkService service) : base(service)
+        {
+        }
+
         [HttpGet("search"), AllowAnonymous]
         public override DataModel<Link> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? viewId, string? searchValue)
         {

@@ -10,5 +10,8 @@ namespace Sixpence.Web.Controllers
 {
     public class SysParamController : EntityBaseController<SysParam, SysParamService>
     {
+        public SysParamController(SysParamService service) : base(service)
+        {
+        }
     }
 }

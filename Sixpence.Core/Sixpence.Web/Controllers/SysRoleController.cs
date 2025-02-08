@@ -9,16 +9,20 @@ namespace Sixpence.Web.Controllers
 {
     public class SysRoleController : EntityBaseController<SysRole, SysRoleService>
     {
+        public SysRoleController(SysRoleService service) : base(service)
+        {
+        }
+
         [HttpGet("basic_role_options")]
         public IEnumerable<SelectOption> GetBasicRole()
         {
-            return new SysRoleService().GetBasicRole();
+            return _service.GetBasicRole();
         }
 
         [HttpGet("role_options")]
         public IEnumerable<SelectOption> GetRoles()
         {
-            return new SysRoleService().GetRoles();
+            return _service.GetRoles();
         }
     }
 }

@@ -13,10 +13,17 @@ using Sixpence.Web.Model;
 namespace Sixpence.Web.WebApi
 {
     [Authorize(Policy = "Api")]
-    public class EntityBaseController<E, S> : BaseApiController
-        where E : BaseEntity, new()
-        where S : EntityService<E>, new()
+    public abstract class EntityBaseController<TEntity, TService> : BaseApiController
+        where TEntity : BaseEntity, new()
+        where TService : EntityService<TEntity>, new()
     {
+        protected readonly TService _service;
+
+        public EntityBaseController(TService service)
+        {
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+        }
+
         /// <summary>
         /// 获取视图
         /// </summary>
@@ -24,7 +31,7 @@ namespace Sixpence.Web.WebApi
         [HttpGet("views")]
         public virtual IList<EntityView> GetViewList()
         {
-            return new S().GetViewList();
+            return _service.GetViewList();
         }
 
         /// <summary>
@@ -38,14 +45,14 @@ namespace Sixpence.Web.WebApi
         /// <param name="searchValue"></param>
         /// <returns></returns>
         [HttpGet("search")]
-        public virtual DataModel<E> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? viewId, string? searchValue)
+        public virtual DataModel<TEntity> GetViewData(string? pageSize, string? pageIndex, string? searchList, string? viewId, string? searchValue)
         {
             var _searchList = string.IsNullOrEmpty(searchList) ? null : JsonConvert.DeserializeObject<IList<SearchCondition>>(searchList);
 
             if (string.IsNullOrEmpty(pageSize) || string.IsNullOrEmpty(pageIndex))
             {
-                var list = new S().GetDataList(_searchList, viewId, searchValue).ToList();
-                return new DataModel<E>()
+                var list = _service.GetDataList(_searchList, viewId, searchValue).ToList();
+                return new DataModel<TEntity>()
                 {
                     Data = list,
                     Count = list.Count
@@ -54,7 +61,7 @@ namespace Sixpence.Web.WebApi
 
             var size = ConvertUtil.ConToInt(pageSize);
             var index = ConvertUtil.ConToInt(pageIndex);
-            return new S().GetDataList(_searchList, size, index, viewId, searchValue);
+            return _service.GetDataList(_searchList, size, index, viewId, searchValue);
         }
 
         /// <summary>
@@ -62,10 +69,10 @@ namespace Sixpence.Web.WebApi
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public virtual DataModel<E> GetDataList()
+        public virtual DataModel<TEntity> GetDataList()
         {
-            var list = new S().GetAllData().ToList();
-            return new DataModel<E>()
+            var list = _service.GetAllData().ToList();
+            return new DataModel<TEntity>()
             {
                 Data = list,
                 Count = list.Count
@@ -79,9 +86,9 @@ namespace Sixpence.Web.WebApi
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public virtual E GetData(string id)
+        public virtual TEntity GetData(string id)
         {
-            return new S().GetData(id);
+            return _service.GetData(id);
         }
 
         /// <summary>
@@ -90,9 +97,9 @@ namespace Sixpence.Web.WebApi
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost]
-        public virtual string CreateData(E entity)
+        public virtual string CreateData(TEntity entity)
         {
-            return new S().CreateData(entity);
+            return _service.CreateData(entity);
         }
 
         /// <summary>
@@ -100,9 +107,9 @@ namespace Sixpence.Web.WebApi
         /// </summary>
         /// <param name="entity"></param>
         [HttpPut]
-        public virtual void UpdateData(E entity)
+        public virtual void UpdateData(TEntity entity)
         {
-            new S().UpdateData(entity);
+            _service.UpdateData(entity);
         }
 
         /// <summary>
@@ -112,9 +119,9 @@ namespace Sixpence.Web.WebApi
         /// <returns></returns>
         [HttpPost]
         [Route("save")]
-        public virtual string CreateOrUpdateData(E entity)
+        public virtual string CreateOrUpdateData(TEntity entity)
         {
-            return new S().CreateOrUpdateData(entity);
+            return _service.CreateOrUpdateData(entity);
         }
 
         /// <summary>
@@ -127,7 +134,7 @@ namespace Sixpence.Web.WebApi
             if (!string.IsNullOrEmpty(id))
             {
                 var ids = id.Split(",").ToList();
-                new S().DeleteData(ids);
+                _service.DeleteData(ids);
             }
         }
 
@@ -135,14 +142,14 @@ namespace Sixpence.Web.WebApi
         [Route("privilege")]
         public virtual EntityPrivilegeResponse GetPrivilege()
         {
-            return new S().GetPrivilege();
+            return _service.GetPrivilege();
         }
 
         [HttpGet, Route("export/csv")]
         public virtual IActionResult ExportCsv()
         {
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-            var fileName = new S().Export();
+            var fileName = _service.Export();
             return File(FileUtil.GetFileStream(fileName), "application/octet-stream", Path.GetFileName(fileName));
         }
     }

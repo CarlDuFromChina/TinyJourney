@@ -11,5 +11,8 @@ namespace Sixpence.Web.Controller
 {
     public class SysAttrsController : EntityBaseController<SysAttrs, SysAttrsService>
     {
+        public SysAttrsController(SysAttrsService service) : base(service)
+        {
+        }
     }
 }

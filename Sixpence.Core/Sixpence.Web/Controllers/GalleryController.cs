@@ -11,6 +11,12 @@ namespace Sixpence.Web.Controllers
 {
     public class GalleryController : EntityBaseController<Gallery, GalleryService>
     {
+        protected readonly PixabayService _pixabayService;
+        public GalleryController(GalleryService service, PixabayService pixabayService) : base(service)
+        {
+            _pixabayService = pixabayService;
+        }
+
         /// <summary>
         /// 搜索云图库
         /// </summary>
@@ -21,7 +27,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("cloud/search")]
         public ImagesModel GetImages(string searchValue, int pageIndex, int pageSize)
         {
-            return new PixabayService().GetImages(searchValue, pageIndex, pageSize);
+            return _pixabayService.GetImages(searchValue, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -32,7 +38,7 @@ namespace Sixpence.Web.Controllers
         [HttpPost("upload")]
         public List<string> UploadImage(ImageModel image)
         {
-            return new GalleryService().UploadImage(image);
+            return _service.UploadImage(image);
         }
 
         /// <summary>
@@ -42,7 +48,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("random_image"), AllowAnonymous]
         public async Task<Gallery> RandomImage()
         {
-            return await new GalleryService().GetRandomImage();
+            return await _service.GetRandomImage();
         }
     }
 }

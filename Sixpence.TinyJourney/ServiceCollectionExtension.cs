@@ -10,6 +10,7 @@ using Sixpence.TinyJourney.Config;
 using Sixpence.AI;
 using Sixpence.AI.Wenxin;
 using Sixpence.AI.DeepSeek;
+using Sixpence.TinyJourney.Service;
 
 namespace Sixpence.TinyJourney
 {
@@ -24,7 +25,8 @@ namespace Sixpence.TinyJourney
                 .AddEntityOptionProvider()
                 .AddSysConfig()
                 .AddJob()
-                .AddAIService();
+                .AddAIService()
+                .AddEntityService();
         }
 
         private static IServiceCollection AddEntity(this IServiceCollection services)
@@ -73,6 +75,17 @@ namespace Sixpence.TinyJourney
         {
             services.AddSingleton<IAIService, WenxinAIService>();
             services.AddSingleton<IAIService, DeepSeekAIService>();
+            return services;
+        }
+
+        public static IServiceCollection AddEntityService(this IServiceCollection services)
+        {
+            services.AddScoped<AnalysisService>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<DraftService>();
+            services.AddScoped<IdeaSerivice>();
+            services.AddScoped<LinkService>();
+            services.AddScoped<PostService>();
             return services;
         }
     }

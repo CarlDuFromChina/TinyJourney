@@ -9,17 +9,21 @@ namespace Sixpence.Web.Controllers
 {
     public class SysRolePrivilegeController : EntityBaseController<SysRolePrivilege, SysRolePrivilegeService>
     {
+        public SysRolePrivilegeController(SysRolePrivilegeService service) : base(service)
+        {
+        }
+
         [HttpGet("{roleid}/{roleType}")]
         public IEnumerable<SysRolePrivilege> GetUserPrivileges(string roleid, RoleType roleType)
         {
-            return new SysRolePrivilegeService().GetUserPrivileges(roleid, roleType);
+            return _service.GetUserPrivileges(roleid, roleType);
         }
 
         [HttpPost("bulk_save")]
         public void BulkSave([FromBody] string dataList)
         {
             var privileges = string.IsNullOrEmpty(dataList) ? null : JsonConvert.DeserializeObject<List<SysRolePrivilege>>(dataList);
-            new SysRolePrivilegeService().BulkSave(privileges);
+            _service.BulkSave(privileges);
         }
     }
 }

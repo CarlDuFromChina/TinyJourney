@@ -16,6 +16,10 @@ namespace Sixpence.TinyJourney.Controller
 {
     public class PostController : EntityBaseController<Post, PostService>
     {
+        public PostController(PostService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 查询所有博客菜单
         /// </summary>
@@ -23,7 +27,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpGet("routers")]
         public IEnumerable<string> GetPostRouters()
         {
-            return new PostService().GetPostRouters();
+            return _service.GetPostRouters();
         }
 
         /// <summary>
@@ -48,7 +52,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpGet("categories"), AllowAnonymous]
         public PostCategories categories()
         {
-            return new PostService().GetCategories();
+            return _service.GetCategories();
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace Sixpence.TinyJourney.Controller
         public IActionResult ExportMarkdown(string id)
         {
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-            var result = new PostService().ExportMarkdown(id);
+            var result = _service.ExportMarkdown(id);
             return File(result.bytes, result.ContentType, result.fileName);
         }
 
@@ -82,7 +86,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpGet, AllowAnonymous, Route("index_user")]
         public SysUser GetIndexUser()
         {
-            return new PostService().GetIndexUser();
+            return _service.GetIndexUser();
         }
 
         /// <summary>
@@ -98,7 +102,7 @@ namespace Sixpence.TinyJourney.Controller
             {
                 content = await reader.ReadToEndAsync();
             }
-            return await new PostService().GenerateSummary(content);
+            return await _service.GenerateSummary(content);
         }
 
         /// <summary>
@@ -109,7 +113,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpPost, Route("generate_markdown")]
         public async Task<string> GenerateMarkdownContent(AIInputDto dto)
         {
-            return await new PostService().GenerateMarkdownContent(dto.Prompt);
+            return await _service.GenerateMarkdownContent(dto.Prompt);
         }
     }
 }

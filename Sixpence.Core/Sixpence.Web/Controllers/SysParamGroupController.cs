@@ -9,11 +9,15 @@ namespace Sixpence.Web.Controllers
 {
     public class SysParamGroupController : EntityBaseController<SysParamGroup, SysParamGroupService>
     {
+        public SysParamGroupController(SysParamGroupService service) : base(service)
+        {
+        }
+
         [HttpGet("options")]
         public IEnumerable<object> GetParams(string code)
         {
             var codeList = code.Split(',');
-            return new SysParamGroupService().GetParamsList(codeList);
+            return _service.GetParamsList(codeList);
         }
 
         [HttpGet("entity_options")]
@@ -24,7 +28,7 @@ namespace Sixpence.Web.Controllers
             {
                 codeList = code.Split(',');
             }
-            return new SysParamGroupService().GetEntityOptions(codeList);
+            return _service.GetEntityOptions(codeList);
         }
     }
 }

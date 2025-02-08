@@ -11,6 +11,8 @@ namespace Sixpence.TinyJourney.Controller
 {
     public class CategoryController : EntityBaseController<Category, CategoryService>
     {
-
+        public CategoryController(CategoryService service) : base(service)
+        {
+        }
     }
 }

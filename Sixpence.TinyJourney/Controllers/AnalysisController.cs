@@ -12,10 +12,16 @@ namespace Sixpence.TinyJourney.Controller
 {
     public class AnalysisController : BaseApiController
     {
+        protected readonly AnalysisService _service;
+        public AnalysisController(AnalysisService analysisService)
+        {
+            _service = analysisService;
+        }
+
         [HttpGet("timeline")]
         public IEnumerable<TimelineModel> GetTimeline()
         {
-            return new AnalysisService().GetTimeline();
+            return _service.GetTimeline();
         }
     }
 }

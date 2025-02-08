@@ -11,11 +11,15 @@ namespace Sixpence.Web.Controllers
 {
     public class SysMenuController : EntityBaseController<SysMenu, SysMenuService>
     {
+        public SysMenuController(SysMenuService service) : base(service)
+        {
+        }
+
         [HttpGet]
         [Route("first_menu")]
         public IList<SysMenu> GetFirstMenu()
         {
-            return new SysMenuService().GetFirstMenu();
+            return _service.GetFirstMenu();
         }
     }
 }

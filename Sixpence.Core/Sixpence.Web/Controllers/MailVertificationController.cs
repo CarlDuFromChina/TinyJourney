@@ -12,6 +12,10 @@ namespace Sixpence.Web.Controllers
 {
     public class MailVertificationController : EntityBaseController<MailVertification, MailVertificationService>
     {
+        public MailVertificationController(MailVertificationService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 激活用户
         /// </summary>
@@ -21,7 +25,7 @@ namespace Sixpence.Web.Controllers
         public string ActivateUser(string id)
         {
             UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
-            return new MailVertificationService().ActivateUser(id);
+            return _service.ActivateUser(id);
         }
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace Sixpence.Web.Controllers
         public string ResetPassword(string id)
         {
             UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
-            return new MailVertificationService().ResetPassword(id);
+            return _service.ResetPassword(id);
         }
     }
 }

@@ -9,5 +9,8 @@ namespace Sixpence.Web.Controllers
 {
     public class JobHistoryController : EntityBaseController<JobHistory, JobHistoryService>
     {
+        public JobHistoryController(JobHistoryService service) : base(service)
+        {
+        }
     }
 }

@@ -13,6 +13,10 @@ namespace Sixpence.Web.Controllers
 {
     public class SysUserController : EntityBaseController<SysUser, SysUserService>
     {
+        public SysUserController(SysUserService service) : base(service)
+        {
+        }
+
         [HttpGet("{id}"), AllowAnonymous]
         public override SysUser GetData(string id)
         {
@@ -26,7 +30,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("is_incomplete")]
         public bool InfoFilled()
         {
-            return new SysUserService().InfoFilled();
+            return _service.InfoFilled();
         }
     }
 }

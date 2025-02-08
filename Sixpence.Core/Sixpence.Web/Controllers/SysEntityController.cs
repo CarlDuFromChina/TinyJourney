@@ -14,6 +14,10 @@ namespace Sixpence.Web.Controller
 {
     public class SysEntityController : EntityBaseController<SysEntity, SysEntityService>
     {
+        public SysEntityController(SysEntityService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 根据实体 id 查询字段
         /// </summary>
@@ -22,7 +26,7 @@ namespace Sixpence.Web.Controller
         [HttpGet("attrs")]
         public IList<SysAttrs> GetEntityAttrs(string id)
         {
-            return new SysEntityService().GetEntityAttrs(id);
+            return _service.GetEntityAttrs(id);
         }
     }
 }

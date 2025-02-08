@@ -12,6 +12,10 @@ namespace Sixpence.Web.Controllers
 {
     public class MessageRemindController : EntityBaseController<MessageRemind, MessageRemindService>
     {
+        public MessageRemindController(MessageRemindService service) : base(service)
+        {
+        }
+
         /// <summary>
         /// 获取未读消息数量
         /// </summary>
@@ -19,7 +23,7 @@ namespace Sixpence.Web.Controllers
         [HttpGet("unread_message_count")]
         public object GetUnReadMessageCount()
         {
-            return new MessageRemindService().GetUnReadMessageCount();
+            return _service.GetUnReadMessageCount();
         }
     }
 }

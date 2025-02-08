@@ -15,6 +15,10 @@ namespace Sixpence.TinyJourney.Controller
 {
     public class IdeaController : EntityBaseController<Idea, IdeaSerivice>
     {
+        public IdeaController(IdeaSerivice service) : base(service)
+        {
+        }
+
         [HttpGet("{id}"), AllowAnonymous]
         public override Idea GetData(string id)
         {
