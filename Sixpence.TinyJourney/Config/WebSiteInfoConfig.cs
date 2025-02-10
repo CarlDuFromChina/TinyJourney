@@ -1,17 +1,35 @@
 ﻿using System;
+using Sixpence.Common.Config;
 using Sixpence.Web;
 
 namespace Sixpence.TinyJourney.Config
 {
-    public class WebSiteInfoConfig : ISysConfig
+    public class WebSiteInfoConfig : BaseAppConfig<WebSiteInfoConfig>
     {
-        public string Name => "网站信息";
-
-        public string Code => "website_info";
-
-        public object DefaultValue => @"{""author"":"""",""email"":"""",""record_no"":""""}";
-
-        public string Description => "网站信息：作者、邮箱、备案号等";
+        /// <summary>
+        /// 站长
+        /// </summary>
+        public string Author { get; set; }
+        
+        /// <summary>
+        /// 站长邮箱
+        /// </summary>
+        public string Email { get; set; }
+        
+        /// <summary>
+        /// 备案号
+        /// </summary>
+        public string RecordNo { get; set; }
+        
+        /// <summary>
+        /// 主页用户
+        /// </summary>
+        public string IndexUser { get; set; }
+        
+        /// <summary>
+        /// 小红书链接
+        /// </summary>
+        public string RedBookUrl { get; set; }
     }
 }
 

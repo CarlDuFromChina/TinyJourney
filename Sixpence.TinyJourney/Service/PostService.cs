@@ -169,20 +169,6 @@ WHERE
                 return (fileName, contentType, ms.ToArray());
             }
         }
-
-        /// <summary>
-        /// 获取首页用户
-        /// </summary>
-        /// <returns></returns>
-        public SysUser? GetIndexUser()
-        {
-            var config = _manager.QueryFirst<SysConfig>(new { code = "index_user" });
-            if (!string.IsNullOrEmpty(config?.Value))
-            {
-                return _userService.GetDataByCode(config?.Value);
-            }
-            return null;
-        }
         
         /// <summary>
         /// 生成文章摘要

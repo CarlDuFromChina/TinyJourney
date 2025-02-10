@@ -29,5 +29,10 @@ namespace Sixpence.Web.Config
         /// 本地运行地址
         /// </summary>
         public string LocalUrls { get; set; }
+        
+        /// <summary>
+        /// 日志备份天数
+        /// </summary>
+        public int LogBackupDays { get; set; }
     }
 }

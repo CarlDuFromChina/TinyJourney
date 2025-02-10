@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Sixpence.Web.Config
 {
+    /// <summary>
+    /// 数据库配置，支持Postgresql、Sqlite
+    /// 注意：不支持多数据库配置
+    /// </summary>
     public class DBSourceConfig : BaseAppConfig<DBSourceConfig>
     {
         /// <summary>

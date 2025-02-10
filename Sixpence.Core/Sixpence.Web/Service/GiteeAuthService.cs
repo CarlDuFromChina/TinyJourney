@@ -17,25 +17,17 @@ namespace Sixpence.Web.Service
 {
     public class GiteeAuthService : BaseService<GiteeAuthService>
     {
-        private readonly SysConfigService _sysConfigService;
         private readonly IRepository<SysFile> _sysFileRepository;
-        public GiteeAuthService(IEntityManager manager, SysConfigService sysConfigService, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger) : base(manager, logger)
+        public GiteeAuthService(IEntityManager manager, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger) : base(manager, logger)
         {
-            _sysConfigService = sysConfigService;
             _sysFileRepository = sysFileRepository;
-        }
-
-        public GiteeConfig GetConfig()
-        {
-            var data = _sysConfigService.GetValue("gitee_oauth")?.ToString();
-            return JsonSerializer.Deserialize<GiteeConfig>(data);
         }
 
         public async Task<GiteeAccessToken> GetAccessToken(string code, string userid = "")
         {
-            var config = GetConfig();
-            var client_id = config.client_id;
-            var client_secret = config.client_secret;
+            var config = SSOConfig.Config.Gitee;
+            var client_id = config.ClientId;
+            var client_secret = config.ClientSecret;
             var redirect_uri = $"{SystemConfig.Config.Protocol}://{SystemConfig.Config.Domain}/gitee-oauth";
             if (!string.IsNullOrEmpty(userid))
             {

@@ -73,7 +73,15 @@ export default {
         this.$router.push({ name: item.route });
       }
       if (item.url) {
-        window.open(item.url, '_blank');
+        this.$confirm({
+          title: '确认',
+          content: '即将离开本站，是否继续？',
+          okText: '确认',
+          cancelText: '取消',
+          onOk: () => {
+            window.open(item.url, '_blank');
+          }
+        });
       }
     }
   }

@@ -15,20 +15,14 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Sixpence.Web.Config;
 
 namespace Sixpence.Web.Service
 {
     public class GithubAuthService : BaseService<GithubAuthService>
     {
-        private readonly SysConfigService _configService;
         public GithubAuthService(IEntityManager manager, ILogger<GithubAuthService> logger) : base(manager, logger)
         {
-        }
-
-        public GithubConfig GetConfig()
-        {
-            var data = _configService.GetValue("github_oauth")?.ToString();
-            return JsonConvert.DeserializeObject<GithubConfig>(data);
         }
 
         /// <summary>
@@ -37,9 +31,9 @@ namespace Sixpence.Web.Service
         /// <param name="code">临时码，有效期十分钟</param>
         public async Task<GithubAccessToken> GetAccessToken(string code)
         {
-            var config = GetConfig();
-            var clientId = config.client_id;
-            var clientSecret = config.client_secret;
+            var config = SSOConfig.Config.Github;
+            var clientId = config.ClientId;
+            var clientSecret = config.ClientSecret;
 
             var param = new
             {

@@ -13,6 +13,7 @@ using Sixpence.Common.Current;
 using Sixpence.Web.Auth.Github;
 using Sixpence.Web.Auth.Gitee;
 using System.Linq;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model.System;
 using Sixpence.Web.Model;
@@ -165,21 +166,6 @@ namespace Sixpence.Web.Service
                 message = "登录成功"
             };
             return oUser;
-        }
-
-        /// <summary>
-        /// 获取登录参数
-        /// </summary>
-        /// <returns></returns>
-        public LoginConfig GetLoginConfig()
-        {
-            var github = _githubAuthService.GetConfig();
-            var gitee = _giteeAuthService.GetConfig();
-            return new LoginConfig()
-            {
-                github = github,
-                gitee = gitee
-            };
         }
 
         /// <summary>

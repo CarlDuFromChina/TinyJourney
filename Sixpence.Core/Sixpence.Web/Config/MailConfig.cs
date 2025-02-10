@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Sixpence.Web.Config
 {
+    /// <summary>
+    /// 邮件系统配置
+    /// </summary>
     public class MailConfig : BaseAppConfig<MailConfig>
     {
         public string Name { get; set; }

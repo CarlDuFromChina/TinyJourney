@@ -23,7 +23,6 @@ namespace Sixpence.TinyJourney
                 .AddEntityFramework()
                 .AddInitData()
                 .AddEntityOptionProvider()
-                .AddSysConfig()
                 .AddJob()
                 .AddAIService()
                 .AddEntityService();
@@ -61,13 +60,6 @@ namespace Sixpence.TinyJourney
         private static IServiceCollection AddInitData(this IServiceCollection services)
         {
             services.AddScoped<IInitDbData, InitDbBusinessData>();
-            return services;
-        }
-
-        private static IServiceCollection AddSysConfig(this IServiceCollection services)
-        {
-            services.AddTransient<ISysConfig, IndexUserConfig>();
-            services.AddTransient<ISysConfig, WebSiteInfoConfig>();
             return services;
         }
 

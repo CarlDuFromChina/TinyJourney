@@ -26,10 +26,13 @@ export default {
     };
   },
   async created() {
-    var user = await sp.get('api/post/index_user');
+    var user = await sp.get('api/index/owner');
     if (user) {
       if (user.life_photo) {
         this.lifePhoto = sp.getDownloadUrl(user.life_photo, false);
+      } else {
+        const image = await import('../../../../assets/images/pic_err.png');
+        this.lifePhoto = image.default;
       }
       this.introduction = user.introduction;
       this.name = user.name;

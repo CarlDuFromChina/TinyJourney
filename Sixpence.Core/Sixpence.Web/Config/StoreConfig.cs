@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Sixpence.Web.Config
 {
+    /// <summary>
+    /// 存储方案配置
+    /// </summary>
     public class StoreConfig : BaseAppConfig<StoreConfig>
     {
         /// <summary>
@@ -15,7 +18,8 @@ namespace Sixpence.Web.Config
         /// </summary>
         public string Type { get; set; }
 
-        private string temp { get; set; }
+        private string _temp;
+        
         /// <summary>
         /// 临时文件路径
         /// </summary>
@@ -23,15 +27,20 @@ namespace Sixpence.Web.Config
         {
             get
             {
-                return string.IsNullOrEmpty(temp) ? GetCurrentSystemPath("temp") : temp;
+                if (string.IsNullOrEmpty(_temp))
+                {
+                    _temp = GetCurrentSystemPath("temp");
+                }
+
+                return _temp;
             }
             set
             {
-                temp = value;
+                _temp = value;
             }
         }
 
-        private string storage;
+        private string _storage;
         /// <summary>
         /// 文件路径
         /// </summary>
@@ -39,11 +48,16 @@ namespace Sixpence.Web.Config
         {
             get
             {
-                return string.IsNullOrEmpty(storage) ? GetCurrentSystemPath("storage") : storage;
+                if (string.IsNullOrEmpty(_storage))
+                {
+                    _storage = GetCurrentSystemPath("storage");
+                }
+                
+                return _storage;
             }
             set
             {
-                storage = value;
+                _storage = value;
             }
         }
 

@@ -44,12 +44,7 @@ namespace Sixpence.Web
                 roles.Each(item => MemoryCacheUtil.Set(item.GetRoleKey, new RolePrivilegeModel() { Role = item.GetSysRole(), Privileges = item.GetRolePrivilege() }, 3600 * 12));
                 #endregion
 
-                #region 3. 系统配置自动创建
-                var settings = ServiceFactory.ResolveAll<ISysConfig>();
-                scope.ServiceProvider.GetRequiredService<SysConfigService>().CreateMissingConfig(settings);
-                #endregion
-
-                #region 4. 初始化用户
+                #region 3. 初始化用户
                 var inits = scope.ServiceProvider.GetServices<IInitDbData>();
                 using (var manger = scope.ServiceProvider.GetRequiredService<IEntityManager>())
                 {

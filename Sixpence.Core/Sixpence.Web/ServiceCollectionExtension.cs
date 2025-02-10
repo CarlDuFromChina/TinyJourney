@@ -40,7 +40,6 @@ namespace Sixpence.Web
                 .AddStorage()
                 .AddRole()
                 .AddInitData()
-                .AddSysConfig()
                 .AddSSO()
                 .AddJwt()
                 .AddServices()
@@ -155,14 +154,6 @@ namespace Sixpence.Web
             return services;
         }
 
-        private static IServiceCollection AddSysConfig(this IServiceCollection services)
-        {
-            services.AddSingleton<ISysConfig, BackupLogSysConfig>();
-            services.AddSingleton<ISysConfig, GiteeOAuthConfig>();
-            services.AddSingleton<ISysConfig, GithubOAuthConfig>();
-            return services;
-        }
-
         public static IServiceCollection AddSSO(this IServiceCollection services)
         {
             services.AddScoped<IThirdPartyBindStrategy, GithubUserBind>();
@@ -248,7 +239,6 @@ namespace Sixpence.Web
             services.AddScoped<PixabayService>();
             services.AddScoped<SysAttrsService>();
             services.AddScoped<SysAuthUserService>();
-            services.AddScoped<SysConfigService>();
             services.AddScoped<SysEntityService>();
             services.AddScoped<SysFileService>();
             services.AddScoped<SysMenuService>();

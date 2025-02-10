@@ -1,6 +1,7 @@
 using Quartz;
 using Sixpence.Common.Utils;
 using Sixpence.EntityFramework;
+using Sixpence.Web.Config;
 using Sixpence.Web.Job;
 using Sixpence.Web.Utils;
 
@@ -20,7 +21,10 @@ namespace Sixpence.TinyJourney.Job
         {
             var files = FileHelper.GetFileList("*.log", Web.FolderType.Log);
             var logNameList = new List<string>();
-            var days = 7;
+            var days = SystemConfig.Config.LogBackupDays;
+
+            if (days == 0)
+                days = 7;
 
             // 需要保留的log
             for (int i = 0; i < days; i++)

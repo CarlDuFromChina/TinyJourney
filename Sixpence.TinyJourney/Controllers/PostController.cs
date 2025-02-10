@@ -80,16 +80,6 @@ namespace Sixpence.TinyJourney.Controller
         }
 
         /// <summary>
-        /// 获取主页用户
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet, AllowAnonymous, Route("index_user")]
-        public SysUser GetIndexUser()
-        {
-            return _service.GetIndexUser();
-        }
-
-        /// <summary>
         /// 生成摘要
         /// </summary>
         /// <param name="content"></param>

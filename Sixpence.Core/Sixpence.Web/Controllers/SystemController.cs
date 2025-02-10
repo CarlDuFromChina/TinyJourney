@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sixpence.Web.Auth;
+using Sixpence.Web.Config;
 using Sixpence.Web.Model;
 using Sixpence.Web.Model.System;
 using Sixpence.Web.Service;
@@ -84,9 +85,9 @@ namespace Sixpence.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("login_config"), AllowAnonymous]
-        public LoginConfig LoginConfig()
+        public object LoginConfig()
         {
-            return _systemService.GetLoginConfig();
+            return Ok(SSOConfig.Config);
         }
 
         /// <summary>

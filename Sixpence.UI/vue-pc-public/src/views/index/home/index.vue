@@ -15,8 +15,8 @@
       <!-- 想法 -->
 
       <div class="more">
-        <p>作者：{{ website.author }}</p>
-        <p>我的邮箱：<a :href="`mailto:${website.email}`">{{ website.email }}</a></p>
+        <p>站长：{{ website.author }}</p>
+        <p>邮箱：<a :href="`mailto:${website.email}`">{{ website.email }}</a></p>
         <p>版本号：{{ config.version }}</p>
         <p><a href="https://beian.miit.gov.cn">{{ website.record_no }}</a></p>
       </div>
@@ -52,7 +52,7 @@ export default {
     };
   },
   created() {
-    sp.get('api/sys_config/website_info').then(resp => {
+    sp.get('api/index/website_info').then(resp => {
       if (!sp.isNullOrEmpty(resp)) {
         try {
           var { author, email, record_no } = resp;
