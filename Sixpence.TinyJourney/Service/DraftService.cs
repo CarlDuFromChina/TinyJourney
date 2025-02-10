@@ -13,11 +13,9 @@ namespace Sixpence.TinyJourney.Service
 {
     public class DraftService : EntityService<Draft>
     {
-        #region 构造函数
-        public DraftService() : base() { }
-
-        public DraftService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public DraftService(IEntityManager manager, ILogger<EntityService<Draft>> logger, IRepository<Draft> repository) : base(manager, logger, repository)
+        {
+        }
 
         public IList<Draft> GetDrafts()
         {
@@ -27,7 +25,7 @@ WHERE post_id NOT IN (
 	SELECT post_id FROM post
 )
 ";
-            return Manager.Query<Draft>(sql).ToList();
+            return _manager.Query<Draft>(sql).ToList();
         }
 
         /// <summary>
@@ -36,28 +34,28 @@ WHERE post_id NOT IN (
         /// <param name="post_id"></param>
         /// <returns></returns>
         public Draft GetDataByPostId(string post_id) =>
-            Repository.FindOne(new { post_id });
+            _repository.FindOne(new { post_id });
 
         /// <summary>
         /// 根据博客id删除草稿
         /// </summary>
         /// <param name="post_id"></param>
         public void DeleteDataByPostId(string post_id) =>
-            Manager.Delete<Draft>(new { post_id });
+            _manager.Delete<Draft>(new { post_id });
 
         public override string CreateOrUpdateData(Draft t)
         {
-            var data = Repository.FindOne(t.Id);
+            var data = _repository.FindOne(t.Id);
             if (data != null)
             {
                 t.CreatedBy = data.CreatedBy;
                 t.CreatedByName = data.CreatedByName;
                 t.CreatedAt = data.CreatedAt;
-                Repository.Update(t);
+                _repository.Update(t);
             }
             else
             {
-                return Repository.Create(t);
+                return _repository.Create(t);
             }
             return t.Id;
         }

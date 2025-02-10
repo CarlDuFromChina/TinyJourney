@@ -68,18 +68,18 @@ namespace Sixpence.Web
             services.AddTransient<IEntity, VersionScriptExecutionLog>();
 
             // 2. 添加实体插件
-            services.AddTransient<IEntityManagerPlugin, GalleryPlugin>();
-            services.AddTransient<IEntityManagerPlugin, SysEntityPlugin>();
-            services.AddTransient<IEntityManagerPlugin, SysMenuPlugin>();
-            services.AddTransient<IEntityManagerPlugin, SysEntityPlugin>();
-            services.AddTransient<IEntityManagerPlugin, MailVertificationPlugin>();
-            services.AddTransient<IEntityManagerPlugin, SysRolePlugin>();
-            services.AddTransient<IEntityManagerPlugin, SysRolePrivilegePlugin>();
-            services.AddTransient<IEntityManagerPlugin, SysUserPlugin>();
+            services.AddScoped<IEntityManagerPlugin, GalleryPlugin>();
+            services.AddScoped<IEntityManagerPlugin, SysEntityPlugin>();
+            services.AddScoped<IEntityManagerPlugin, SysMenuPlugin>();
+            services.AddScoped<IEntityManagerPlugin, SysEntityPlugin>();
+            services.AddScoped<IEntityManagerPlugin, MailVertificationPlugin>();
+            services.AddScoped<IEntityManagerPlugin, SysRolePlugin>();
+            services.AddScoped<IEntityManagerPlugin, SysRolePrivilegePlugin>();
+            services.AddScoped<IEntityManagerPlugin, SysUserPlugin>();
 
             // 3. 添加实体拦截器
-            services.AddSingleton<IEntityMigrationInterceptor, EntityMigrationInterceptor>();
-            services.AddSingleton<IEntityManagerBeforeCreateOrUpdate, Implements.EntityManagerBeforeCreateOrUpdate>();
+            services.AddScoped<IEntityMigrationInterceptor, EntityMigrationInterceptor>();
+            services.AddScoped<IEntityManagerBeforeCreateOrUpdate, Implements.EntityManagerBeforeCreateOrUpdate>();
 
             // 4. 添加数据库连接
             services.AddEntityFramework(options =>
@@ -136,16 +136,16 @@ namespace Sixpence.Web
 
         private static IServiceCollection AddStorage(this IServiceCollection services)
         {
-            services.AddSingleton<IStorage, SystemLocalStore>();
+            services.AddScoped<IStorage, SystemLocalStore>();
             return services;
         }
 
         private static IServiceCollection AddRole(this IServiceCollection services)
         {
-            services.AddTransient<IRole, AdminRole>();
-            services.AddTransient<IRole, GuestRole>();
-            services.AddTransient<IRole, UserRole>();
-            services.AddTransient<IRole, SystemRole>();
+            services.AddScoped<IRole, AdminRole>();
+            services.AddScoped<IRole, GuestRole>();
+            services.AddScoped<IRole, UserRole>();
+            services.AddScoped<IRole, SystemRole>();
             return services;
         }
 
@@ -165,8 +165,10 @@ namespace Sixpence.Web
 
         public static IServiceCollection AddSSO(this IServiceCollection services)
         {
-            services.AddTransient<IThirdPartyBindStrategy, GithubUserBind>();
-            services.AddTransient<IThirdPartyBindStrategy, GiteeUserBind>();
+            services.AddScoped<IThirdPartyBindStrategy, GithubUserBind>();
+            services.AddScoped<IThirdPartyBindStrategy, GiteeUserBind>();
+            services.AddScoped<IThirdPartyLoginStrategy, GiteeLogin>();
+            services.AddScoped<IThirdPartyLoginStrategy, GithubLogin>();
             return services;
         }
 

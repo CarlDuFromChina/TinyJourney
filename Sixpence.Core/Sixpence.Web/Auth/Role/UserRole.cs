@@ -14,6 +14,10 @@ namespace Sixpence.Web.Auth.Role
     /// </summary>
     public class UserRole : BasicRole
     {
+        public UserRole(IEntityManager manager) : base(manager)
+        {
+        }
+
         public override Role Role => Role.User;
 
         public override string Description => "普通用户：拥有修改特定部分实体权限";

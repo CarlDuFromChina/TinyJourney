@@ -49,10 +49,9 @@ namespace Sixpence.Web.Job
         /// <summary>
         /// 注册作业
         /// </summary>
-        public static void Start()
+        public static void Start(List<IJob> jobs)
         {
             var logger = AppContext.GetLogger<AppContext>();
-            var jobs = ServiceFactory.ResolveAll<IJob>().ToList();
             logger.LogInformation($"共发现{jobs.Count}个Job待运行");
             jobs.Each(item =>
             {

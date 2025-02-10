@@ -8,16 +8,15 @@ using System.Linq;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Auth;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class SysAuthUserService : EntityService<SysAuthUser>
     {
-        #region 构造函数
-        public SysAuthUserService() : base() { }
-
-        public SysAuthUserService(IEntityManager manger) : base(manger) { }
-        #endregion
+        public SysAuthUserService(IEntityManager manager, ILogger<EntityService<SysAuthUser>> logger, IRepository<SysAuthUser> repository) : base(manager, logger, repository)
+        {
+        }
 
         /// <summary>
         /// 获取用户登录信息
@@ -26,13 +25,13 @@ namespace Sixpence.Web.Service
         /// <param name="pwd">MD5密码</param>
         /// <returns></returns>
         public SysAuthUser GetData(string code, string password)
-            => Manager.QueryFirst<SysAuthUser>(new { code, password });
+            => _manager.QueryFirst<SysAuthUser>(new { code, password });
 
         public SysAuthUser GetDataByCode(string code)
-            => Manager.QueryFirst<SysAuthUser>(new { code });
+            => _manager.QueryFirst<SysAuthUser>(new { code });
 
         public SysAuthUser GetDataByUserId(string userId)
-            => Manager.QueryFirst<SysAuthUser>(new { user_id = userId });
+            => _manager.QueryFirst<SysAuthUser>(new { user_id = userId });
 
         /// <summary>
         /// 锁定用户
@@ -40,7 +39,7 @@ namespace Sixpence.Web.Service
         /// <param name="id"></param>
         public void LockUser(string id)
         {
-            Manager.ExecuteTransaction(() =>
+            _manager.ExecuteTransaction(() =>
             {
                 var userId = UserIdentityUtil.GetCurrentUserId();
                 AssertUtil.IsTrue(userId == id, "请勿锁定自己");
@@ -56,7 +55,7 @@ namespace Sixpence.Web.Service
         /// <param name="id"></param>
         public void UnlockUser(string id)
         {
-            Manager.ExecuteTransaction(() =>
+            _manager.ExecuteTransaction(() =>
             {
                 var data = GetDataByUserId(id);
                 data.IsLock = false;
@@ -82,9 +81,9 @@ namespace Sixpence.Web.Service
         {
             users.Each(user =>
             {
-                var data = Repository.FindOne(new { code = user.Code });
+                var data = _repository.FindOne(new { code = user.Code });
                 if (data == null)
-                    Manager.Create(user, false);
+                    _manager.Create(user, false);
             });
         }
     }

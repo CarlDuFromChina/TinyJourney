@@ -11,21 +11,28 @@ namespace Sixpence.Web.Auth.Gitee
 {
     public class GiteeLogin : IThirdPartyLoginStrategy
     {
+        private readonly ILogger<GiteeLogin> _logger;
+        private readonly GiteeAuthService _giteeAuthService;
+        private readonly SysRoleService _sysRoleService;
+        private readonly IEntityManager _manager;
+        public GiteeLogin(ILogger<GiteeLogin> logger, GiteeAuthService giteeAuthService, SysRoleService sysRoleService, IEntityManager manager)
+        {
+            _logger = logger;
+            _giteeAuthService = giteeAuthService;
+            _sysRoleService = sysRoleService;
+            _manager = manager;
+        }
+
         public string GetName() => "Gitee";
 
         public LoginResponse Login(object param)
         {
-            var manager = new EntityManager();
-            var giteeService = new GiteeAuthService(manager);
-            var sysRoleService = new SysRoleService(manager);
-            var logger = AppContext.GetLogger<GiteeLogin>();
-
             try
             {
                 var code = param as string;
-                var giteeToken = giteeService.GetAccessToken(code).Result;
-                var giteeUser = giteeService.GetGiteeUserInfo(giteeToken).Result;
-                var user = manager.QueryFirst<SysUser>(new { gitee_id = giteeUser.id.ToString() });
+                var giteeToken = _giteeAuthService.GetAccessToken(code).Result;
+                var giteeUser = _giteeAuthService.GetGiteeUserInfo(giteeToken).Result;
+                var user = _manager.QueryFirst<SysUser>(new { gitee_id = giteeUser.id.ToString() });
 
                 if (user != null)
                 {
@@ -39,11 +46,11 @@ namespace Sixpence.Web.Auth.Gitee
                     };
                 }
 
-                return manager.ExecuteTransaction(() =>
+                return _manager.ExecuteTransaction(() =>
                 {
-                    var role = sysRoleService.GetGuest();
+                    var role = _sysRoleService.GetGuest();
                     var id = Guid.NewGuid().ToString();
-                    var avatarId = giteeService.DownloadImage(giteeUser.avatar_url, id).Result;
+                    var avatarId = _giteeAuthService.DownloadImage(giteeUser.avatar_url, id).Result;
                     var user = new SysUser()
                     {
                         Id = id,
@@ -58,7 +65,7 @@ namespace Sixpence.Web.Auth.Gitee
                         GiteeId = giteeUser.id.ToString(),
                         isActive = true,
                     };
-                    manager.Create(user, false);
+                    _manager.Create(user, false);
                     var _authUser = new SysAuthUser()
                     {
                         Id = user.Id,
@@ -71,7 +78,7 @@ namespace Sixpence.Web.Auth.Gitee
                         LastLoginTime = DateTime.Now,
                         Password = null
                     };
-                    manager.Create(_authUser);
+                    _manager.Create(_authUser);
 
                     return new LoginResponse()
                     {
@@ -85,12 +92,12 @@ namespace Sixpence.Web.Auth.Gitee
             }
             catch (Exception ex)
             {
-                logger.LogError("Gitee 登录失败：" + ex.Message, ex);
+                _logger.LogError("Gitee 登录失败：" + ex.Message, ex);
                 return new LoginResponse() { result = false, message = "Gitee 登录失败" };
             }
             finally
             {
-                manager.Dispose();
+                _manager.Dispose();
             }
         }
     }

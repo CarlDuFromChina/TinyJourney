@@ -6,9 +6,8 @@ namespace Sixpence.TinyJourney.Service
 {
     public class LinkService : EntityService<Link>
     {
-        #region 构造函数
-        public LinkService() : base() { }
-        public LinkService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public LinkService(IEntityManager manager, ILogger<EntityService<Link>> logger, IRepository<Link> repository) : base(manager, logger, repository)
+        {
+        }
     }
 }

@@ -1,26 +1,24 @@
 ﻿using Sixpence.AI;
-using Sixpence.AI.DeepSeek;
-using Sixpence.AI.Wenxin;
 using Sixpence.Common;
 using Sixpence.EntityFramework;
-using Sixpence.TinyJourney.Config;
 using Sixpence.TinyJourney.Entity;
 using Sixpence.TinyJourney.Model;
 using Sixpence.Web;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model;
 using Sixpence.Web.Service;
-using System.ComponentModel.Design;
 
 namespace Sixpence.TinyJourney.Service
 {
     public class PostService : EntityService<Post>
     {
-        #region 构造函数
-        public PostService() : base() { }
-
-        public PostService(IEntityManager manager) : base(manager) { }
-        #endregion
+        private readonly SysUserService _userService;
+        private readonly Lazy<IEnumerable<IAIService>> aIService;
+        public PostService(IEntityManager manager, ILogger<EntityService<Post>> logger, IRepository<Post> repository, SysUserService userService, IServiceProvider provider) : base(manager, logger, repository)
+        {
+            _userService = userService;
+            aIService = new Lazy<IEnumerable<IAIService>>(provider.GetServices<IAIService>);
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -92,11 +90,11 @@ WHERE 1=1 AND post.is_show = true";
         /// <returns></returns>
         public override Post GetData(string id)
         {
-            return Manager.ExecuteTransaction(() =>
+            return _manager.ExecuteTransaction(() =>
             {
                 var data = base.GetData(id);
                 var paramList = new Dictionary<string, object>() { { "@id", id } };
-                Manager.Execute("UPDATE post SET reading_times = COALESCE(reading_times, 0) + 1 WHERE id = @id", paramList);
+                _manager.Execute("UPDATE post SET reading_times = COALESCE(reading_times, 0) + 1 WHERE id = @id", paramList);
                 return data;
             });
         }
@@ -114,7 +112,7 @@ SELECT
 FROM
 	post
 WHERE 1=1 AND post.is_show is true";
-            var dataList = Manager.Query<Post>(sql).ToList();
+            var dataList = _manager.Query<Post>(sql).ToList();
 
             var categories = dataList
                 .GroupBy(p => p.PostType)
@@ -148,7 +146,7 @@ FROM
 WHERE
 	parent_id = '7EB12A4C-2698-4A8B-956D-B2467BE1D886'
 ";
-            return Manager.DbClient.Query<string>(sql);
+            return _manager.DbClient.Query<string>(sql);
         }
 
         /// <summary>
@@ -178,10 +176,10 @@ WHERE
         /// <returns></returns>
         public SysUser? GetIndexUser()
         {
-            var config = Manager.QueryFirst<SysConfig>(new { code = "index_user" });
+            var config = _manager.QueryFirst<SysConfig>(new { code = "index_user" });
             if (!string.IsNullOrEmpty(config?.Value))
             {
-                return new SysUserService(Manager).GetDataByCode(config?.Value);
+                return _userService.GetDataByCode(config?.Value);
             }
             return null;
         }
@@ -193,7 +191,7 @@ WHERE
         /// <returns></returns>
         public async Task<string> GenerateSummary(string content)
         {
-            IAIService service = ServiceFactory.Resolve<IAIService>(AIServiceResolver.Resolve);
+            IAIService service = aIService.Value?.FirstOrDefault(AIServiceResolver.Resolve);
 
             string template = "根据以下内容写一个 100 字摘要：{question}";
 
@@ -222,7 +220,7 @@ WHERE
         /// <returns></returns>
         public async Task<string> GenerateMarkdownContent(string prompt)
         {
-            IAIService service = ServiceFactory.Resolve<IAIService>(AIServiceResolver.Resolve);
+            IAIService service = aIService.Value?.FirstOrDefault(AIServiceResolver.Resolve);
 
             string template = "根据提示词写一篇 Markdown 文章，文字里要夹杂图标：{question}";
 

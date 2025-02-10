@@ -10,7 +10,7 @@ using System.Web;
 using Sixpence.Web.Service;
 using Sixpence.Web.Entity;
 
-namespace Sixpence.Web.Controller
+namespace Sixpence.Web.Controllers
 {
     public class SysEntityController : EntityBaseController<SysEntity, SysEntityService>
     {

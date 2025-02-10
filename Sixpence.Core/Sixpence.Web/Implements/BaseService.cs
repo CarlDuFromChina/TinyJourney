@@ -8,21 +8,15 @@ using System.Threading.Tasks;
 
 namespace Sixpence.Web
 {
-    public class BaseService
+    public abstract class BaseService<TService> where TService : class
     {
         protected IEntityManager _manager;
-        protected ILogger _logger;
+        protected ILogger<TService> _logger;
 
-        public BaseService()
-        {
-            _manager = new EntityManager();
-            _logger = AppContext.GetLogger<AppContext>();
-        }
-
-        public BaseService(IEntityManager manager)
+        public BaseService(IEntityManager manager, ILogger<TService> logger)
         {
             _manager = manager;
-            _logger = AppContext.GetLogger<AppContext>();
+            _logger = logger;
         }
     }
 }

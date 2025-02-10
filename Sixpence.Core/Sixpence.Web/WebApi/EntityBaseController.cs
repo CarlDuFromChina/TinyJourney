@@ -15,7 +15,7 @@ namespace Sixpence.Web.WebApi
     [Authorize(Policy = "Api")]
     public abstract class EntityBaseController<TEntity, TService> : BaseApiController
         where TEntity : BaseEntity, new()
-        where TService : EntityService<TEntity>, new()
+        where TService : EntityService<TEntity>
     {
         protected readonly TService _service;
 

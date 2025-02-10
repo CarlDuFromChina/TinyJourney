@@ -12,10 +12,8 @@ namespace Sixpence.TinyJourney.Service
 {
     public class CategoryService : EntityService<Category>
     {
-        #region 构造函数
-        public CategoryService() : base() { }
-
-        public CategoryService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public CategoryService(IEntityManager manager, ILogger<EntityService<Category>> logger, IRepository<Category> repository) : base(manager, logger, repository)
+        {
+        }
     }
 }

@@ -7,7 +7,7 @@ using System.Web;
 using Sixpence.Web.Module.SysAttrs;
 using Sixpence.Web.Service;
 
-namespace Sixpence.Web.Controller
+namespace Sixpence.Web.Controllers
 {
     public class SysAttrsController : EntityBaseController<SysAttrs, SysAttrsService>
     {

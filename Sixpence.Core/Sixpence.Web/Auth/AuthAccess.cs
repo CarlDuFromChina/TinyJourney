@@ -1,4 +1,5 @@
-﻿using Sixpence.Web.Auth.Role;
+﻿using Sixpence.EntityFramework;
+using Sixpence.Web.Auth.Role;
 using Sixpence.Web.Cache;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,9 @@ namespace Sixpence.Web.Auth
         /// <param name="objectid"></param>
         /// <param name="operationType"></param>
         /// <returns></returns>
-        private static bool CheckAccess(string objectid, OperationType operationType, string userId)
+        private static bool CheckAccess(IEntityManager manager, string objectid, OperationType operationType, string userId)
         {
-            var data = UserPrivilegesCache.GetUserPrivileges(string.IsNullOrEmpty(userId) ? UserIdentityUtil.GetCurrentUser()?.Id : userId)
+            var data = UserPrivilegesCache.GetUserPrivileges(manager, string.IsNullOrEmpty(userId) ? UserIdentityUtil.GetCurrentUser()?.Id : userId)
                 .Where(item => item.ObjectId == objectid)
                 .FirstOrDefault();
             return data != null && (data.Privilege & (int)operationType) == (int)operationType;
@@ -32,9 +33,9 @@ namespace Sixpence.Web.Auth
         /// <param name="objectid"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool CheckReadAccess(string objectid, string userId = "")
+        public static bool CheckReadAccess(IEntityManager manager, string objectid, string userId = "")
         {
-            return CheckAccess(objectid, OperationType.Read, userId);
+            return CheckAccess(manager, objectid, OperationType.Read, userId);
         }
 
         /// <summary>
@@ -43,9 +44,9 @@ namespace Sixpence.Web.Auth
         /// <param name="objectid"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool CheckWriteAccess(string objectid, string userId = "")
+        public static bool CheckWriteAccess(IEntityManager manager, string objectid, string userId = "")
         {
-            return CheckAccess(objectid, OperationType.Write, userId);
+            return CheckAccess(manager, objectid, OperationType.Write, userId);
         }
 
         /// <summary>
@@ -54,9 +55,9 @@ namespace Sixpence.Web.Auth
         /// <param name="objectid"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool CheckDeleteAccess(string objectid, string userId = "")
+        public static bool CheckDeleteAccess(IEntityManager manager, string objectid, string userId = "")
         {
-            return CheckAccess(objectid, OperationType.Delete, userId);
+            return CheckAccess(manager, objectid, OperationType.Delete, userId);
         }
     }
 }

@@ -28,6 +28,18 @@ namespace Sixpence.EntityFramework
         public ISqlBuilder SqlBuilder => driver.SqlBuilder; // 数据库方言
         public IDbOperator Operator => driver.Operator; // 数据库批量操作
 
+        internal DbClient()
+        {
+            var dbSetting = ServiceCollectionExtensions.Options?.DbSetting;
+            driver = dbSetting.Driver;
+            DbConnection = driver.GetDbConnection(dbSetting.ConnectionString);
+            if (dbSetting.CommandTimeout != null)
+            {
+                this.commandTimeout = dbSetting.CommandTimeout;
+            }
+            Logger = ServiceContainer.Provider.GetService<ILogger<DbClient>>();
+        }
+
         internal DbClient(IDbDriver dbDriver, string connectionString, int? commandTimeout)
         {
             driver = dbDriver;

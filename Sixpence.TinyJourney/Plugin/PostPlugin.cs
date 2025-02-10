@@ -8,6 +8,11 @@ namespace Sixpence.TinyJourney.Plugin
 {
     public class PostPlugin : IEntityManagerPlugin
     {
+        private readonly DraftService _draftService;
+        public PostPlugin(DraftService draftService)
+        {
+            _draftService = draftService;
+        }
         public void Execute(EntityManagerPluginContext context)
         {
             var post = context.Entity as Post;
@@ -22,7 +27,7 @@ namespace Sixpence.TinyJourney.Plugin
                 case EntityAction.PostCreate:
                 case EntityAction.PostUpdate:
                     var id = context.Entity.PrimaryColumn.Value?.ToString();
-                    new DraftService(context.EntityManager).DeleteDataByPostId(id); // 删除草稿
+                    _draftService.DeleteDataByPostId(id); // 删除草稿
                     MemoryCacheUtil.RemoveCacheItem(id);
                     break;
                 default:

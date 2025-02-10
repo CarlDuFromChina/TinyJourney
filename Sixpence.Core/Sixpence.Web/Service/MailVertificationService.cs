@@ -14,11 +14,11 @@ namespace Sixpence.Web.Service
 {
     public class MailVertificationService : EntityService<MailVertification>
     {
-        #region 构造函数
-        public MailVertificationService() : base() { }
-
-        public MailVertificationService(IEntityManager manager) : base(manager) { }
-        #endregion
+        private readonly SysRoleService _roleService;
+        public MailVertificationService(IEntityManager manager, ILogger<EntityService<MailVertification>> logger, IRepository<MailVertification> repository, SysRoleService roleService) : base(manager, logger, repository)
+        {
+            _roleService = roleService;
+        }
 
         /// <summary>
         /// 查询未激活且未过期的邮件
@@ -32,7 +32,7 @@ WHERE mail_address = @address
 AND is_active is false
 AND expire_time > CURRENT_TIMESTAMP
 AND mail_type = @type";
-            return Manager.QueryFirst<MailVertification>(sql, new Dictionary<string, object>() { { "@address", mail }, { "@type", mailType.ToString() } }); ;
+            return _manager.QueryFirst<MailVertification>(sql, new Dictionary<string, object>() { { "@address", mail }, { "@type", mailType.ToString() } }); ;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ AND mail_type = @type";
         /// <returns></returns>
         public string ActivateUser(string id)
         {
-            return Manager.ExecuteTransaction(() =>
+            return _manager.ExecuteTransaction(() =>
             {
                 var data = GetData(id);
                 if (data == null)
@@ -53,7 +53,7 @@ AND mail_type = @type";
 
                 #region 创建用户
                 var model = JsonConvert.DeserializeObject<LoginRequest>(data.LoginRequest);
-                var role = new SysRoleService(Manager).GetGuest();
+                var role = _roleService.GetGuest();
                 var user = new SysUser()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -65,7 +65,7 @@ AND mail_type = @type";
                     RoleName = role.Name,
                     isActive = true,
                 };
-                Manager.Create(user, false);
+                _manager.Create(user, false);
                 var _authUser = new SysAuthUser()
                 {
                     Id = user.Id,
@@ -78,43 +78,14 @@ AND mail_type = @type";
                     LastLoginTime = DateTime.Now,
                     Password = model.Password
                 };
-                Manager.Create(_authUser);
+                _manager.Create(_authUser);
                 #endregion
 
                 data.IsActive = true;
-                Manager.Update(data);
+                _manager.Update(data);
 
                 return "激活成功";
             });
-        }
-
-        /// <summary>
-        /// 重置密码
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public string ResetPassword(string id)
-        {
-            try
-            {
-                return Manager.ExecuteTransaction(() =>
-                {
-                    var data = GetData(id);
-                    if (data == null)
-                        return "重置失败";
-
-                    if (data.ExpireTime < DateTime.Now)
-                        return "重置失败，重置链接已过期";
-
-                    new SystemService(Manager).ResetPassword(data.CreatedBy);
-                    return $"重置成功，初始密码为：{SystemConfig.Config.DefaultPassword}";
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "重置密码失败");
-                return "服务器内部错误，请联系管理员";
-            }
         }
     }
 }

@@ -9,11 +9,20 @@ using Sixpence.Web.Entity;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Service;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.EntityPlugin
 {
     public class SysRolePlugin : IEntityManagerPlugin
     {
+        private readonly SysRolePrivilegeService _rolePrivilegeService;
+        private readonly IEnumerable<IRole> _roles;
+        public SysRolePlugin(SysRolePrivilegeService rolePrivilegeService, IServiceProvider provider)
+        {
+            _rolePrivilegeService = rolePrivilegeService;
+            _roles = provider.GetServices<IRole>();
+        }
+
         public void Execute(EntityManagerPluginContext context)
         {
             var obj = context.Entity as SysRole;
@@ -29,7 +38,7 @@ namespace Sixpence.Web.EntityPlugin
                     {
                         // 重新创建权限
                         var rootRoleId = string.IsNullOrEmpty(obj.InheritedRoleId) ? obj.Id : obj.InheritedRoleId;
-                        var privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(rootRoleId, RoleType.All).ToList();
+                        var privileges = _rolePrivilegeService.GetUserPrivileges(rootRoleId, RoleType.All).ToList();
                         privileges.Each(item =>
                         {
                             item.Id = Guid.NewGuid().ToString();
@@ -40,17 +49,18 @@ namespace Sixpence.Web.EntityPlugin
                         });
                         context.EntityManager.BulkCreate(privileges);
                         // 权限缓存清空
-                        UserPrivilegesCache.Clear(context.EntityManager);
+                        UserPrivilegesCache.Clear();
+                        _roles.Each(e => e.RebuildCache());
                     }
                     break;
                 case EntityAction.PostUpdate:
                     {
                         // 删除所有权限
                         var rootRoleId = string.IsNullOrEmpty(obj.InheritedRoleId) ? obj.Id : obj.InheritedRoleId;
-                        var privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(obj.Id, RoleType.All).ToList();
+                        var privileges = _rolePrivilegeService.GetUserPrivileges(obj.Id, RoleType.All).ToList();
                         privileges.Each(item => context.EntityManager.Delete(item));
                         // 重新创建权限
-                        privileges = new SysRolePrivilegeService(context.EntityManager).GetUserPrivileges(rootRoleId, RoleType.All).ToList();
+                        privileges = _rolePrivilegeService.GetUserPrivileges(rootRoleId, RoleType.All).ToList();
                         privileges.Each(item =>
                         {
                             item.Id = Guid.NewGuid().ToString();
@@ -61,7 +71,8 @@ namespace Sixpence.Web.EntityPlugin
                         });
                         context.EntityManager.BulkCreate(privileges);
                         // 权限缓存清空
-                        UserPrivilegesCache.Clear(context.EntityManager);
+                        UserPrivilegesCache.Clear();
+                        _roles.Each(e => e.RebuildCache());
                     }
                     break;
                 default:

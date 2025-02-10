@@ -9,22 +9,25 @@ namespace Sixpence.Web.Auth.Gitee
 {
     public class GiteeUserBind : IThirdPartyBindStrategy
     {
+        private readonly IEntityManager _manager;
+        private readonly GiteeAuthService _giteeAuthService;
+        public GiteeUserBind(IEntityManager manager, GiteeAuthService giteeAuthService)
+        {
+            _manager = manager;
+            _giteeAuthService = giteeAuthService;
+        }
         public string GetName() => "Gitee";
 
         public void Bind(string code, string userid)
         {
-            using (var manager = new EntityManager())
+            _manager.ExecuteTransaction(() =>
             {
-                var giteeAuthService = new GiteeAuthService(manager);
-                manager.ExecuteTransaction(() =>
-                {
-                    var user = manager.QueryFirst<SysUser>(userid);
-                    var githubToken = giteeAuthService.GetAccessToken(code, userid).Result;
-                    var githubUser = giteeAuthService.GetGiteeUserInfo(githubToken).Result;
-                    user.GiteeId = githubUser.id.ToString();
-                    manager.Update(user);
-                });
-            }
+                var user = _manager.QueryFirst<SysUser>(userid);
+                var githubToken = _giteeAuthService.GetAccessToken(code, userid).Result;
+                var githubUser = _giteeAuthService.GetGiteeUserInfo(githubToken).Result;
+                user.GiteeId = githubUser.id.ToString();
+                _manager.Update(user);
+            });
         }
     }
 }

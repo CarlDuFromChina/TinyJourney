@@ -8,19 +8,19 @@ using Sixpence.Web.Extensions;
 using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 using Sixpence.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class SysMenuService : EntityService<SysMenu>
     {
-        #region 构造函数
-        public SysMenuService() : base() { }
-        public SysMenuService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public SysMenuService(IEntityManager manager, ILogger<EntityService<SysMenu>> logger, IRepository<SysMenu> repository) : base(manager, logger, repository)
+        {
+        }
 
         public override IEnumerable<SysMenu> GetDataList(IList<SearchCondition> searchList, string viewId = "", string searchValue = "")
         {
-            var data = base.GetDataList(searchList, viewId).Filter().ToList();
+            var data = base.GetDataList(searchList, viewId).Filter(_manager).ToList();
             var firstMenu = data
                 .Where(e => string.IsNullOrEmpty(e.ParentId))
                 .Select(item =>
@@ -39,7 +39,7 @@ namespace Sixpence.Web.Service
         public override DataModel<SysMenu> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
         {
             var model = base.GetDataList(searchList, pageSize, pageIndex, viewId);
-            var data = model.Data.Filter().ToList();
+            var data = model.Data.Filter(_manager).ToList();
             var firstMenu = data.Where(e => string.IsNullOrEmpty(e.ParentId)).ToList();
             firstMenu.ForEach(item =>
             {
@@ -68,7 +68,7 @@ SELECT * FROM sys_menu
 WHERE parent_id IS NULL OR parent_id = ''
 ORDER BY menu_index
 ";
-            var data = Manager.Query<SysMenu>(sql).ToList();
+            var data = _manager.Query<SysMenu>(sql).ToList();
             return data;
         }
 
@@ -79,12 +79,12 @@ ORDER BY menu_index
                 SysMenu data;
 
                 if (!string.IsNullOrEmpty(item.Router))
-                    data = Repository.FindOne(new { router = item.Router });
+                    data = _repository.FindOne(new { router = item.Router });
                 else
-                    data = Repository.FindOne(new { id = item.Id });
+                    data = _repository.FindOne(new { id = item.Id });
 
                 if (data == null)
-                    Repository.Create(item);
+                    _repository.Create(item);
             }
         }
     }

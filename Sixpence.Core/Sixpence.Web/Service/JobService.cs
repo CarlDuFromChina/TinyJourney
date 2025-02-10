@@ -7,13 +7,15 @@ using Sixpence.Common.Utils;
 using Sixpence.Web.Auth;
 using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
-    public class JobService : BaseService
+    public class JobService : BaseService<JobService>
     {
-        public JobService() : base() { }
-        public JobService(IEntityManager manager) : base(manager) { }
+        public JobService(IEntityManager manager, ILogger<JobService> logger) : base(manager, logger)
+        {
+        }
 
         /// <summary>
         /// 查询所有的job

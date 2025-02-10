@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Sixpence.TinyJourney.Service
 {
-    public class AnalysisService : BaseService
+    public class AnalysisService : BaseService<AnalysisService>
     {
-        public AnalysisService() : base() { }
-
-        public AnalysisService(IEntityManager manager) : base(manager) { }
+        public AnalysisService(IEntityManager manager, ILogger<AnalysisService> logger) : base(manager, logger)
+        {
+        }
 
         public IEnumerable<TimelineModel> GetTimeline()
         {

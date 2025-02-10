@@ -14,6 +14,14 @@ namespace Sixpence.Web.EntityPlugin
 {
     public class SysUserPlugin : IEntityManagerPlugin
     {
+        private readonly SysAuthUserService _sysAuthUserService;
+        private readonly SysRoleService _sysRoleService;
+        public SysUserPlugin(SysAuthUserService sysAuthUserService, SysRoleService sysRoleService)
+        {
+            _sysAuthUserService = sysAuthUserService;
+            _sysRoleService = sysRoleService;
+        }
+
         public void Execute(EntityManagerPluginContext context)
         {
             var entity = context.Entity as SysUser;
@@ -55,7 +63,7 @@ namespace Sixpence.Web.EntityPlugin
                 RoleName = entity.RoleName,
                 IsLock = false,
             };
-            new SysAuthUserService(manager).CreateData(authInfo);
+            _sysAuthUserService.CreateData(authInfo);
         }
 
         /// <summary>
@@ -70,7 +78,7 @@ namespace Sixpence.Web.EntityPlugin
             authInfo.Name = entity.Name;
             authInfo.RoleId = entity.RoleId;
             authInfo.RoleName = entity.RoleName;
-            new SysAuthUserService(manager).UpdateData(authInfo);
+            _sysAuthUserService.UpdateData(authInfo);
         }
 
         /// <summary>
@@ -80,7 +88,7 @@ namespace Sixpence.Web.EntityPlugin
         /// <param name="broker"></param>
         private void CheckUserInfo(SysUser entity, IEntityManager manager)
         {
-            var allowUpdateRole = new SysRoleService(manager).AllowCreateOrUpdateRole(entity.RoleId);
+            var allowUpdateRole = _sysRoleService.AllowCreateOrUpdateRole(entity.RoleId);
             AssertUtil.IsTrue(!allowUpdateRole, $"你没有权限修改角色为[{entity.RoleName}]");
             AssertUtil.IsTrue(entity.PrimaryColumn.Value?.ToString() == "00000000-0000-0000-0000-000000000000", "系统管理员信息禁止更新");
         }

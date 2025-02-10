@@ -18,18 +18,16 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Sixpence.Web.Service
 {
-    public class GithubAuthService : BaseService
+    public class GithubAuthService : BaseService<GithubAuthService>
     {
-        #region 构造函数
-        public GithubAuthService() : base() { }
-
-        public GithubAuthService(IEntityManager manager) : base(manager) { }
-        #endregion
+        private readonly SysConfigService _configService;
+        public GithubAuthService(IEntityManager manager, ILogger<GithubAuthService> logger) : base(manager, logger)
+        {
+        }
 
         public GithubConfig GetConfig()
         {
-            var configService = new SysConfigService(_manager);
-            var data = configService.GetValue("github_oauth")?.ToString();
+            var data = _configService.GetValue("github_oauth")?.ToString();
             return JsonConvert.DeserializeObject<GithubConfig>(data);
         }
 

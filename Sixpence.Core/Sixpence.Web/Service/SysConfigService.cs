@@ -1,9 +1,11 @@
-﻿using Sixpence.Common;
+﻿using Microsoft.Extensions.Logging;
+using Sixpence.Common;
 using Sixpence.EntityFramework;
 using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Entity;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,22 +14,23 @@ namespace Sixpence.Web.Service
 {
     public class SysConfigService : EntityService<SysConfig>
     {
-        #region 构造函数
-        public SysConfigService() : base() { }
+        private const string CACHE_PREFIX = "SysConfig";
+        private static readonly ConcurrentDictionary<string, Entity.SysConfig> settings = new ConcurrentDictionary<string, Entity.SysConfig>();
 
-        public SysConfigService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public SysConfigService(IEntityManager manager, ILogger<EntityService<SysConfig>> logger, IRepository<SysConfig> repository) : base(manager, logger, repository)
+        {
+        }
 
         public object GetValue(string code)
         {
-            return SysConfigCache.GetValue(code);
+            return GetCacheValue(code);
         }
 
         public void CreateMissingConfig(IEnumerable<ISysConfig> settings)
         {
             settings.Each(item =>
             {
-                var data = Manager.QueryFirst<SysConfig>(new { code = item.Code });
+                var data = _manager.QueryFirst<SysConfig>(new { code = item.Code });
                 if (data == null)
                 {
                     data = new SysConfig()
@@ -38,9 +41,21 @@ namespace Sixpence.Web.Service
                         Value = item.DefaultValue.ToString(),
                         Description = item.Description
                     };
-                    Manager.Create(data);
+                    _manager.Create(data);
                 }
             });
+        }
+
+        private object GetCacheValue(string code)
+        {
+            var config = settings.GetOrAdd(CACHE_PREFIX + code, (key) =>
+            {
+                var sql = @"select * from sys_config where code = @code;";
+                var data = _manager.QueryFirst<SysConfig>(sql, new Dictionary<string, object>() { { "@code", code } });
+                return data;
+            });
+
+            return config?.Value;
         }
     }
 }

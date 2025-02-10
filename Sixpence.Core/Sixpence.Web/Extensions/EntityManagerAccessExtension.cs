@@ -25,8 +25,8 @@ namespace Sixpence.Web.Extensions
         /// <returns></returns>
         public static string FilteredCreate(this IEntityManager manager, BaseEntity entity)
         {
-            var sysEntity = EntityCache.GetEntity(entity.EntityMap.Table);
-            if (!AuthAccess.CheckWriteAccess(sysEntity.PrimaryColumn.Value?.ToString()))
+            var sysEntity = EntityCache.GetEntity(manager, entity.EntityMap.Table);
+            if (!AuthAccess.CheckWriteAccess(manager, sysEntity.PrimaryColumn.Value?.ToString()))
             {
                 throw new InvalidCredentialException($"用户没有实体[{sysEntity.Name}]的创建权限");
             }
@@ -45,8 +45,8 @@ namespace Sixpence.Web.Extensions
         /// <returns></returns>
         public static int FiltededUpdate(this IEntityManager manager, BaseEntity entity)
         {
-            var sysEntity = EntityCache.GetEntity(entity.EntityMap.Table);
-            if (!AuthAccess.CheckWriteAccess(sysEntity.PrimaryColumn.Value?.ToString()))
+            var sysEntity = EntityCache.GetEntity(manager, entity.EntityMap.Table);
+            if (!AuthAccess.CheckWriteAccess(manager, sysEntity.PrimaryColumn.Value?.ToString()))
             {
                 throw new InvalidCredentialException($"用户没有实体[{sysEntity.Name}]的更新权限");
             }
@@ -83,8 +83,8 @@ namespace Sixpence.Web.Extensions
         /// <returns></returns>
         public static T FilteredQueryFirst<T>(this IEntityManager manager, string id) where T : BaseEntity, new()
         {
-            var sysEntity = EntityCache.GetEntity(new T().EntityMap.Table);
-            if (!AuthAccess.CheckReadAccess(sysEntity.PrimaryColumn.Value?.ToString()))
+            var sysEntity = EntityCache.GetEntity(manager, new T().EntityMap.Table);
+            if (!AuthAccess.CheckReadAccess(manager, sysEntity.PrimaryColumn.Value?.ToString()))
             {
                 throw new InvalidCredentialException($"用户没有实体[{sysEntity.Name}]的查询权限");
             }
@@ -101,8 +101,8 @@ namespace Sixpence.Web.Extensions
         /// <returns></returns>
         public static IEnumerable<T> FilteredQuery<T>(this IEntityManager manager, string sql, Dictionary<string, object> paramList = null) where T : BaseEntity, new()
         {
-            var sysEntity = EntityCache.GetEntity(new T().EntityMap.Table);
-            if (!AuthAccess.CheckReadAccess(sysEntity.PrimaryColumn.Value?.ToString()))
+            var sysEntity = EntityCache.GetEntity(manager, new T().EntityMap.Table);
+            if (!AuthAccess.CheckReadAccess(manager, sysEntity.PrimaryColumn.Value?.ToString()))
             {
                 throw new InvalidCredentialException($"用户没有实体[{sysEntity.Name}]的查询权限");
             }
@@ -117,8 +117,8 @@ namespace Sixpence.Web.Extensions
         /// <returns></returns>
         public static int FilteredDelete(this IEntityManager manager, BaseEntity entity)
         {
-            var sysEntity = EntityCache.GetEntity(entity.EntityMap.Table);
-            if (!AuthAccess.CheckDeleteAccess(sysEntity.PrimaryColumn.Value?.ToString()))
+            var sysEntity = EntityCache.GetEntity(manager, entity.EntityMap.Table);
+            if (!AuthAccess.CheckDeleteAccess(manager, sysEntity.PrimaryColumn.Value?.ToString()))
             {
                 throw new InvalidCredentialException($"用户没有实体[{sysEntity.Name}]的删除权限");
             }
@@ -134,8 +134,8 @@ namespace Sixpence.Web.Extensions
         /// <returns></returns>
         public static int FilteredDelete(this IEntityManager manager, string entityName, string id)
         {
-            var sysEntity = EntityCache.GetEntity(entityName);
-            if (!AuthAccess.CheckDeleteAccess(sysEntity.PrimaryColumn.Value?.ToString()))
+            var sysEntity = EntityCache.GetEntity(manager, entityName);
+            if (!AuthAccess.CheckDeleteAccess(manager, sysEntity.PrimaryColumn.Value?.ToString()))
             {
                 throw new InvalidCredentialException($"用户没有实体[{sysEntity.Name}]的删除权限");
             }

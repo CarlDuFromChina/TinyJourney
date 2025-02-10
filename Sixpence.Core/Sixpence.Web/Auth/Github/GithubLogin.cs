@@ -11,21 +11,27 @@ namespace Sixpence.Web.Auth.Github
 {
     public class GithubLogin : IThirdPartyLoginStrategy
     {
+        private readonly IEntityManager _manager;
+        private readonly GithubAuthService _githubAuthService;
+        private readonly SysRoleService _sysRoleService;
+        private readonly ILogger<GithubLogin> _logger;
+        public GithubLogin(IEntityManager manager, ILogger<GithubLogin> logger, GithubAuthService githubAuthService, SysRoleService sysRoleService)
+        {
+            _manager = manager;
+            _githubAuthService = githubAuthService;
+            _sysRoleService = sysRoleService;
+            _logger = logger;
+        }
         public string GetName() => "Github";
 
         public LoginResponse Login(object param)
         {
-            var manager = new EntityManager();
-            var githubService = new GithubAuthService(manager);
-            var sysRoleService = new SysRoleService(manager);
-            var logger = AppContext.GetLogger<GithubLogin>();
-
             try
             {
                 var code = param as string;
-                var githubToken = githubService.GetAccessToken(code).Result;
-                var githubUser = githubService.GetUserInfo(githubToken).Result;
-                var user = manager.QueryFirst<SysUser>(new { github_id = githubUser.id.ToString() });
+                var githubToken = _githubAuthService.GetAccessToken(code).Result;
+                var githubUser = _githubAuthService.GetUserInfo(githubToken).Result;
+                var user = _manager.QueryFirst<SysUser>(new { github_id = githubUser.id.ToString() });
 
                 if (user != null)
                 {
@@ -39,11 +45,11 @@ namespace Sixpence.Web.Auth.Github
                     };
                 }
 
-                return manager.ExecuteTransaction(() =>
+                return _manager.ExecuteTransaction(() =>
                 {
-                    var role = sysRoleService.GetGuest();
+                    var role = _sysRoleService.GetGuest();
                     var id = Guid.NewGuid().ToString();
-                    var avatarId = githubService.DownloadImage(githubUser.avatar_url, id).Result;
+                    var avatarId = _githubAuthService.DownloadImage(githubUser.avatar_url, id).Result;
                     var user = new SysUser()
                     {
                         Id = id,
@@ -58,7 +64,7 @@ namespace Sixpence.Web.Auth.Github
                         GithubId = githubUser.id.ToString(),
                         isActive = true,
                     };
-                    manager.Create(user, false);
+                    _manager.Create(user, false);
                     var _authUser = new SysAuthUser()
                     {
                         Id = user.Id,
@@ -71,7 +77,7 @@ namespace Sixpence.Web.Auth.Github
                         LastLoginTime = DateTime.Now,
                         Password = null
                     };
-                    manager.Create(_authUser);
+                    _manager.Create(_authUser);
 
                     return new LoginResponse()
                     {
@@ -85,8 +91,8 @@ namespace Sixpence.Web.Auth.Github
             }
             catch (Exception ex)
             {
-                logger.LogError("Github 登录失败：" + ex.Message, ex);
-                manager.Dispose();
+                _logger.LogError("Github 登录失败：" + ex.Message, ex);
+                _manager.Dispose();
                 return new LoginResponse() { result = false, message = "Github 登录失败" };
             }
         }

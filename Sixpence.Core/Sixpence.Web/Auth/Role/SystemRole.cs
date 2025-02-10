@@ -14,6 +14,10 @@ namespace Sixpence.Web.Auth.Role
     /// </summary>
     public class SystemRole : BasicRole
     {
+        public SystemRole(IEntityManager manager) : base(manager)
+        {
+        }
+
         public override Role Role => Role.System;
 
         public override string Description => "系统角色：拥有最高权限";

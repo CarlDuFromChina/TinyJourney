@@ -17,9 +17,14 @@ namespace Sixpence.Web.Auth.Role
 {
     public abstract class BasicRole : IRole
     {
-        public IEntityManager Manager = new EntityManager();
+        public IEntityManager _manager;
         protected const string ROLE_PREFIX = "BasicRole";
         protected const string PRIVILEGE_PREFIX = "RolePrivilege";
+
+        public BasicRole(IEntityManager manager)
+        {
+            _manager = manager;
+        }
 
         public string GetRoleKey => GetType().Name;
 
@@ -45,7 +50,7 @@ namespace Sixpence.Web.Auth.Role
             var key = $"{ROLE_PREFIX}_{RoleName}";
             return MemoryCacheUtil.GetOrAddCacheItem(key, () =>
             {
-                var role = Manager.QueryFirst<SysRole>(new { name = Role.GetDescription() });
+                var role = _manager.QueryFirst<SysRole>(new { name = Role.GetDescription() });
                 if (role == null)
                 {
                     role = new SysRole()
@@ -55,7 +60,7 @@ namespace Sixpence.Web.Auth.Role
                         Description = this.Description,
                         IsBasic = true
                     };
-                    Manager.Create(role);
+                    _manager.Create(role);
                 }
                 return role;
             }, DateTime.Now.AddHours(12));
@@ -70,7 +75,7 @@ namespace Sixpence.Web.Auth.Role
             var key = $"{PRIVILEGE_PREFIX}_{Role.GetIdentifier()}";
             return MemoryCacheUtil.GetOrAddCacheItem(key, () =>
             {
-                var dataList = Manager.Query<SysRolePrivilege>(new { role_id = Role.GetIdentifier() });
+                var dataList = _manager.Query<SysRolePrivilege>(new { role_id = Role.GetIdentifier() });
                 return dataList;
             }, DateTime.Now.AddHours(12));
         }
@@ -149,6 +154,16 @@ WHERE id NOT IN (
                 UpdatedAt = DateTime.Now
             };
             return privilege;
+        }
+
+        /// <summary>
+        /// 重新生成缓存
+        /// </summary>
+        public void RebuildCache()
+        {
+            ClearCache();
+            MemoryCacheUtil.RemoveCacheItem(GetRoleKey);
+            MemoryCacheUtil.Set(GetRoleKey, new RolePrivilegeModel() { Role = GetSysRole(), Privileges = GetRolePrivilege() }, 3600 * 12);
         }
     }
 

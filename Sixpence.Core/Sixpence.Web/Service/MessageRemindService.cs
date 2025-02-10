@@ -5,20 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Sixpence.EntityFramework.Repository;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class MessageRemindService : EntityService<MessageRemind>
     {
-        #region 构造函数
-        public MessageRemindService() : base() { }
-
-        public MessageRemindService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public MessageRemindService(IEntityManager manager, ILogger<EntityService<MessageRemind>> logger, IRepository<MessageRemind> repository) : base(manager, logger, repository)
+        {
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -56,13 +54,13 @@ WHERE message_type = 'system'",
 
         public void ReadMessage(IEnumerable<string> ids)
         {
-            var inSqlResult = Manager.Driver.SqlBuilder.BuildInClauseSql("id", 0, ids.Cast<object>().ToList());
+            var inSqlResult = _manager.Driver.SqlBuilder.BuildInClauseSql("id", 0, ids.Cast<object>().ToList());
             var sql = $@"
 UPDATE message_remind
 SET	is_read = true
 WHERE id {inSqlResult.sql}
 ";
-            Manager.Execute(sql, inSqlResult.param);
+            _manager.Execute(sql, inSqlResult.param);
         }
 
         public override DataModel<MessageRemind> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
@@ -103,10 +101,10 @@ WHERE id {inSqlResult.sql}
 SELECT COUNT(1)
 FROM message_remind
 WHERE receiver_id = @id AND is_read is false";
-            var total = Manager.ExecuteScalar(sql, paramList);
-            var upvote = Manager.ExecuteScalar($"{sql} AND message_type = 'upvote'", paramList);
-            var comment = Manager.ExecuteScalar($"{sql} AND message_type IN ('comment', 'reply')", paramList);
-            var system = Manager.ExecuteScalar($"{sql} AND message_type = 'system'", paramList);
+            var total = _manager.ExecuteScalar(sql, paramList);
+            var upvote = _manager.ExecuteScalar($"{sql} AND message_type = 'upvote'", paramList);
+            var comment = _manager.ExecuteScalar($"{sql} AND message_type IN ('comment', 'reply')", paramList);
+            var system = _manager.ExecuteScalar($"{sql} AND message_type = 'system'", paramList);
             return new
             {
                 total = Convert.ToInt32(total),

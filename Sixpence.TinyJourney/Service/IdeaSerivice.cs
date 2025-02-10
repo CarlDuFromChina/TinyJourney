@@ -6,11 +6,8 @@ namespace Sixpence.TinyJourney.Service
 {
     public class IdeaSerivice : EntityService<Idea>
     {
-        #region 构造函数
-        public IdeaSerivice() : base() { }
-
-        public IdeaSerivice(IEntityManager manager) : base(manager) { }
-        #endregion
-
+        public IdeaSerivice(IEntityManager manager, ILogger<EntityService<Idea>> logger, IRepository<Idea> repository) : base(manager, logger, repository)
+        {
+        }
     }
 }

@@ -27,17 +27,5 @@ namespace Sixpence.Web.Controllers
             UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
             return _service.ActivateUser(id);
         }
-
-        /// <summary>
-        /// 重置密码
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("passsword/reset"), AllowAnonymous]
-        public string ResetPassword(string id)
-        {
-            UserIdentityUtil.SetCurrentUser(UserIdentityUtil.GetSystem());
-            return _service.ResetPassword(id);
-        }
     }
 }

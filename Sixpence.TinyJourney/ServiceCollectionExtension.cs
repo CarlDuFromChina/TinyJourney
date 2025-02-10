@@ -11,6 +11,7 @@ using Sixpence.AI;
 using Sixpence.AI.Wenxin;
 using Sixpence.AI.DeepSeek;
 using Sixpence.TinyJourney.Service;
+using Sixpence.EntityFramework.Repository;
 
 namespace Sixpence.TinyJourney
 {
@@ -19,9 +20,8 @@ namespace Sixpence.TinyJourney
         public static void AddSixpencePortal(this IServiceCollection services)
         {
             services
-                .AddEntity()
+                .AddEntityFramework()
                 .AddInitData()
-                .AddEntityPlugin()
                 .AddEntityOptionProvider()
                 .AddSysConfig()
                 .AddJob()
@@ -29,32 +29,38 @@ namespace Sixpence.TinyJourney
                 .AddEntityService();
         }
 
-        private static IServiceCollection AddEntity(this IServiceCollection services)
+        private static IServiceCollection AddEntityFramework(this IServiceCollection services)
         {
-            services.AddSingleton<IEntity, Category>();
-            services.AddSingleton<IEntity, Draft>();
-            services.AddSingleton<IEntity, Link>();
-            services.AddSingleton<IEntity, Post>();
-            services.AddSingleton<IEntity, Idea>();
-            return services;
-        }
+            // 1. 添加实体
+            services.AddTransient<IEntity, Category>();
+            services.AddTransient<IEntity, Draft>();
+            services.AddTransient<IEntity, Link>();
+            services.AddTransient<IEntity, Post>();
+            services.AddTransient<IEntity, Idea>();
 
-        private static IServiceCollection AddEntityPlugin(this IServiceCollection services)
-        {
-            services.AddTransient<IEntityManagerPlugin, PostPlugin>();
-            services.AddTransient<IEntityManagerPlugin, CategoryPlugin>();
+            // 2. 添加实体插件
+            services.AddScoped<IEntityManagerPlugin, PostPlugin>();
+            services.AddScoped<IEntityManagerPlugin, CategoryPlugin>();
+
+            // 3. 添加仓储
+            services.AddScoped<IRepository<Category>, Repository<Category>>();
+            services.AddScoped<IRepository<Draft>, Repository<Draft>>();
+            services.AddScoped<IRepository<Link>, Repository<Link>>();
+            services.AddScoped<IRepository<Post>, Repository<Post>>();
+            services.AddScoped<IRepository<Idea>, Repository<Idea>>();
+
             return services;
         }
 
         private static IServiceCollection AddEntityOptionProvider(this IServiceCollection services)
         {
-            services.AddTransient<IEntityOptionProvider, CategoryEntityOptionProvider>();
+            services.AddScoped<IEntityOptionProvider, CategoryEntityOptionProvider>();
             return services;
         }
 
         private static IServiceCollection AddInitData(this IServiceCollection services)
         {
-            services.AddTransient<IInitDbData, InitDbBusinessData>();
+            services.AddScoped<IInitDbData, InitDbBusinessData>();
             return services;
         }
 
@@ -67,7 +73,7 @@ namespace Sixpence.TinyJourney
 
         private static IServiceCollection AddJob(this IServiceCollection services)
         {
-            services.AddSingleton<IJob, CleanJob>();
+            services.AddScoped<IJob, CleanJob>();
             return services;
         }
 

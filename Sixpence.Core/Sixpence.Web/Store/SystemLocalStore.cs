@@ -16,10 +16,12 @@ namespace Sixpence.Web.Store
     {
         private readonly ILogger<SystemLocalStore> logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IEntityManager _manager;
         public SystemLocalStore(IEntityManager manager, ILogger<SystemLocalStore> logger, IHttpContextAccessor contextAccessor)
         {
             this.logger = logger;
             _httpContextAccessor = contextAccessor;
+            _manager = manager;
         }
 
         /// <summary>
@@ -61,8 +63,7 @@ namespace Sixpence.Web.Store
         /// <returns></returns>
         public async Task<Stream> GetStreamAsync(string id)
         {
-            var manager = ServiceFactory.Resolve<IEntityManager>();
-            var data = manager.QueryFirst<SysFile>(id);
+            var data = _manager.QueryFirst<SysFile>(id);
             return await FileUtil.GetFileStreamAsync(data.GetFilePath());
         }
 

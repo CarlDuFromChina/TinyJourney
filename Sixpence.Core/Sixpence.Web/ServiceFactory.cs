@@ -14,7 +14,8 @@ namespace Sixpence.Web
 
         public static T Resolve<T>()
         {
-            return Provider.GetService<T>();
+            using (var scope = Provider.CreateScope())
+                return scope.ServiceProvider.GetService<T>();
         }
 
         public static T Resolve<T>(string name)
@@ -23,24 +24,36 @@ namespace Sixpence.Web
             {
                 return default;
             }
-            var result = Provider.GetServices<T>();
-            return result.Where(x => x.GetType().Name == name).FirstOrDefault();
+            using (var scope = Provider.CreateScope())
+            {
+                var result = scope.ServiceProvider.GetServices<T>();
+                return result.Where(x => x.GetType().Name == name).FirstOrDefault();
+            }
         }
 
         public static T Resolve<T>(Func<T, bool> predicate)
         {
-            var services = Provider.GetServices<T>();
-            return services.Where(predicate).FirstOrDefault();
+            using (var scope = Provider.CreateScope())
+            {
+                var services = Provider.GetServices<T>();
+                return services.Where(predicate).FirstOrDefault();
+            }
         }
 
         public static IEnumerable<T> ResolveAll<T>()
         {
-            return Provider.GetServices<T>();
+            using (var scope = Provider.CreateScope())
+            {
+                return scope.ServiceProvider.GetServices<T>();
+            }
         }
 
         public static IEnumerable<T> ResolveAll<T>(Func<T, bool> predicate)
         {
-            return Provider.GetServices<T>().Where(predicate);
+            using (var scope = Provider.CreateScope())
+            {
+                return scope.ServiceProvider.GetServices<T>().Where(predicate);
+            }
         }
     }
 }

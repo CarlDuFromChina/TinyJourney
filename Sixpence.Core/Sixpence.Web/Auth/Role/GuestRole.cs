@@ -14,6 +14,10 @@ namespace Sixpence.Web.Auth.Role
     /// </summary>
     public class GuestRole : BasicRole
     {
+        public GuestRole(IEntityManager manager) : base(manager)
+        {
+        }
+
         public override Role Role => Role.Guest;
 
         public override string Description => "匿名用户：一般情况下无修改更新权限，只读";

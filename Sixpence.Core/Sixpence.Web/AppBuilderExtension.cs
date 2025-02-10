@@ -13,6 +13,8 @@ using Sixpence.Common.Utils;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Module.SysMenu;
+using Microsoft.Extensions.DependencyInjection;
+using Quartz;
 
 namespace Sixpence.Web
 {
@@ -21,49 +23,51 @@ namespace Sixpence.Web
         public static void UseSixpenceWeb(this IApplicationBuilder builder)
         {
             ServiceFactory.Provider = builder.ApplicationServices;
-
-            builder.UseEntityFramework(options =>
+            using (var scope = builder.ApplicationServices.CreateScope())
             {
-                options.EnableLogging = true;
-                options.MigrateDb = true;
-            });
-
-            #region 1. Job 启动
-            JobHelpers.Start();
-            #endregion
-
-            #region 2. 权限写入缓存
-            var roles = ServiceFactory.ResolveAll<IRole>();
-            using var manager = new EntityManager();
-            new SysRolePrivilegeService(manager).CreateRoleMissingPrivilege();
-
-            // 权限读取到缓存
-            roles.Each(item => MemoryCacheUtil.Set(item.GetRoleKey, new RolePrivilegeModel() { Role = item.GetSysRole(), Privileges = item.GetRolePrivilege() }, 3600 * 12));
-            #endregion
-
-            #region 3. 系统配置自动创建
-            var settings = ServiceFactory.ResolveAll<ISysConfig>();
-            new SysConfigService().CreateMissingConfig(settings);
-            #endregion
-
-            #region 4. 初始化用户
-            var inits = ServiceFactory.ResolveAll<IInitDbData>();
-            using (var manger = new EntityManager())
-            {
-                var sysUsers = new List<SysUser>();
-                var sysAuthUsers = new List<SysAuthUser>();
-                var sysMenus = new List<SysMenu>();
-                foreach (var item in inits)
+                builder.UseEntityFramework(options =>
                 {
-                    sysUsers = sysUsers.Concat(item.GetSysUsers()).ToList();
-                    sysAuthUsers = sysAuthUsers.Concat(item.GetSysAuthUsers()).ToList();
-                    sysMenus = sysMenus.Concat(item.GetSysMenus()).ToList();
+                    options.EnableLogging = true;
+                    options.MigrateDb = true;
+                });
+
+                #region 1. Job 启动
+                var jobs = scope.ServiceProvider.GetServices<IJob>().ToList();
+                JobHelpers.Start(jobs);
+                #endregion
+
+                #region 2. 权限写入缓存
+                var roles = scope.ServiceProvider.GetServices<IRole>();
+                scope.ServiceProvider.GetRequiredService<SysRolePrivilegeService>().CreateRoleMissingPrivilege();
+
+                // 权限读取到缓存
+                roles.Each(item => MemoryCacheUtil.Set(item.GetRoleKey, new RolePrivilegeModel() { Role = item.GetSysRole(), Privileges = item.GetRolePrivilege() }, 3600 * 12));
+                #endregion
+
+                #region 3. 系统配置自动创建
+                var settings = ServiceFactory.ResolveAll<ISysConfig>();
+                scope.ServiceProvider.GetRequiredService<SysConfigService>().CreateMissingConfig(settings);
+                #endregion
+
+                #region 4. 初始化用户
+                var inits = scope.ServiceProvider.GetServices<IInitDbData>();
+                using (var manger = scope.ServiceProvider.GetRequiredService<IEntityManager>())
+                {
+                    var sysUsers = new List<SysUser>();
+                    var sysAuthUsers = new List<SysAuthUser>();
+                    var sysMenus = new List<SysMenu>();
+                    foreach (var item in inits)
+                    {
+                        sysUsers = sysUsers.Concat(item.GetSysUsers()).ToList();
+                        sysAuthUsers = sysAuthUsers.Concat(item.GetSysAuthUsers()).ToList();
+                        sysMenus = sysMenus.Concat(item.GetSysMenus()).ToList();
+                    }
+                    scope.ServiceProvider.GetRequiredService<SysUserService>().CreateMissingUser(sysUsers);
+                    scope.ServiceProvider.GetRequiredService<SysAuthUserService>().CreateMissingAuthUser(sysAuthUsers);
+                    scope.ServiceProvider.GetRequiredService<SysMenuService>().CreateMissingMenu(sysMenus);
                 }
-                new SysUserService(manager).CreateMissingUser(sysUsers);
-                new SysAuthUserService(manager).CreateMissingAuthUser(sysAuthUsers);
-                new SysMenuService(manager).CreateMissingMenu(sysMenus);
+                #endregion
             }
-            #endregion
         }
     }
 }

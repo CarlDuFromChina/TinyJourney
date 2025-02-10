@@ -6,16 +6,15 @@ using System.Linq;
 using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class SysEntityService : EntityService<SysEntity>
     {
-        #region 构造函数
-        public SysEntityService() : base() { }
-
-        public SysEntityService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public SysEntityService(IEntityManager manager, ILogger<EntityService<SysEntity>> logger, IRepository<SysEntity> repository) : base(manager, logger, repository)
+        {
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -46,7 +45,7 @@ FROM
         /// <returns></returns>
         public IList<SysAttrs> GetEntityAttrs(string id)
         {
-            return Manager.Query<SysAttrs>(new { entity_id = id }).ToList();
+            return _manager.Query<SysAttrs>(new { entity_id = id }).ToList();
         }
 
         /// <summary>
@@ -57,11 +56,11 @@ FROM
         public override string CreateData(SysEntity t)
         {
             var id = "";
-            Manager.ExecuteTransaction(() =>
+            _manager.ExecuteTransaction(() =>
             {
                 id = base.CreateData(t);
                 var sql = $"CREATE TABLE {t.Code} (id VARCHAR(100) PRIMARY KEY)";
-                Manager.Execute(sql);
+                _manager.Execute(sql);
             });
             return id;
         }
@@ -72,18 +71,18 @@ FROM
         /// <param name="ids"></param>
         public override void DeleteData(List<string> ids)
         {
-            Manager.ExecuteTransaction(() =>
+            _manager.ExecuteTransaction(() =>
             {
-                var dataList = Manager.Query<SysEntity>(ids).ToList();
+                var dataList = _manager.Query<SysEntity>(ids).ToList();
                 base.DeleteData(ids); // 删除实体
-                var inSqlResult = Manager.Driver.SqlBuilder.BuildInClauseSql("entity_id", 0, ids.Cast<object>().ToList());
+                var inSqlResult = _manager.Driver.SqlBuilder.BuildInClauseSql("entity_id", 0, ids.Cast<object>().ToList());
                 var sql = $@"
 DELETE FROM sys_attrs WHERE entity_id {inSqlResult.sql};
 ";
-                Manager.Execute(sql, inSqlResult.param); // 删除级联字段
+                _manager.Execute(sql, inSqlResult.param); // 删除级联字段
                 dataList.ForEach(data =>
                 {
-                    Manager.Execute($"DROP TABLE {data.Code}");
+                    _manager.Execute($"DROP TABLE {data.Code}");
                 });
             });
         }

@@ -7,16 +7,15 @@ using Sixpence.Web.Model;
 using Sixpence.Web.Auth;
 using Sixpence.Web.Entity;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class SysUserService : EntityService<SysUser>
     {
-        #region 构造函数
-        public SysUserService() : base() { }
-
-        public SysUserService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public SysUserService(IEntityManager manager, ILogger<EntityService<SysUser>> logger, IRepository<SysUser> repository) : base(manager, logger, repository)
+        {
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -49,7 +48,7 @@ LEFT JOIN (
 
         public SysUser GetData()
         {
-            return Repository.FindOne(UserIdentityUtil.GetCurrentUserId());
+            return _repository.FindOne(UserIdentityUtil.GetCurrentUserId());
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ LEFT JOIN (
         /// <returns></returns>
         public SysUser GetDataByCode(string code)
         {
-            return Repository.FindOne(new Dictionary<string, object>() { { "code", code } });
+            return _repository.FindOne(new Dictionary<string, object>() { { "code", code } });
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ LEFT JOIN (
         /// <returns></returns>
         public bool InfoFilled()
         {
-            var user = Repository.FindOne(UserIdentityUtil.GetCurrentUserId());
+            var user = _repository.FindOne(UserIdentityUtil.GetCurrentUserId());
             AssertUtil.IsNull(user, "未查询到用户");
             if (user.Id == UserIdentityUtil.ADMIN_ID)
             {
@@ -86,9 +85,9 @@ LEFT JOIN (
         {
             users.Each(user =>
             {
-                var data = Repository.FindOne(new { code = user.Code });
+                var data = _repository.FindOne(new { code = user.Code });
                 if (data == null)
-                    Manager.Create(user, false);
+                    _manager.Create(user, false);
             });
         }
     }

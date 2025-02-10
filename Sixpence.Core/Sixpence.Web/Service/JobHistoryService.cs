@@ -1,4 +1,5 @@
-﻿using Sixpence.EntityFramework;
+﻿using Microsoft.Extensions.Logging;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Entity;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,8 @@ namespace Sixpence.Web.Service
 {
     public class JobHistoryService : EntityService<JobHistory>
     {
-        #region 构造函数
-        public JobHistoryService() : base() { }
-
-        public JobHistoryService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public JobHistoryService(IEntityManager manager, ILogger<EntityService<JobHistory>> logger, IRepository<JobHistory> repository) : base(manager, logger, repository)
+        {
+        }
     }
 }

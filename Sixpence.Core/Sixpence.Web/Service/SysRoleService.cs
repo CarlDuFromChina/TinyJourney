@@ -6,21 +6,20 @@ using System.Linq;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class SysRoleService : EntityService<SysRole>
     {
-        #region 构造函数
-        public SysRoleService() : base() { }
-
-        public SysRoleService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public SysRoleService(IEntityManager manager, ILogger<EntityService<SysRole>> logger, IRepository<SysRole> repository) : base(manager, logger, repository)
+        {
+        }
 
         public IEnumerable<SelectOption> GetBasicRole()
         {
-            var roles = Repository.GetAllEntity();
-            var currentRoleId = Manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId())?.RoleId;
+            var roles = _repository.GetAllEntity();
+            var currentRoleId = _manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId())?.RoleId;
             var role = roles.FirstOrDefault(item => item.Id == currentRoleId);
 
             return roles.Where(item => UserIdentityUtil.IsOwner(role.IsBasic.Value ? role.Id : role.InheritedRoleId, item.IsBasic.Value ? item.Id : item.InheritedRoleId))
@@ -31,15 +30,15 @@ namespace Sixpence.Web.Service
 
         public IEnumerable<SelectOption> GetRoles()
         {
-            var roles = Repository.GetAllEntity();
-            var currentRoleId = Manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId())?.RoleId;
+            var roles = _repository.GetAllEntity();
+            var currentRoleId = _manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId())?.RoleId;
             var role = roles.FirstOrDefault(item => item.Id == currentRoleId);
 
             return roles.Where(item => UserIdentityUtil.IsOwner(role.IsBasic.Value ? role.Id : role.InheritedRoleId, item.IsBasic.Value ? item.Id : item.InheritedRoleId))
                 .Select(item => new SelectOption(item.Name, item.Id));
         }
 
-        public SysRole GetGuest() => Manager.QueryFirst<SysRole>("222222222-22222-2222-2222-222222222222");
+        public SysRole GetGuest() => _manager.QueryFirst<SysRole>("222222222-22222-2222-2222-222222222222");
 
         public bool AllowCreateOrUpdateRole(string roleid)
         {
@@ -61,7 +60,7 @@ namespace Sixpence.Web.Service
                     curRoleId = curid;
                     break;
                 default:
-                    curRoleId = Manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId())?.RoleId;
+                    curRoleId = _manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId())?.RoleId;
                     break;
             }
 

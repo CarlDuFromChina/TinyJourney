@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sixpence.Common.Utils;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Model.Pixabay;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,15 @@ namespace Sixpence.Web.Service
     /// <summary>
     /// Pixabay第三方API资源（https://pixabay.com/api/docs/）
     /// </summary>
-    public class PixabayService : BaseService
+    public class PixabayService : BaseService<PixabayService>
     {
-        public PixabayService() : base() { }
 
         private static readonly string key = "19356383-2f75a9b525aa933f63ab20ab5";
+
+        public PixabayService(IEntityManager manager, ILogger<PixabayService> logger) : base(manager, logger)
+        {
+        }
+
         private static string Get(string url)
         {
             var request = WebRequest.Create(url) as HttpWebRequest;

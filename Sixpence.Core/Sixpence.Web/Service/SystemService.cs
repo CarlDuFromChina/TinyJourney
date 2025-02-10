@@ -19,24 +19,21 @@ using Sixpence.Web.Model;
 using Sixpence.Common.Crypto;
 using Sixpence.EntityFramework;
 using Sixpence.Common.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
-    public class SystemService
+    public class SystemService : BaseService<SystemService>
     {
-        private IEntityManager Manager;
-
-        #region 构造函数
-        public SystemService()
+        private readonly GithubAuthService _githubAuthService;
+        private readonly GiteeAuthService _giteeAuthService;
+        private readonly MailVertificationService _mailVertificationService;
+        public SystemService(IEntityManager manager, ILogger<SystemService> logger, GithubAuthService githubAuthService, GiteeAuthService giteeAuthService, MailVertificationService mailVertificationService) : base(manager, logger)
         {
-            Manager = new EntityManager();
+            _githubAuthService = githubAuthService;
+            _giteeAuthService = giteeAuthService;
+            _mailVertificationService = mailVertificationService;
         }
-
-        public SystemService(IEntityManager manager)
-        {
-            Manager = manager;
-        }
-        #endregion
 
         /// <summary>
         /// 获取公钥
@@ -68,7 +65,7 @@ namespace Sixpence.Web.Service
             {
                 return null;
             }
-            var user = Manager.QueryFirst<SysUser>(id);
+            var user = _manager.QueryFirst<SysUser>(id);
             if (!string.IsNullOrEmpty(user?.Avatar))
             {
                 return AppContext.Storage.DownloadAsync(user.Avatar).Result;
@@ -99,7 +96,7 @@ namespace Sixpence.Web.Service
             var pwd = model.Password;
             var publicKey = model.PublicKey;
 
-            var user = Manager.QueryFirst<SysUser>(new { code });
+            var user = _manager.QueryFirst<SysUser>(new { code });
             if (user == null)
             {
                 return new LoginResponse() { result = false, message = "用户名或密码错误" };
@@ -110,7 +107,7 @@ namespace Sixpence.Web.Service
                 return new LoginResponse() { result = false, message = "用户已被锁定，请联系管理员" };
             }
 
-            var authUser = Manager.QueryFirst<SysAuthUser>(new { code });
+            var authUser = _manager.QueryFirst<SysAuthUser>(new { code });
 
             if (authUser == null)
             {
@@ -147,7 +144,7 @@ namespace Sixpence.Web.Service
                     message = $"用户已被锁定，请联系管理员";
                 }
 
-                Manager.Update(authUser);
+                _manager.Update(authUser);
                 return new LoginResponse() { result = false, message = message };
             }
 
@@ -156,7 +153,7 @@ namespace Sixpence.Web.Service
                 authUser.TryTimes = 0;
             }
             authUser.LastLoginTime = DateTime.Now;
-            Manager.Update(authUser);
+            _manager.Update(authUser);
 
             // 返回登录结果、用户信息、用户验证票据信息
             var oUser = new LoginResponse
@@ -176,8 +173,8 @@ namespace Sixpence.Web.Service
         /// <returns></returns>
         public LoginConfig GetLoginConfig()
         {
-            var github = new GithubAuthService(Manager).GetConfig();
-            var gitee = new GiteeAuthService(Manager).GetConfig();
+            var github = _githubAuthService.GetConfig();
+            var gitee = _giteeAuthService.GetConfig();
             return new LoginConfig()
             {
                 github = github,
@@ -195,12 +192,12 @@ namespace Sixpence.Web.Service
             AssertUtil.IsNullOrEmpty(model.Code, "账号不能为空");
             AssertUtil.IsNullOrEmpty(model.Password, "密码不能为空");
 
-            return Manager.ExecuteTransaction(() =>
+            return _manager.ExecuteTransaction(() =>
             {
                 if (!model.Code.Contains("@"))
                     return new LoginResponse(false, "注册失败，请使用邮箱作为账号");
 
-                var vertification = new MailVertificationService(Manager).GetDataByMailAdress(model.Code);
+                var vertification = _mailVertificationService.GetDataByMailAdress(model.Code);
                 if (vertification != null)
                     return new LoginResponse(false, "激活邮件已发送，请前往邮件激活账号，请勿重复注册", LoginMesageLevel.Warning);
 
@@ -219,7 +216,7 @@ namespace Sixpence.Web.Service
                     MailAddress = model.Code,
                     MailType = MailType.Activation.ToString()
                 };
-                Manager.Create(data);
+                _manager.Create(data);
 
                 // 返回登录结果、用户信息、用户验证票据信息
                 return new LoginResponse()
@@ -258,7 +255,7 @@ WHERE user_id = @id;
 ";
             var user = UserIdentityUtil.GetCurrentUser();
             var paramList = new Dictionary<string, object>() { { "@id", user.Id }, { "@password", password } };
-            Manager.Execute(sql, paramList);
+            _manager.Execute(sql, paramList);
         }
 
         /// <summary>
@@ -273,7 +270,7 @@ SET password = @password
 WHERE user_id = @id;
 ";
             var paramList = new Dictionary<string, object>() { { "@id", id }, { "@password", SystemConfig.Config.DefaultPassword } };
-            Manager.Execute(sql, paramList);
+            _manager.Execute(sql, paramList);
         }
 
         /// <summary>
@@ -282,7 +279,7 @@ WHERE user_id = @id;
         /// <param name="code"></param>
         public void ForgetPassword(string code)
         {
-            var user = Manager.QueryFirst<SysUser>("SELECT * FROM user_info WHERE code = @mail OR mailbox = @mail", new Dictionary<string, object>() { { "@mail", code } });
+            var user = _manager.QueryFirst<SysUser>("SELECT * FROM user_info WHERE code = @mail OR mailbox = @mail", new Dictionary<string, object>() { { "@mail", code } });
             AssertUtil.IsNull(user, "用户不存在");
             UserIdentityUtil.SetCurrentUser(new CurrentUserModel() { Id = user.Id, Code = user.Code, Name = user.Name });
             var id = Guid.NewGuid().ToString();
@@ -298,7 +295,7 @@ WHERE user_id = @id;
                 MailAddress = user.Mailbox,
                 MailType = MailType.ResetPassword.ToString()
             };
-            Manager.Create(sms);
+            _manager.Create(sms);
         }
 
         /// <summary>
@@ -311,7 +308,7 @@ WHERE user_id = @id;
             if (string.IsNullOrEmpty(userId))
                 return false;
 
-            var user = Manager.QueryFirst<SysUser>(userId);
+            var user = _manager.QueryFirst<SysUser>(userId);
             if (user == null)
                 return false;
 

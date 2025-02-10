@@ -1,5 +1,6 @@
 using Quartz;
 using Sixpence.Common.Utils;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Job;
 using Sixpence.Web.Utils;
 
@@ -7,6 +8,10 @@ namespace Sixpence.TinyJourney.Job
 {
     public class CleanJob : JobBase
     {
+        public CleanJob(IEntityManager manager) : base(manager)
+        {
+        }
+
         public override string Name => "清理作业";
         public override string Description => "清理日志、资源文件";
         public override IScheduleBuilder ScheduleBuilder => CronScheduleBuilder.CronSchedule("0 0 0 * * ?");

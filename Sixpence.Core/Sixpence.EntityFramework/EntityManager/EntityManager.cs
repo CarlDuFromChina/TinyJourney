@@ -16,27 +16,26 @@ namespace Sixpence.EntityFramework
     /// </summary>
     public class EntityManager : IEntityManager, IDisposable
     {
-        private DbClient _dbClient;
-        private readonly IServiceProvider Provider;
-        private readonly ILogger<EntityManager>? Logger;
+        private DbClient _dbClient = new DbClient();
         private readonly bool EnableLogging = AppBuilderExtensions.BuilderOptions.EnableLogging;
+
+        private readonly ILogger<EntityManager>? _logger;
+        private readonly Lazy<IEnumerable<IEntityManagerBeforeCreateOrUpdate>> _entityManagerBeforeCreateOrUpdates;
+        private readonly Lazy<IEnumerable<IEntityManagerPlugin>> _entityManagerPlugins;
 
         public IDbDriver Driver => _dbClient.Driver;
         public DbClient DbClient => _dbClient;
 
-        public EntityManager()
+        public EntityManager(IServiceProvider provider)
         {
-            var dbSetting = ServiceCollectionExtensions.Options?.DbSetting;
-            _dbClient = new DbClient(dbSetting.Driver, dbSetting.ConnectionString, dbSetting.CommandTimeout);
-            Provider = ServiceContainer.Provider;
-            Logger = Provider.GetService<ILoggerFactory>()?.CreateLogger<EntityManager>();
-        }
+            _logger = provider.GetService<ILoggerFactory>()?.CreateLogger<EntityManager>();
 
-        public EntityManager(string connectionString, IDbDriver dbDriver, int? commandTimeout)
-        {
-            _dbClient = new DbClient(dbDriver, connectionString, commandTimeout);
-            Provider = ServiceContainer.Provider;
-            Logger = Provider.GetService<ILoggerFactory>()?.CreateLogger<EntityManager>();
+            // 将集合包裹在 Lazy 中，懒加载依赖项
+            _entityManagerBeforeCreateOrUpdates = new Lazy<IEnumerable<IEntityManagerBeforeCreateOrUpdate>>(
+                () => provider.GetServices<IEntityManagerBeforeCreateOrUpdate>());
+
+            _entityManagerPlugins = new Lazy<IEnumerable<IEntityManagerPlugin>>(
+                () => provider.GetServices<IEntityManagerPlugin>());
         }
 
         #region CRUD
@@ -51,13 +50,13 @@ namespace Sixpence.EntityFramework
             {
                 #region 创建前 Plugin
                 var context = new EntityManagerPluginContext() { Entity = entity, EntityManager = this, Action = EntityAction.PreCreate, EntityName = entity.EntityMap.Table };
-                ServiceContainer.Provider.GetServices<IEntityManagerBeforeCreateOrUpdate>()?
-                    .Each(item => item.Execute(context));
+                _entityManagerBeforeCreateOrUpdates?.Value?.Each(item => item.Execute(context));
                 if (usePlugin)
                 {
-                    ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                        .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
-                        .Each(item => item.Execute(context));
+                    _entityManagerPlugins
+                        ?.Value
+                        ?.Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
+                        ?.Each(item => item.Execute(context));
                 }
                 #endregion
 
@@ -80,9 +79,9 @@ namespace Sixpence.EntityFramework
                 if (usePlugin)
                 {
                     context.Action = EntityAction.PostCreate;
-                    ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                        .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
-                        .Each(item => item.Execute(context));
+                    _entityManagerPlugins?.Value
+                        ?.Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
+                        ?.Each(item => item.Execute(context));
                 }
                 #endregion
 
@@ -108,8 +107,9 @@ namespace Sixpence.EntityFramework
             var attributes = dataList.Rows[0].ToDictionary(dataList.Columns);
             attributes.Each(item => EntityCommon.SetDbColumnValue(entity, item.Key, item.Value.Equals(DBNull.Value) ? null : item.Value));
 
-            var plugins = ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table));
+            var plugins = _entityManagerPlugins
+                ?.Value
+                ?.Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table));
 
             plugins?.Each(item => item.Execute(new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PreDelete }));
 
@@ -129,8 +129,8 @@ namespace Sixpence.EntityFramework
         {
             return this.ExecuteTransaction(() =>
             {
-                var plugins = ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table));
+                var plugins = _entityManagerPlugins?.Value
+                    ?.Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table));
 
                 plugins?.Each(item => item.Execute(new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = entity.EntityMap.Table, Action = EntityAction.PreDelete }));
 
@@ -227,12 +227,12 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
 
                 #region 更新前 Plugin
                 var context = new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PreUpdate };
-                ServiceContainer.Provider.GetServices<IEntityManagerBeforeCreateOrUpdate>()
-                    .Each(item => item.Execute(context));
+                _entityManagerBeforeCreateOrUpdates?.Value?.Each(item => item.Execute(context));
 
-                ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
-                    .Each(item => item.Execute(context));
+                _entityManagerPlugins
+                    ?.Value
+                    ?.Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
+                    ?.Each(item => item.Execute(context));
                 #endregion
 
                 var paramList = new Dictionary<string, object>();
@@ -259,9 +259,10 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
 
                 #region 更新后 Plugin
                 context.Action = EntityAction.PostUpdate;
-                ServiceContainer.Provider.GetServices<IEntityManagerPlugin>()
-                    .Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
-                    .Each(item => item.Execute(context));
+                _entityManagerPlugins
+                    ?.Value
+                    ?.Where(item => EntityCommon.MatchEntityManagerPlugin(item.GetType().Name, entity.EntityMap.Table))
+                    ?.Each(item => item.Execute(context));
                 #endregion
                 return result;
             });
@@ -533,7 +534,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
             int sqlCount = 0, errorCount = 0;
             if (!File.Exists(sqlFile))
             {
-                Logger?.LogError($"文件({sqlFile})不存在");
+                _logger?.LogError($"文件({sqlFile})不存在");
                 return -1;
             }
             using (StreamReader sr = new StreamReader(sqlFile))
@@ -565,7 +566,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
                         {
                             errorCount++;
                             if (EnableLogging)
-                                Logger?.LogError(sql + newLIne + ex.Message, ex);
+                                _logger?.LogError(sql + newLIne + ex.Message, ex);
                         }
                         sql = string.Empty;
                     }
@@ -605,8 +606,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
             dataList.ForEach(entity =>
             {
                 var context = new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PreCreate };
-                ServiceContainer.Provider.GetServices<IEntityManagerBeforeCreateOrUpdate>()
-                    .Each(item => item.Execute(context));
+                _entityManagerBeforeCreateOrUpdates?.Value?.Each(item => item.Execute(context));
             });
             var data = EntityCommon.ParseToDataTable(dataList, dt.Columns);
             BulkCreate(tableName, primaryKey, data);
@@ -657,8 +657,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
             dataList.ForEach(entity =>
             {
                 var context = new EntityManagerPluginContext() { EntityManager = this, Entity = entity, EntityName = tableName, Action = EntityAction.PreUpdate };
-                ServiceContainer.Provider.GetServices<IEntityManagerBeforeCreateOrUpdate>()
-                    .Each(item => item.Execute(context));
+                _entityManagerBeforeCreateOrUpdates?.Value?.Each(item => item.Execute(context));
             });
             BulkUpdate(tableName, mainKeyName, EntityCommon.ParseToDataTable(dataList, dt.Columns));
         }

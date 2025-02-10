@@ -6,15 +6,19 @@ using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Sixpence.Web.EntityOptionProvider;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.Logging;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.Service
 {
     public class SysParamGroupService : EntityService<SysParamGroup>
     {
-        #region 构造函数
-        public SysParamGroupService() : base() { }
-        public SysParamGroupService(IEntityManager manger) : base(manger) { }
-        #endregion
+        private Lazy<IEnumerable<IEntityOptionProvider>> _entityOptionProviders;
+        public SysParamGroupService(IEntityManager manager, ILogger<EntityService<SysParamGroup>> logger, IRepository<SysParamGroup> repository, IServiceProvider provider) : base(manager, logger, repository)
+        {
+            _entityOptionProviders = new Lazy<IEnumerable<IEntityOptionProvider>>(() => provider.GetServices<IEntityOptionProvider>());
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -48,7 +52,7 @@ FROM sys_param
 INNER JOIN sys_param_group ON sys_param.sys_param_group_id = sys_param_group.id
 WHERE sys_param_group.code = @code
 ";
-            return Manager.Query<SelectOption>(sql, new Dictionary<string, object>() { { "@code", code } }).ToList();
+            return _manager.Query<SelectOption>(sql, new Dictionary<string, object>() { { "@code", code } }).ToList();
         }
 
         public IEnumerable<IEnumerable<SelectOption>> GetParamsList(string[] paramsList)
@@ -59,16 +63,16 @@ WHERE sys_param_group.code = @code
 
         public IEnumerable<SelectOption> GetEntityOptions(string code)
         {
-            var resolve = ServiceFactory.Resolve<IEntityOptionProvider>(name => code.Replace("_", "").ToLower() == name.GetType().Name.Replace("EntityOptionProvider", "").ToLower());
+            var resolve = _entityOptionProviders?.Value?.ToList()?.FirstOrDefault(name => code.Replace("_", "").ToLower() == name.GetType().Name.Replace("EntityOptionProvider", "").ToLower());
             if (resolve != null)
             {
                 return resolve.GetOptions();
             }
 
-            var entity = Manager.QueryFirst<SysEntity>(new { code });
+            var entity = _manager.QueryFirst<SysEntity>(new { code });
             if (entity != null)
             {
-                return Manager.Query<SelectOption>($"select id AS Value, name AS Name from {entity.Code}");
+                return _manager.Query<SelectOption>($"select id AS Value, name AS Name from {entity.Code}");
             }
             return new List<SelectOption>();
         }
@@ -81,11 +85,11 @@ WHERE sys_param_group.code = @code
 
         public override void DeleteData(List<string> ids)
         {
-            Manager.ExecuteTransaction(() =>
+            _manager.ExecuteTransaction(() =>
             {
-                var inSqlResult = Manager.Driver.SqlBuilder.BuildInClauseSql("sys_param_group_id", 0, ids.Cast<object>().ToList());
+                var inSqlResult = _manager.Driver.SqlBuilder.BuildInClauseSql("sys_param_group_id", 0, ids.Cast<object>().ToList());
                 var sql = $@"DELETE FROM sys_param WHERE sys_param_group_id {inSqlResult.sql}";
-                Manager.Execute(sql, inSqlResult.param);
+                _manager.Execute(sql, inSqlResult.param);
                 base.DeleteData(ids);
             });
         }

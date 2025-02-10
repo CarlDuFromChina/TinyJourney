@@ -9,10 +9,15 @@ namespace Sixpence.TinyJourney.EntityOptionProvider
 {
     public class CategoryEntityOptionProvider : IEntityOptionProvider
     {
+        private IEntityManager _manager;
+        public CategoryEntityOptionProvider(IEntityManager manager)
+        {
+            _manager = manager;
+        }
+
         public IEnumerable<SelectOption> GetOptions()
         {
-            var manager = new EntityManager();
-            return manager.Query<SelectOption>($"select code AS Value, name AS Name from category");
+            return _manager.Query<SelectOption>($"select code AS Value, name AS Name from category");
         }
     }
 }

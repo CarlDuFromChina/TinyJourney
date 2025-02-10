@@ -6,11 +6,22 @@ using Sixpence.Web.Module.SysMenu;
 using Sixpence.Web.Cache;
 using Sixpence.Web.Service;
 using Sixpence.EntityFramework;
+using Sixpence.Web.Auth.Role;
+using Microsoft.Extensions.DependencyInjection;
+using Sixpence.Common;
 
 namespace Sixpence.Web.EntityPlugin
 {
     public class SysMenuPlugin : IEntityManagerPlugin
     {
+        private readonly SysRolePrivilegeService _rolePrivilegeService;
+        private readonly IEnumerable<IRole> _roles;
+        public SysMenuPlugin(SysRolePrivilegeService rolePrivilegeService, IServiceProvider provider)
+        {
+            _rolePrivilegeService = rolePrivilegeService;
+            _roles = provider.GetServices<IRole>();
+        }
+
         public void Execute(EntityManagerPluginContext context)
         {
             var manager = context.EntityManager;
@@ -24,14 +35,17 @@ namespace Sixpence.Web.EntityPlugin
                     break;
                 case EntityAction.PostCreate:
                     // 创建权限
-                    new SysRolePrivilegeService(manager).CreateRoleMissingPrivilege();
+                    _rolePrivilegeService.CreateRoleMissingPrivilege();
                     // 重新注册权限并清除缓存
-                    UserPrivilegesCache.Clear(manager);
+                    UserPrivilegesCache.Clear();
+                    _roles.Each(item => item.RebuildCache());
                     break;
                 case EntityAction.PostDelete:
-                    var privileges = new SysRolePrivilegeService(manager).GetPrivileges(context.Entity.PrimaryColumn.Value?.ToString())?.ToArray();
+                    var privileges = _rolePrivilegeService.GetPrivileges(context.Entity.PrimaryColumn.Value?.ToString())?.ToArray();
                     manager.Delete(privileges);
-                    UserPrivilegesCache.Clear(manager);
+                    // 重新注册权限并清除缓存
+                    UserPrivilegesCache.Clear();
+                    _roles.Each(item => item.RebuildCache());
                     break;
                 default:
                     break;

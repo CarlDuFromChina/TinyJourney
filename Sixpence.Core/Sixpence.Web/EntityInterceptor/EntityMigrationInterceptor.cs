@@ -20,6 +20,14 @@ namespace Sixpence.Web.EntityInterceptor
     /// </summary>
     public class EntityMigrationInterceptor : IEntityMigrationInterceptor
     {
+        private readonly SysEntityService _entityService;
+        private readonly VersionScriptExecutionLogService _versionScriptExecutionLogService;
+        public EntityMigrationInterceptor(SysEntityService entityService, VersionScriptExecutionLogService versionScriptExecutionLogService)
+        {
+            _entityService = entityService;
+            _versionScriptExecutionLogService = versionScriptExecutionLogService;
+        }
+
         public void Execute(EntityMigrationInterceptorContext context)
         {
             // 设置当前线程为系统用户
@@ -69,7 +77,7 @@ namespace Sixpence.Web.EntityInterceptor
                 #endregion
 
                 var attrs = entity.EntityMap.Properties; // 实体类字段
-                var attrsList = new SysEntityService(manager).GetEntityAttrs(entity.Id).Select(e => e.Code); // 现有字段
+                var attrsList = _entityService.GetEntityAttrs(entity.Id).Select(e => e.Code); // 现有字段
 
                 #region 实体字段变更（删除字段）
                 attrsList.Each(attr =>
@@ -126,7 +134,7 @@ namespace Sixpence.Web.EntityInterceptor
                 {
                     if (filePath.EndsWith(".sql") || filePath.EndsWith(".csv"))
                     {
-                        var count = new VersionScriptExecutionLogService(manager).ExecuteScript(filePath);
+                        var count = _versionScriptExecutionLogService.ExecuteScript(filePath);
                         if (count == 1)
                         {
                             logger.LogInformation($"脚本：{Path.GetFileName(filePath)}执行成功");

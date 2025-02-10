@@ -15,8 +15,8 @@ namespace Sixpence.EntityFramework
 
         public static IServiceCollection AddEntityFramework(this IServiceCollection services, Action<ServiceCollectionOptions> action)
         {
-            services.AddTransient<IEntityManager, EntityManager>();
-            services.AddTransient<IEntityManagerBeforeCreateOrUpdate, EntityManagerBeforeCreateOrUpdate>();
+            services.AddScoped<IEntityManager, EntityManager>();
+            services.AddScoped<IEntityManagerBeforeCreateOrUpdate, EntityManagerBeforeCreateOrUpdate>();
 
             Options = new ServiceCollectionOptions();
             action?.Invoke(Options);

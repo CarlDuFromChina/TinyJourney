@@ -47,6 +47,11 @@ namespace Sixpence.Web
         void ClearCache();
 
         /// <summary>
+        /// 重新生成缓存
+        /// </summary>
+        void RebuildCache();
+
+        /// <summary>
         /// 获取初始化权限
         /// </summary>
         /// <returns></returns>

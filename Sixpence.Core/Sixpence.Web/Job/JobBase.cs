@@ -18,6 +18,12 @@ namespace Sixpence.Web.Job
     [DisallowConcurrentExecution]
     public abstract class JobBase : IJob
     {
+        private IEntityManager _manager;
+        public JobBase(IEntityManager manager)
+        {
+            _manager = manager;
+        }
+
         /// <summary>
         /// 作业名
         /// </summary>
@@ -62,7 +68,6 @@ namespace Sixpence.Web.Job
 
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
-                using var manager = new EntityManager();
                 UserIdentityUtil.SetCurrentUser(user);
                 var history = new JobHistory()
                 {
@@ -85,7 +90,7 @@ namespace Sixpence.Web.Job
                 finally
                 {
                     history.EndTime = DateTime.Now;
-                    manager.Create(history);
+                    _manager.Create(history);
                 }
                 stopWatch.Stop();
                 Logger.LogInformation($"作业：{Name} 执行结束，耗时{stopWatch.ElapsedMilliseconds}ms");

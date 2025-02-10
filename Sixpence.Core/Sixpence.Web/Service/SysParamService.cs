@@ -1,4 +1,5 @@
-﻿using Sixpence.EntityFramework;
+﻿using Microsoft.Extensions.Logging;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Entity;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,8 @@ namespace Sixpence.Web.Service
 {
     public class SysParamService : EntityService<SysParam>
     {
-        #region 构造函数
-        public SysParamService() : base() { }
-
-        public SysParamService(IEntityManager manger) : base(manger) { }
-        #endregion
+        public SysParamService(IEntityManager manager, ILogger<EntityService<SysParam>> logger, IRepository<SysParam> repository) : base(manager, logger, repository)
+        {
+        }
     }
 }

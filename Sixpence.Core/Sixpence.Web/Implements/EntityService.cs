@@ -19,33 +19,16 @@ namespace Sixpence.Web
     /// <summary>
     /// 实体服务类
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class EntityService<T>
-        where T : BaseEntity, new()
+    /// <typeparam name="TEntity"></typeparam>
+    public abstract class EntityService<TEntity> : BaseService<EntityService<TEntity>>
+        where TEntity : BaseEntity, new()
     {
-        public EntityService()
+        protected readonly IRepository<TEntity> _repository;
+
+        public EntityService(IEntityManager manager, ILogger<EntityService<TEntity>> logger, IRepository<TEntity> repository) : base(manager, logger)
         {
-            _logger = AppContext.GetLogger<T>();
-            Repository = new Repository<T>(new EntityManager());
+            _repository = repository;
         }
-
-        public EntityService(IEntityManager manager)
-        {
-            _logger = AppContext.GetLogger<T>();
-            Repository = new Repository<T>(manager);
-        }
-
-        /// <summary>
-        /// 实体操作
-        /// </summary>
-        protected IRepository<T> Repository;
-
-        /// <summary>
-        /// 数据库持久化
-        /// </summary>
-        protected IEntityManager Manager => Repository.Manager;
-
-        protected ILogger _logger;
 
         #region 实体表单
 
@@ -55,7 +38,7 @@ namespace Sixpence.Web
         /// <returns></returns>
         public virtual IList<EntityView> GetViewList()
         {
-            var sql = $"SELECT * FROM {new T().EntityMap.FullQualifiedName} WHERE 1=1";
+            var sql = $"SELECT * FROM {new TEntity().EntityMap.FullQualifiedName} WHERE 1=1";
             return new List<EntityView>()
             {
                 new EntityView()
@@ -72,30 +55,30 @@ namespace Sixpence.Web
         /// 获取所有记录
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<T> GetAllData()
+        public IEnumerable<TEntity> GetAllData()
         {
-            return Repository.FindAll();
+            return _repository.FindAll();
         }
 
         /// <summary>
         /// 获取所有实体记录
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<T> GetDataList(IList<SearchCondition> searchList, string viewId = "", string searchValue = "")
+        public virtual IEnumerable<TEntity> GetDataList(IList<SearchCondition> searchList, string viewId = "", string searchValue = "")
         {
             var view = string.IsNullOrEmpty(viewId) ? GetViewList().ToList().FirstOrDefault() : GetViewList().ToList().Find(item => item.ViewId == viewId);
-            return Repository.GetDataList(view, searchList);
+            return _repository.GetDataList(view, searchList);
         }
 
         /// <summary>
         /// 获取所有实体记录
         /// </summary>
         /// <returns></returns>
-        public virtual DataModel<T> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
+        public virtual DataModel<TEntity> GetDataList(IList<SearchCondition> searchList, int pageSize, int pageIndex, string viewId = "", string searchValue = "")
         {
             var view = string.IsNullOrEmpty(viewId) ? GetViewList().ToList().FirstOrDefault() : GetViewList().ToList().Find(item => item.ViewId == viewId);
-            var data = Repository.GetDataList(view, searchList, pageSize, pageIndex, out var recordCount, searchValue);
-            return new DataModel<T>()
+            var data = _repository.GetDataList(view, searchList, pageSize, pageIndex, out var recordCount, searchValue);
+            return new DataModel<TEntity>()
             {
                 Data = data.ToList(),
                 Count = recordCount
@@ -107,9 +90,9 @@ namespace Sixpence.Web
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual T GetData(string id)
+        public virtual TEntity GetData(string id)
         {
-            var obj = Repository.FilteredQueryFirst(id);
+            var obj = _repository.FilteredQueryFirst(id);
             return obj;
         }
 
@@ -118,18 +101,18 @@ namespace Sixpence.Web
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public virtual string CreateData(T t)
+        public virtual string CreateData(TEntity t)
         {
-            return Repository.FilteredCreate(t);
+            return _repository.FilteredCreate(t);
         }
 
         /// <summary>
         /// 更新记录
         /// </summary>
         /// <param name="t"></param>
-        public virtual void UpdateData(T t)
+        public virtual void UpdateData(TEntity t)
         {
-            Repository.FilteredUpdate(t);
+            _repository.FilteredUpdate(t);
         }
 
         /// <summary>
@@ -137,9 +120,9 @@ namespace Sixpence.Web
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public virtual string CreateOrUpdateData(T t)
+        public virtual string CreateOrUpdateData(TEntity t)
         {
-            return Repository.FilteredCreateOrUpdateData(t);
+            return _repository.FilteredCreateOrUpdateData(t);
         }
 
         /// <summary>
@@ -148,7 +131,7 @@ namespace Sixpence.Web
         /// <param name="ids"></param>
         public virtual void DeleteData(List<string> ids)
         {
-            Repository.FilteredDelete(ids);
+            _repository.FilteredDelete(ids);
         }
 
         /// <summary>
@@ -157,7 +140,7 @@ namespace Sixpence.Web
         /// <returns></returns>
         public virtual string Export()
         {
-            var fileName = $"{new T().EntityMap.Table}.csv";
+            var fileName = $"{new TEntity().EntityMap.Table}.csv";
             var fullFilePath = Path.Combine(FolderType.Temp.GetPath(), fileName);
             var dataList = GetAllData();
             CsvUtil.Write(dataList, fullFilePath);
@@ -172,14 +155,14 @@ namespace Sixpence.Web
         /// <returns></returns>
         public EntityPrivilegeResponse GetPrivilege()
         {
-            var user = Manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId());
+            var user = _manager.QueryFirst<SysUser>(UserIdentityUtil.GetCurrentUserId());
             var param = new
             {
                 role_id = user.RoleId,
                 object_type = "sys_entity",
-                object_id = EntityCache.GetEntity(new T().EntityMap.Table)?.PrimaryColumn.Value?.ToString()
+                object_id = EntityCache.GetEntity(_manager, new TEntity().EntityMap.Table)?.PrimaryColumn.Value?.ToString()
             };
-            var data = Manager.QueryFirst<SysRolePrivilege>(param);
+            var data = _manager.QueryFirst<SysRolePrivilege>(param);
 
             return new EntityPrivilegeResponse()
             {

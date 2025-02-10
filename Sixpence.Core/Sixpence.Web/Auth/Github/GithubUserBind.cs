@@ -9,22 +9,26 @@ namespace Sixpence.Web.Auth.Github
 {
     public class GithubUserBind : IThirdPartyBindStrategy
     {
+        private readonly IEntityManager _manager;
+        private readonly GithubAuthService _githubAuthService;
+        public GithubUserBind(IEntityManager manager, GithubAuthService githubAuthService)
+        {
+            _manager = manager;
+            _githubAuthService = githubAuthService;
+        }
+
         public string GetName() => "Github";
 
         public void Bind(string code, string userid)
         {
-            using (var manager = new EntityManager())
+            _manager.ExecuteTransaction(() =>
             {
-                var githubService = new GithubAuthService(manager);
-                manager.ExecuteTransaction(() =>
-                {
-                    var user = manager.QueryFirst<SysUser>(userid);
-                    var githubToken = githubService.GetAccessToken(code).Result;
-                    var githubUser = githubService.GetUserInfo(githubToken).Result;
-                    user.GithubId = githubUser.id.ToString();
-                    manager.Update(user);
-                });
-            }
+                var user = _manager.QueryFirst<SysUser>(userid);
+                var githubToken = _githubAuthService.GetAccessToken(code).Result;
+                var githubUser = _githubAuthService.GetUserInfo(githubToken).Result;
+                user.GithubId = githubUser.id.ToString();
+                _manager.Update(user);
+            });
         }
     }
 }

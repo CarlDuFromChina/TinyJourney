@@ -9,19 +9,18 @@ using Sixpence.EntityFramework.Repository;
 using Sixpence.Web.Entity;
 using Sixpence.EntityFramework.Entity;
 using Sixpence.EntityFramework;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.Service
 {
     public class SysRolePrivilegeService : EntityService<SysRolePrivilege>
     {
-        #region 构造函数
-        public SysRolePrivilegeService() : base() { }
-
-        public SysRolePrivilegeService(IEntityManager manger)
+        private readonly IServiceProvider _provider;
+        public SysRolePrivilegeService(IEntityManager manager, ILogger<EntityService<SysRolePrivilege>> logger, IRepository<SysRolePrivilege> repository, IServiceProvider provider) : base(manager, logger, repository)
         {
-            Repository = new Repository<SysRolePrivilege>(manger);
+            _provider = provider;
         }
-        #endregion
 
         /// <summary>
         /// 获取角色权限
@@ -30,7 +29,7 @@ namespace Sixpence.Web.Service
         /// <returns></returns>
         public IEnumerable<SysRolePrivilege> GetUserPrivileges(string roleid, RoleType roleType)
         {
-            var role = Manager.QueryFirst<SysRole>(roleid);
+            var role = _manager.QueryFirst<SysRole>(roleid);
             var privileges = new List<SysRolePrivilege>();
 
             if (role.IsBasic.Value)
@@ -43,7 +42,7 @@ namespace Sixpence.Web.Service
 SELECT * FROM sys_role_privilege
 WHERE role_id = @id
 ";
-                privileges = Manager.Query<SysRolePrivilege>(sql, new Dictionary<string, object>() { { "@id", roleid } }).ToList();
+                privileges = _manager.Query<SysRolePrivilege>(sql, new Dictionary<string, object>() { { "@id", roleid } }).ToList();
             }
 
             switch (roleType)
@@ -69,7 +68,7 @@ WHERE role_id = @id
             var sql = @"
 SELECT * FROM sys_role_privilege
 WHERE object_id = @id";
-            return Manager.Query<SysRolePrivilege>(sql, new Dictionary<string, object>() { { "@id", entityid } });
+            return _manager.Query<SysRolePrivilege>(sql, new Dictionary<string, object>() { { "@id", entityid } });
         }
 
         /// <summary>
@@ -78,7 +77,7 @@ WHERE object_id = @id";
         /// <param name="dataList"></param>
         public void BulkSave(List<SysRolePrivilege> dataList)
         {
-            Manager.BulkCreateOrUpdate(dataList);
+            _manager.BulkCreateOrUpdate(dataList);
         }
 
         /// <summary>
@@ -86,12 +85,12 @@ WHERE object_id = @id";
         /// </summary>
         public void CreateRoleMissingPrivilege()
         {
-            var roles = ServiceFactory.ResolveAll<IRole>();
+            var roles = _provider.GetServices<IRole>();
             var privileges = new List<SysRolePrivilege>();
 
             roles.Each(item =>
             {
-                item.GetMissingPrivilege(Manager)
+                item.GetMissingPrivilege(_manager)
                     .Each(item =>
                     {
                         if (!item.Value.IsEmpty())
@@ -101,7 +100,7 @@ WHERE object_id = @id";
                     });
             });
 
-            Manager.ExecuteTransaction(() => Manager.BulkCreate(privileges));
+            _manager.ExecuteTransaction(() => _manager.BulkCreate(privileges));
         }
     }
 }

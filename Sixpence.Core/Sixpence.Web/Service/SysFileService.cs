@@ -18,11 +18,9 @@ namespace Sixpence.Web.Service
 {
     public class SysFileService : EntityService<SysFile>
     {
-        #region 构造函数
-        public SysFileService() : base() { }
-
-        public SysFileService(IEntityManager manager) : base(manager) { }
-        #endregion
+        public SysFileService(IEntityManager manager, ILogger<EntityService<SysFile>> logger, IRepository<SysFile> repository) : base(manager, logger, repository)
+        {
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -69,7 +67,7 @@ FROM
 
         public IEnumerable<SysFile> GetDataByCode(string code)
         {
-            return Manager.Query<SysFile>(new { hash_code = code });
+            return _manager.Query<SysFile>(new { hash_code = code });
         }
 
         public SysFile UploadFile(Stream stream, string fileSuffix, string fileType, string contentType, string objectId, string fileName = "")
@@ -119,7 +117,7 @@ FROM
             var contentType = file.ContentType;
             var suffix = file.FileName.GetFileType();
 
-            return Manager.ExecuteTransaction(() =>
+            return _manager.ExecuteTransaction(() =>
             {
                 // 上传大图
                 var image = UploadFile(stream, suffix, fileType, contentType, objectId, file.FileName);

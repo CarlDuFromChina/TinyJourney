@@ -20,16 +20,17 @@ using Sixpence.EntityFramework.Entity;
 using System.Web;
 using Sixpence.Web.ImageResource;
 using Sixpence.Common.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class GalleryService : EntityService<Gallery>
     {
-        #region 构造函数
-        public GalleryService() : base() { }
-
-        public GalleryService(IEntityManager manager) : base(manager) { }
-        #endregion
+        private readonly SysFileService _sysFileService;
+        public GalleryService(IEntityManager manager, ILogger<EntityService<Gallery>> logger, IRepository<Gallery> repository, SysFileService sysFileService) : base(manager, logger, repository)
+        {
+            _sysFileService = sysFileService;
+        }
 
         public override IList<EntityView> GetViewList()
         {
@@ -75,7 +76,7 @@ namespace Sixpence.Web.Service
                     ContentType = result.Content.Headers.ContentType.MediaType,
                     ObjectId = objectid
                 };
-                return Manager.Create(data);
+                return _manager.Create(data);
             }
         }
 
@@ -86,7 +87,7 @@ namespace Sixpence.Web.Service
         /// <returns></returns>
         public List<string> UploadImage(ImageModel image)
         {
-            return Manager.ExecuteTransaction(() =>
+            return _manager.ExecuteTransaction(() =>
             {
                 var data = new Gallery()
                 {
@@ -112,12 +113,11 @@ namespace Sixpence.Web.Service
             {
                 throw new SpException("图片下载失败，请重试");
             }
-            var sysFileService = new SysFileService(Manager);
 
-            return Manager.ExecuteTransaction(() =>
+            return _manager.ExecuteTransaction(() =>
             {
                 var galleryid = Guid.NewGuid().ToString();
-                var image = sysFileService.UploadFile(result.Stream, result.Suffix, "gallery", result.ContentType, galleryid, result.FileName);
+                var image = _sysFileService.UploadFile(result.Stream, result.Suffix, "gallery", result.ContentType, galleryid, result.FileName);
                 //var thumbStream = ImageHelper.CreateThumbnail(image.GetFilePath(), 240, 160);
                 //var image2 = sysFileService.UploadFile(thumbStream, result.Suffix, "gallery", result.ContentType, galleryid, sysFileService.GetPreviewImageFileName(result.FileName));
 
@@ -129,7 +129,7 @@ namespace Sixpence.Web.Service
                     ImageId = image.Id,
                     ImageUrl = image.DownloadUrl
                 };
-                Manager.Create(gallery);
+                _manager.Create(gallery);
 
                 return gallery;
             });

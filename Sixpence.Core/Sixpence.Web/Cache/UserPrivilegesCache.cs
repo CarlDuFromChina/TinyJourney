@@ -24,15 +24,12 @@ namespace Sixpence.Web.Cache
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static IEnumerable<SysRolePrivilege> GetUserPrivileges(string userId)
+        public static IEnumerable<SysRolePrivilege> GetUserPrivileges(IEntityManager manager, string userId)
         {
             return UserPrivliege.GetOrAdd(UserPrivilegesPrefix + userId, (key) =>
             {
-                using (var manager = new EntityManager())
-                {
-                    var user = manager.QueryFirst<SysAuthUser>(userId);
-                    return manager.Query<SysRolePrivilege>("select * from sys_role_privilege where role_id = @id", new Dictionary<string, object>() { { "@id", user.RoleId } }).ToList();
-                }
+                var user = manager.QueryFirst<SysAuthUser>(userId);
+                return manager.Query<SysRolePrivilege>("select * from sys_role_privilege where role_id = @id", new Dictionary<string, object>() { { "@id", user.RoleId } }).ToList();
             });
         }
 
@@ -48,23 +45,9 @@ namespace Sixpence.Web.Cache
         /// <summary>
         /// 清除用户权限信息缓存
         /// </summary>
-        public static void Clear(IEntityManager manager)
+        public static void Clear()
         {
-            var roleList = new List<IRole>()
-            {
-                new AdminRole(),
-                new GuestRole(),
-                new SystemRole(),
-                new UserRole(),
-            };
             UserPrivliege.Clear();
-            roleList.Each(item =>
-            {
-                (item as BasicRole).Manager = manager;
-                item.ClearCache();
-                MemoryCacheUtil.RemoveCacheItem(item.GetRoleKey);
-                MemoryCacheUtil.Set(item.GetRoleKey, new RolePrivilegeModel() { Role = item.GetSysRole(), Privileges = item.GetRolePrivilege() }, 3600 * 12);
-            });
         }
     }
 }

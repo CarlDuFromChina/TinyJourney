@@ -15,15 +15,19 @@ using System.Threading.Tasks;
 
 namespace Sixpence.Web.Service
 {
-    public class GiteeAuthService : BaseService
+    public class GiteeAuthService : BaseService<GiteeAuthService>
     {
-        public GiteeAuthService() : base() { }
-        public GiteeAuthService(IEntityManager manager) : base(manager) { }
+        private readonly SysConfigService _sysConfigService;
+        private readonly IRepository<SysFile> _sysFileRepository;
+        public GiteeAuthService(IEntityManager manager, SysConfigService sysConfigService, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger) : base(manager, logger)
+        {
+            _sysConfigService = sysConfigService;
+            _sysFileRepository = sysFileRepository;
+        }
 
         public GiteeConfig GetConfig()
         {
-            var configService = new SysConfigService(_manager);
-            var data = configService.GetValue("gitee_oauth")?.ToString();
+            var data = _sysConfigService.GetValue("gitee_oauth")?.ToString();
             return JsonSerializer.Deserialize<GiteeConfig>(data);
         }
 
@@ -88,7 +92,7 @@ namespace Sixpence.Web.Service
                     ObjectId = objectid
                 };
 
-                return _manager.Create(data);
+                return _sysFileRepository.Create(data);
             }
         }
     }
