@@ -37,12 +37,6 @@ export default [
     meta: { title: '链接' }
   },
   {
-    path: '/admin/recommendInfo',
-    name: 'recommendInfo',
-    component: () => import('./recommendInfo/recommendInfoList.vue'),
-    meta: { title: '推荐信息' }
-  },
-  {
     path: '/admin/drafts',
     name: 'draft',
     component: () => import('./draftList.vue'),

@@ -50,7 +50,7 @@ export default {
       searchData: {
         file_type: []
       },
-      selectEntityNameList: ['sys_entity']
+      selectNameList: ['sys_entity']
     };
   },
   computed: {

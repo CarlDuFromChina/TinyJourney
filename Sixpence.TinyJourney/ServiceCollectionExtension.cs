@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sixpence.EntityFramework;
 using Sixpence.TinyJourney.Entity;
-using Sixpence.TinyJourney.EntityOptionProvider;
 using Sixpence.TinyJourney.Plugin;
 using Sixpence.Web;
 using Quartz;
@@ -22,7 +21,6 @@ namespace Sixpence.TinyJourney
             services
                 .AddEntityFramework()
                 .AddInitData()
-                .AddEntityOptionProvider()
                 .AddJob()
                 .AddAIService()
                 .AddEntityService();
@@ -48,12 +46,6 @@ namespace Sixpence.TinyJourney
             services.AddScoped<IRepository<Post>, Repository<Post>>();
             services.AddScoped<IRepository<Idea>, Repository<Idea>>();
 
-            return services;
-        }
-
-        private static IServiceCollection AddEntityOptionProvider(this IServiceCollection services)
-        {
-            services.AddScoped<IEntityOptionProvider, CategoryEntityOptionProvider>();
             return services;
         }
 

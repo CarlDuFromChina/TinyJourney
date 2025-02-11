@@ -171,5 +171,15 @@ namespace Sixpence.Web
                 delete = data.Privilege >= 7
             };
         }
+
+        /// <summary>
+        /// 获取实体选项集
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<SelectOption> GetOptions()
+        {
+            var sql = $@"select id AS Value, name AS Name FROM {new TEntity().EntityMap.Table}";
+            return _manager.Query<SelectOption>(sql);
+        }
     }
 }

@@ -175,7 +175,7 @@ export default {
       configs: {},
       publishModalVisible: false,
       controllerName: 'post',
-      selectEntityNameList: ['category'],
+      selectNameList: ['category'],
       fileList: [],
       baseUrl: sp.getServerUrl(),
       tags: [],

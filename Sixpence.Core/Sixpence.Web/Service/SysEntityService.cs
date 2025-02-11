@@ -7,6 +7,7 @@ using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Microsoft.Extensions.Logging;
+using Sixpence.EntityFramework.Entity;
 
 namespace Sixpence.Web.Service
 {
@@ -85,6 +86,12 @@ DELETE FROM sys_attrs WHERE entity_id {inSqlResult.sql};
                     _manager.Execute($"DROP TABLE {data.Code}");
                 });
             });
+        }
+
+        public override IEnumerable<SelectOption> GetOptions()
+        {
+            var sql = $@"SELECT code AS Value, name AS Name FROM {new SysEntity().EntityMap.FullQualifiedName}";
+            return _manager.Query<SelectOption>(sql);
         }
     }
 }

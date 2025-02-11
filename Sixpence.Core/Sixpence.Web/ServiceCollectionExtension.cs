@@ -13,7 +13,6 @@ using Sixpence.Web.Auth.Role;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using Sixpence.Web.EntityInterceptor;
-using Sixpence.Web.EntityOptionProvider;
 using Sixpence.Web.EntityPlugin;
 using Sixpence.Web.Module.SysAttrs;
 using Sixpence.Web.Module.SysMenu;
@@ -36,7 +35,6 @@ namespace Sixpence.Web
             services
                 .AddEntityFramework()
                 .AddRepository()
-                .AddEntityOptionProvider()
                 .AddStorage()
                 .AddRole()
                 .AddInitData()
@@ -59,8 +57,6 @@ namespace Sixpence.Web
             services.AddTransient<IEntity, SysEntity>();
             services.AddTransient<IEntity, SysFile>();
             services.AddTransient<IEntity, SysMenu>();
-            services.AddTransient<IEntity, SysParam>();
-            services.AddTransient<IEntity, SysParamGroup>();
             services.AddTransient<IEntity, SysRole>();
             services.AddTransient<IEntity, SysRolePrivilege>();
             services.AddTransient<IEntity, SysUser>();
@@ -118,18 +114,10 @@ namespace Sixpence.Web
             services.AddScoped<IRepository<SysEntity>, Repository<SysEntity>>();
             services.AddScoped<IRepository<SysFile>, Repository<SysFile>>();
             services.AddScoped<IRepository<SysMenu>, Repository<SysMenu>>();
-            services.AddScoped<IRepository<SysParam>, Repository<SysParam>>();
-            services.AddScoped<IRepository<SysParamGroup>, Repository<SysParamGroup>>();
             services.AddScoped<IRepository<SysRole>, Repository<SysRole>>();
             services.AddScoped<IRepository<SysRolePrivilege>, Repository<SysRolePrivilege>>();
             services.AddScoped<IRepository<SysUser>, Repository<SysUser>>();
             services.AddScoped<IRepository<VersionScriptExecutionLog>, Repository<VersionScriptExecutionLog>>();
-            return services;
-        }
-
-        private static IServiceCollection AddEntityOptionProvider(this IServiceCollection services)
-        {
-            services.AddTransient<IEntityOptionProvider, SysEntityEntityOptionProvider>();
             return services;
         }
 
@@ -242,8 +230,6 @@ namespace Sixpence.Web
             services.AddScoped<SysEntityService>();
             services.AddScoped<SysFileService>();
             services.AddScoped<SysMenuService>();
-            services.AddScoped<SysParamGroupService>();
-            services.AddScoped<SysParamService>();
             services.AddScoped<SysRolePrivilegeService>();
             services.AddScoped<SysRoleService>();
             services.AddScoped<SystemService>();

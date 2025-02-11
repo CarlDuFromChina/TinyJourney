@@ -138,19 +138,36 @@ namespace Sixpence.Web.WebApi
             }
         }
 
-        [HttpGet]
-        [Route("privilege")]
+        /// <summary>
+        /// 获取实体权限
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("privilege")]
         public virtual EntityPrivilegeResponse GetPrivilege()
         {
             return _service.GetPrivilege();
         }
 
+        /// <summary>
+        /// 实体记录导出CSV
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Route("export/csv")]
         public virtual IActionResult ExportCsv()
         {
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
             var fileName = _service.Export();
             return File(FileUtil.GetFileStream(fileName), "application/octet-stream", Path.GetFileName(fileName));
+        }
+
+        /// <summary>
+        /// 获取选项集
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("options")]
+        public virtual IActionResult GetOptions()
+        {
+            return Ok(_service.GetOptions());
         }
     }
 }

@@ -27,6 +27,16 @@ namespace Sixpence.EntityFramework.Entity
         /// <summary>
         /// 获取实体表名
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        public static string GetEntityTableName<TEntity>() where TEntity : BaseEntity
+        {
+            return GetEntityTableName(typeof(TEntity));
+        }
+
+        /// <summary>
+        /// 获取实体表名
+        /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>

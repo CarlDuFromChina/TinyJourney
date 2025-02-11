@@ -84,7 +84,6 @@ namespace Sixpence.Web
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "数据库管理", Router = "db", Icon = "", MenuIndex = 11010, ParentId = setting, ParentName = "系统设置", IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "作业管理", Router = "job", Icon = "", MenuIndex = 11015, ParentId = setting, ParentName = "系统设置", IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "用户信息", Router = "users", Icon = "", MenuIndex = 11020, ParentId = setting, ParentName = "系统设置", IsEnable = true },
-                new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "选项集", Router = "options", Icon = "", MenuIndex = 11025, ParentId = setting, ParentName = "系统设置", IsEnable = true },
                 new SysMenu() { Id = Guid.NewGuid().ToString(), Name = "角色管理", Router = "role", Icon = "", MenuIndex = 11035, ParentId = setting, ParentName = "系统设置", IsEnable = true },
             };
         }

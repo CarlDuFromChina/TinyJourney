@@ -1,9 +1,8 @@
 export default {
   data() {
     return {
-      selectParamNameList: [],
-      selectEntityNameList: [],
-      selectDataList: {}
+      selectNameList: [], // 选项集，如['category', 'tag']
+      selectDataList: {}, // 选项数据集，如{category: [{ name: '', value: ''}]}
     };
   },
   created() {
@@ -11,24 +10,12 @@ export default {
   },
   methods: {
     async loadSelectDataList() {
-      // 普通选项集
-      if (!sp.isNullOrEmpty(this.selectParamNameList)) {
-        const resp1 = await sp.get(`api/sys_param_group/options?code=${this.selectParamNameList.join(',')}`);
-        this.selectParamNameList.forEach((item, index) => {
-          this.$set(this.selectDataList, item, resp1[index]);
-        });
-      }
-
-      // 实体选项集
-      if (!sp.isNullOrEmpty(this.selectEntityNameList)) {
-        const resp2 = await sp.get(`api/sys_param_group/entity_options?code=${this.selectEntityNameList.join(',')}`);
-        this.selectEntityNameList.forEach((item, index) => {
-          this.$set(this.selectDataList, item, resp2[index]);
-        });
-      }
-
-      if (this.loadSelectDataListComplete && typeof this.loadSelectDataListComplete === 'function') {
-        this.loadSelectDataListComplete();
+      if (!sp.isNullOrEmpty(this.selectNameList)) {
+        for (let i = 0; i < this.selectNameList.length; i++) {
+          const entityName = array[i];
+          const result = await sp.get(`api/${entityName}/options`);
+          this.$set(this.selectDataList, entityName, result);
+        }
       }
     }
   }

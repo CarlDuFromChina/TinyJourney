@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sixpence.EntityFramework;
 using Sixpence.Web;
+using Sixpence.Web.Model;
 
 namespace Sixpence.TinyJourney.Service
 {
@@ -14,6 +15,12 @@ namespace Sixpence.TinyJourney.Service
     {
         public CategoryService(IEntityManager manager, ILogger<EntityService<Category>> logger, IRepository<Category> repository) : base(manager, logger, repository)
         {
+        }
+
+        public override IEnumerable<SelectOption> GetOptions()
+        {
+            var sql = $"SELECT code AS Value, name as Name FROM {new Category().EntityMap.FullQualifiedName}";
+            return _manager.Query<SelectOption>(sql);
         }
     }
 }
