@@ -182,14 +182,6 @@ namespace Sixpence.EntityFramework
         /// <param name="paramList"></param>
         /// <returns></returns>
         object ExecuteScalar(string sql, object? param = null);
-
-        /// <summary>
-        /// 执行SQL文件
-        /// </summary>
-        /// <param name="manager"></param>
-        /// <param name="sqlFile"></param>
-        /// <returns></returns>
-        int ExecuteSqlScript(string sqlFile);
         #endregion
 
         #region Bulk CURD

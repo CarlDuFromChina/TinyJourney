@@ -20,7 +20,7 @@ namespace Sixpence.TinyJourney.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet("website_info"), AllowAnonymous]
-        public object GetWebsiteInfo()
+        public IActionResult GetWebsiteInfo()
         {
             return Ok(WebSiteInfoConfig.Config);
         }
@@ -30,7 +30,7 @@ namespace Sixpence.TinyJourney.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet("owner"), AllowAnonymous]
-        public object GetOwnerUserInfo()
+        public IActionResult GetOwnerUserInfo()
         {
             if (!string.IsNullOrEmpty(WebSiteInfoConfig.Config.IndexUser))
             {

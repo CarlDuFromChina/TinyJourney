@@ -16,19 +16,24 @@ namespace Sixpence.EntityFramework
     /// </summary>
     public class EntityManager : IEntityManager, IDisposable
     {
-        private DbClient _dbClient = new DbClient();
+        private DbClient _dbClient;
         private readonly bool EnableLogging = AppBuilderExtensions.BuilderOptions.EnableLogging;
 
         private readonly ILogger<EntityManager>? _logger;
         private readonly Lazy<IEnumerable<IEntityManagerBeforeCreateOrUpdate>> _entityManagerBeforeCreateOrUpdates;
         private readonly Lazy<IEnumerable<IEntityManagerPlugin>> _entityManagerPlugins;
+        private readonly Lazy<IEnumerable<IEntity>> _entities;
+        private readonly ILoggerFactory _loggerFactory;
 
         public IDbDriver Driver => _dbClient.Driver;
         public DbClient DbClient => _dbClient;
 
         public EntityManager(IServiceProvider provider)
         {
-            _logger = provider.GetService<ILoggerFactory>()?.CreateLogger<EntityManager>();
+            _loggerFactory = provider.GetService<ILoggerFactory>() ?? throw new InvalidOperationException("ILoggerFactory service not found.");
+            _logger = _loggerFactory.CreateLogger<EntityManager>();
+
+            _dbClient = new DbClient(new DbClientOptions() { LoggerFactory = _loggerFactory });
 
             // 将集合包裹在 Lazy 中，懒加载依赖项
             _entityManagerBeforeCreateOrUpdates = new Lazy<IEnumerable<IEntityManagerBeforeCreateOrUpdate>>(
@@ -36,6 +41,9 @@ namespace Sixpence.EntityFramework
 
             _entityManagerPlugins = new Lazy<IEnumerable<IEntityManagerPlugin>>(
                 () => provider.GetServices<IEntityManagerPlugin>());
+
+            _entities = new Lazy<IEnumerable<IEntity>>(
+                () => provider.GetServices<IEntity>());
         }
 
         #region CRUD
@@ -97,7 +105,7 @@ namespace Sixpence.EntityFramework
         /// <returns></returns>
         public int Delete(string tableName, string id)
         {
-            var entity = ServiceContainer.Provider.GetServices<IEntity>().FirstOrDefault(item => item.EntityMap.Table == tableName) as BaseEntity;
+            var entity = _entities.Value.FirstOrDefault(item => item.EntityMap.Table == tableName) as BaseEntity;
             AssertUtil.IsNull(entity, $"未找到实体：{tableName}");
             var sql = $"SELECT * FROM {tableName} WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPrefix}id";
             var dataList = DbClient.Query(sql, new { id });
@@ -522,71 +530,7 @@ WHERE {entity.PrimaryColumn.DbPropertyMap.Name} = {Driver.SqlBuilder.ParameterPr
             return DbClient.ExecuteScalar(sql, param);
         }
 
-        /// <summary>
-        /// 执行SQL文件
-        /// </summary>
-        /// <param name="manager"></param>
-        /// <param name="sqlFile"></param>
-        /// <returns></returns>
-        public int ExecuteSqlScript(string sqlFile)
-        {
-            int returnValue = -1;
-            int sqlCount = 0, errorCount = 0;
-            if (!File.Exists(sqlFile))
-            {
-                _logger?.LogError($"文件({sqlFile})不存在");
-                return -1;
-            }
-            using (StreamReader sr = new StreamReader(sqlFile))
-            {
-                string line = string.Empty;
-                char spaceChar = ' ';
-                string newLIne = "\r\n", semicolon = ";";
-                string sprit = "/", whiffletree = "-";
-                string sql = string.Empty;
-                do
-                {
-                    line = sr.ReadLine();
-                    // 文件结束
-                    if (line == null) break;
-                    // 跳过注释行
-                    if (line.StartsWith(sprit) || line.StartsWith(whiffletree)) continue;
-                    // 去除右边空格
-                    line = line.TrimEnd(spaceChar);
-                    sql += line;
-                    // 以分号(;)结尾，则执行SQL
-                    if (sql.EndsWith(semicolon))
-                    {
-                        try
-                        {
-                            sqlCount++;
-                            Execute(sql);
-                        }
-                        catch (Exception ex)
-                        {
-                            errorCount++;
-                            if (EnableLogging)
-                                _logger?.LogError(sql + newLIne + ex.Message, ex);
-                        }
-                        sql = string.Empty;
-                    }
-                    else
-                    {
-                        // 添加换行符
-                        if (sql.Length > 0) sql += newLIne;
-                    }
-                } while (true);
-            }
-            if (sqlCount > 0 && errorCount == 0)
-                returnValue = 1;
-            if (sqlCount == 0 && errorCount == 0)
-                returnValue = 0;
-            else if (sqlCount > errorCount && errorCount > 0)
-                returnValue = -1;
-            else if (sqlCount == errorCount)
-                returnValue = -2;
-            return returnValue;
-        }
+
         #endregion
 
         #region Bulk CRUD

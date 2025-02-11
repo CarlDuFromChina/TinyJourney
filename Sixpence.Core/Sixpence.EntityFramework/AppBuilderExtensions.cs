@@ -25,7 +25,6 @@ namespace Sixpence.EntityFramework
         public static IApplicationBuilder UseEntityFramework(this IApplicationBuilder app, Action<AppBuilderOptions>? action)
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-            ServiceContainer.Configure(app);
 
             action?.Invoke(BuilderOptions);
 

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,38 +19,25 @@ namespace Sixpence.EntityFramework
     /// </summary>
     public class DbClient : IDisposable
     {
-        private IDbDriver driver;
-        private int? commandTimeout = 20;
-        private readonly ILogger<DbClient> Logger;
-        private readonly bool EnableLogging = AppBuilderExtensions.BuilderOptions.EnableLogging;
+        private IDbDriver _driver;
+        private int? _commandTimeout = 20;
+        private readonly ILogger<DbClient>? _logger;
+        private readonly bool _isLoggingEnabled = AppBuilderExtensions.BuilderOptions.EnableLogging;
 
-        public int? CommandTimeout => commandTimeout;
+        public int? CommandTimeout => _commandTimeout;
         public IDbConnection DbConnection { get; private set; }
-        public IDbDriver Driver => driver; // 数据库驱动
-        public ISqlBuilder SqlBuilder => driver.SqlBuilder; // 数据库方言
-        public IDbOperator Operator => driver.Operator; // 数据库批量操作
+        public IDbDriver Driver => _driver;
 
-        internal DbClient()
+        internal DbClient(DbClientOptions options)
         {
-            var dbSetting = ServiceCollectionExtensions.Options?.DbSetting;
-            driver = dbSetting.Driver;
-            DbConnection = driver.GetDbConnection(dbSetting.ConnectionString);
-            if (dbSetting.CommandTimeout != null)
+            if (options == null)
             {
-                this.commandTimeout = dbSetting.CommandTimeout;
+                options = new DbClientOptions();
             }
-            Logger = ServiceContainer.Provider.GetService<ILogger<DbClient>>();
-        }
-
-        internal DbClient(IDbDriver dbDriver, string connectionString, int? commandTimeout)
-        {
-            driver = dbDriver;
-            DbConnection = dbDriver.GetDbConnection(connectionString);
-            if (commandTimeout != null)
-            {
-                this.commandTimeout = commandTimeout;
-            }
-            Logger = ServiceContainer.Provider.GetService<ILogger<DbClient>>();
+            _driver = options.DbDriver;
+            DbConnection = options.DbDriver.GetDbConnection(options.ConnectionString);
+            _commandTimeout = options.CommandTimeout;
+            _logger = options.LoggerFactory?.CreateLogger<DbClient>();
         }
 
         /// <summary>
@@ -155,8 +144,8 @@ namespace Sixpence.EntityFramework
         {
             var paramList = param.ToDictionary();
 
-            if (EnableLogging)
-                Logger.LogDebug(sql + paramList.ToLogString());
+            if (_isLoggingEnabled)
+                _logger.LogDebug(sql + paramList.ToLogString());
 
             return DbConnection.Execute(sql, param, commandTimeout: CommandTimeout);
         }
@@ -171,10 +160,76 @@ namespace Sixpence.EntityFramework
         {
             var paramList = param.ToDictionary();
 
-            if (EnableLogging)
-                Logger.LogDebug(sql + paramList.ToLogString());
+            if (_isLoggingEnabled)
+                _logger.LogDebug(sql + paramList.ToLogString());
 
             return DbConnection.ExecuteScalar(sql, param, commandTimeout: CommandTimeout);
+        }
+
+        /// <summary>
+        /// 执行SQL文件
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="sqlFile"></param>
+        /// <returns></returns>
+        public int ExecuteSqlScript(string sqlFile)
+        {
+            int returnValue = -1;
+            int sqlCount = 0, errorCount = 0;
+            if (!File.Exists(sqlFile))
+            {
+                _logger?.LogError($"文件({sqlFile})不存在");
+                return -1;
+            }
+            using (StreamReader sr = new StreamReader(sqlFile))
+            {
+                string line = string.Empty;
+                char spaceChar = ' ';
+                string newLIne = "\r\n", semicolon = ";";
+                string sprit = "/", whiffletree = "-";
+                string sql = string.Empty;
+                do
+                {
+                    line = sr.ReadLine();
+                    // 文件结束
+                    if (line == null) break;
+                    // 跳过注释行
+                    if (line.StartsWith(sprit) || line.StartsWith(whiffletree)) continue;
+                    // 去除右边空格
+                    line = line.TrimEnd(spaceChar);
+                    sql += line;
+                    // 以分号(;)结尾，则执行SQL
+                    if (sql.EndsWith(semicolon))
+                    {
+                        try
+                        {
+                            sqlCount++;
+                            Execute(sql);
+                        }
+                        catch (Exception ex)
+                        {
+                            errorCount++;
+                            if (_isLoggingEnabled)
+                                _logger?.LogError(sql + newLIne + ex.Message, ex);
+                        }
+                        sql = string.Empty;
+                    }
+                    else
+                    {
+                        // 添加换行符
+                        if (sql.Length > 0) sql += newLIne;
+                    }
+                } while (true);
+            }
+            if (sqlCount > 0 && errorCount == 0)
+                returnValue = 1;
+            if (sqlCount == 0 && errorCount == 0)
+                returnValue = 0;
+            else if (sqlCount > errorCount && errorCount > 0)
+                returnValue = -1;
+            else if (sqlCount == errorCount)
+                returnValue = -2;
+            return returnValue;
         }
         #endregion
 
@@ -190,8 +245,8 @@ namespace Sixpence.EntityFramework
         {
             var paramList = param.ToDictionary();
 
-            if (EnableLogging)
-                Logger.LogDebug(sql + paramList.ToLogString());
+            if (_isLoggingEnabled)
+                _logger.LogDebug(sql + paramList.ToLogString());
 
             return DbConnection.Query<T>(sql, param, commandTimeout: CommandTimeout);
         }
@@ -207,8 +262,8 @@ namespace Sixpence.EntityFramework
         {
             var paramList = param.ToDictionary();
 
-            if (EnableLogging)
-                Logger.LogDebug(sql + paramList.ToLogString());
+            if (_isLoggingEnabled)
+                _logger.LogDebug(sql + paramList.ToLogString());
 
             return DbConnection.QueryFirstOrDefault<T>(sql, param, commandTimeout: CommandTimeout);
         }
@@ -225,8 +280,8 @@ namespace Sixpence.EntityFramework
         {
             var paramList = param.ToDictionary();
 
-            if (EnableLogging)
-                Logger.LogDebug(sql + paramList.ToLogString());
+            if (_isLoggingEnabled)
+                _logger.LogDebug(sql + paramList.ToLogString());
 
             DataTable dt = new DataTable();
             var reader = DbConnection.ExecuteReader(sql, param, commandTimeout: CommandTimeout);
@@ -245,8 +300,8 @@ namespace Sixpence.EntityFramework
             var tempTableName = $"{SchemaHelper.RemoveSchemaName(tableName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
             var sql = Driver.SqlBuilder.BuildCreateTemporaryTableSql(tableName, tempTableName);
 
-            if (EnableLogging)
-                Logger.LogDebug(sql);
+            if (_isLoggingEnabled)
+                _logger.LogDebug(sql);
 
             DbConnection.Execute(sql);
             return tempTableName;
@@ -258,10 +313,10 @@ namespace Sixpence.EntityFramework
         /// <param name="tableName"></param>
         public void DropTable(string tableName)
         {
-            var sql = SqlBuilder.BuildDropTableSql(tableName);
+            var sql = _driver.SqlBuilder.BuildDropTableSql(tableName);
 
-            if (EnableLogging)
-                Logger.LogDebug(sql);
+            if (_isLoggingEnabled)
+                _logger?.LogDebug(sql);
 
             DbConnection.Execute(sql, commandTimeout: CommandTimeout);
         }
@@ -278,6 +333,6 @@ namespace Sixpence.EntityFramework
         /// <param name="dataTable"></param>
         /// <param name="tableName"></param>
         public void BulkCopy(DataTable dataTable, string tableName)
-            => Operator.BulkCopy(DbConnection, _trans, dataTable, tableName);
+            => _driver.Operator.BulkCopy(DbConnection, _trans, dataTable, tableName);
     }
 }

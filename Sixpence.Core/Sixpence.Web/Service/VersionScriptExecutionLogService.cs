@@ -35,7 +35,7 @@ where name = @name and is_success is true
                 {
                     if (filePath.EndsWith(".sql"))
                     {
-                        _manager.ExecuteSqlScript(filePath);
+                        _manager.DbClient.ExecuteSqlScript(filePath);
                     }
                     if (filePath.EndsWith(".csv"))
                     {
