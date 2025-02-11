@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Sixpence.Web.Module.SysAttrs
 {
-    [Table(Description: "实体字段")]
+    [Table, Description("实体字段")]
     public partial class SysAttrs : TrackedBaseEntity
     {
         /// <summary>

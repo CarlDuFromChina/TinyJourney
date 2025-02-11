@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Sixpence.EntityFramework.Utils;
 
@@ -56,7 +57,7 @@ namespace Sixpence.EntityFramework.Entity
 
         public static string GetEntityTableDescription(Type entity)
         {
-            var attr = Attribute.GetCustomAttribute(entity, typeof(TableAttribute)) as TableAttribute;
+            var attr = Attribute.GetCustomAttribute(entity, typeof(DescriptionAttribute)) as DescriptionAttribute;
             return attr?.Description ?? string.Empty;
         }
 

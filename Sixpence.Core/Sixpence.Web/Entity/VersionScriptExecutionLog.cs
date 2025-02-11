@@ -10,7 +10,7 @@ namespace Sixpence.Web.Entity
     /// <summary>
     /// 版本脚本执行日志
     /// </summary>
-    [Table(Description = "版本脚本执行记录")]
+    [Table, Description("版本脚本执行记录")]
     public class VersionScriptExecutionLog : TrackedBaseEntity
     {
         /// <summary>

@@ -12,12 +12,10 @@ namespace Sixpence.EntityFramework.Entity
         /// 与数据库表映射
         /// </summary>
         /// <param name="TableName"></param>
-        /// <param name="Description"></param>
         /// <param name="Schema"></param>
-        public TableAttribute(string TableName = "", string Description = "", string Schema = "")
+        public TableAttribute(string TableName = "", string Schema = "")
         {
             this.TableName = TableName;
-            this.Description = Description;
             this.Schema = Schema;
         }
 
@@ -25,11 +23,6 @@ namespace Sixpence.EntityFramework.Entity
         /// 表名
         /// </summary>
         public string TableName { get; set; }
-
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string Description { get; set; }
 
         /// <summary>
         /// 模式

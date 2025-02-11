@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Sixpence.Web.Entity
 {
-    [Table(Description: "作业执行记录")]
+    [Table, Description("作业执行记录")]
     public class JobHistory : TrackedBaseEntity
     {
         [PrimaryColumn]

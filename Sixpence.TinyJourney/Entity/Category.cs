@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace Sixpence.TinyJourney.Entity
 {
-    [Table("category", "博客分类")]
+    [Table, Description("博客分类")]
     public partial class Category : TrackedEntity
     {
         /// <summary>

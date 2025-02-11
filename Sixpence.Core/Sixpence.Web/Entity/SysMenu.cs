@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Sixpence.Web.Module.SysMenu
 {
-    [Table(Description: "系统菜单")]
+    [Table, Description("系统菜单")]
     public partial class SysMenu : TrackedBaseEntity
     {
         /// <summary>

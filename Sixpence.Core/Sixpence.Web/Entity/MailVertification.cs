@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Sixpence.Web.Entity
 {
-    [Table(Description: "邮箱验证")]
+    [Table, Description("邮箱验证")]
     public class MailVertification : TrackedEntity
     {
         /// <summary>

@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Sixpence.Web.Entity
 {
-    [Table(Description: "系统配置")]
+    [Table, Description("系统配置")]
     public class SysConfig : TrackedBaseEntity
     {
         /// <summary>
