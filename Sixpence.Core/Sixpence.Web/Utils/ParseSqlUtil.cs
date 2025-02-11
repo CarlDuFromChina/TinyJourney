@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Sixpence.Web.Utils
         /// <returns></returns>
         public static (string sql, Dictionary<string, object> paramsList) GetSearchCondition(SearchType type, string paramName, object value, ref int count)
         {
-            var sqlBuilder = AppContext.DbDriver.SqlBuilder;
+            var sqlBuilder = ServiceCollectionExtensions.Options.DbSetting.Driver.SqlBuilder;
             var ParameterPrefix = sqlBuilder.ParameterPrefix;
 
             switch (type)

@@ -19,20 +19,17 @@ namespace Sixpence.Web.Job
     public abstract class JobBase : IJob
     {
         private IEntityManager _manager;
-        public JobBase(IEntityManager manager)
+        private ILogger _logger;
+        public JobBase(IEntityManager manager, ILoggerFactory loggerFactory)
         {
             _manager = manager;
+            _logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         /// <summary>
         /// 作业名
         /// </summary>
         public abstract string Name { get; }
-
-        /// <summary>
-        /// 日志
-        /// </summary>
-        protected virtual ILogger Logger => AppContext.GetLogger(this.GetType());
 
         /// <summary>
         /// Job Key
@@ -64,7 +61,7 @@ namespace Sixpence.Web.Job
             var user = context.JobDetail.JobDataMap.Get("User") as CurrentUserModel;
             return Task.Factory.StartNew(() =>
             {
-                Logger.LogInformation($"作业：{Name} 开始执行");
+                _logger.LogInformation($"作业：{Name} 开始执行");
 
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
@@ -84,7 +81,7 @@ namespace Sixpence.Web.Job
                 {
                     history.Status = "失败";
                     history.ErrorMsg = e.Message;
-                    Logger.LogError($"作业：{Name}执行异常", e);
+                    _logger.LogError($"作业：{Name}执行异常", e);
                     throw e;
                 }
                 finally
@@ -93,7 +90,7 @@ namespace Sixpence.Web.Job
                     _manager.Create(history);
                 }
                 stopWatch.Stop();
-                Logger.LogInformation($"作业：{Name} 执行结束，耗时{stopWatch.ElapsedMilliseconds}ms");
+                _logger.LogInformation($"作业：{Name} 执行结束，耗时{stopWatch.ElapsedMilliseconds}ms");
             });
         }
 

@@ -51,8 +51,6 @@ namespace Sixpence.Web.Job
         /// </summary>
         public static void Start(List<IJob> jobs)
         {
-            var logger = AppContext.GetLogger<AppContext>();
-            logger.LogInformation($"共发现{jobs.Count}个Job待运行");
             jobs.Each(item =>
             {
                 if (item == null)
@@ -79,7 +77,6 @@ namespace Sixpence.Web.Job
                     ITrigger trigger = triggerBuilder.Build();
                     // 使用 trigger 规划执行任务 job
                     sched.ScheduleJob(job, trigger);
-                    logger.LogInformation($"作业[{instance.Name}]运行成功");
                     if (instance.DefaultTriggerState == TriggerState.Paused)
                     {
                         sched.PauseTrigger(trigger.Key);

@@ -13,13 +13,17 @@ using Sixpence.Web.Utils;
 using Sixpence.EntityFramework;
 using Sixpence.EntityFramework.Entity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.Service
 {
     public class SysFileService : EntityService<SysFile>
     {
-        public SysFileService(IEntityManager manager, ILogger<EntityService<SysFile>> logger, IRepository<SysFile> repository) : base(manager, logger, repository)
+        private readonly Lazy<IStorage> _storage;
+
+        public SysFileService(IEntityManager manager, ILogger<EntityService<SysFile>> logger, IRepository<SysFile> repository, IServiceProvider provider) : base(manager, logger, repository)
         {
+            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
         }
 
         public override IList<EntityView> GetViewList()
@@ -80,7 +84,7 @@ FROM
 
                 // 保存图片到本地
                 // TODO：执行失败回滚操作
-                AppContext.Storage.UploadAsync(stream, newFileName).Wait();
+                _storage.Value.UploadAsync(stream, newFileName).Wait();
 
                 var sysFile = new SysFile()
                 {

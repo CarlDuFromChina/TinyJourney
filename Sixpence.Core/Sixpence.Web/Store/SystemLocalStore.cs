@@ -43,8 +43,7 @@ namespace Sixpence.Web.Store
         /// <param name="filePath"></param>
         public async Task<IActionResult> DownloadAsync(string objectId)
         {
-            var manager = ServiceFactory.Resolve<IEntityManager>();
-            var data = manager.QueryFirst<SysFile>(objectId) ?? manager.QueryFirst<SysFile>(new { hash_code = objectId });
+            var data = _manager.QueryFirst<SysFile>(objectId) ?? _manager.QueryFirst<SysFile>(new { hash_code = objectId });
             var fileInfo = new FileInfo(data.GetFilePath());
             if (fileInfo.Exists)
             {

@@ -9,13 +9,16 @@ using Sixpence.Web.Entity;
 using Sixpence.Web.Auth;
 using Sixpence.EntityFramework;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.Service
 {
     public class SysAuthUserService : EntityService<SysAuthUser>
     {
-        public SysAuthUserService(IEntityManager manager, ILogger<EntityService<SysAuthUser>> logger, IRepository<SysAuthUser> repository) : base(manager, logger, repository)
+        private Lazy<IEnumerable<IThirdPartyBindStrategy>> _thirdPartyBindStrategies;
+        public SysAuthUserService(IEntityManager manager, ILogger<EntityService<SysAuthUser>> logger, IRepository<SysAuthUser> repository, IServiceProvider serviceProvider) : base(manager, logger, repository)
         {
+            _thirdPartyBindStrategies = new Lazy<IEnumerable<IThirdPartyBindStrategy>>(() => serviceProvider.GetServices<IThirdPartyBindStrategy>());
         }
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace Sixpence.Web.Service
             AssertUtil.IsNullOrEmpty(id, "用户id不能为空");
             AssertUtil.IsNullOrEmpty(code, "编码不能为空");
             AssertUtil.IsNull(type, "绑定类型不能为空");
-            ServiceFactory.ResolveAll<IThirdPartyBindStrategy>().First(item => item.GetName().Equals(type, StringComparison.OrdinalIgnoreCase))?.Bind(code, id);
+            _thirdPartyBindStrategies.Value.First(item => item.GetName().Equals(type, StringComparison.OrdinalIgnoreCase))?.Bind(code, id);
         }
 
         public void CreateMissingAuthUser(IEnumerable<SysAuthUser> users)

@@ -9,7 +9,7 @@ namespace Sixpence.TinyJourney.Job
 {
     public class CleanJob : JobBase
     {
-        public CleanJob(IEntityManager manager) : base(manager)
+        public CleanJob(IEntityManager manager, ILoggerFactory loggerFactory) : base(manager, loggerFactory)
         {
         }
 

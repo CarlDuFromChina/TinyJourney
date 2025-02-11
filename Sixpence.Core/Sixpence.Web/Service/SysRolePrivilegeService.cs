@@ -34,7 +34,7 @@ namespace Sixpence.Web.Service
 
             if (role.IsBasic.Value)
             {
-                privileges = ServiceFactory.ResolveAll<IRole>().FirstOrDefault(item => item.Role.GetDescription() == role.Name).GetRolePrivilege().ToList();
+                privileges = _provider.GetServices<IRole>().FirstOrDefault(item => item.Role.GetDescription() == role.Name).GetRolePrivilege().ToList();
             }
             else
             {

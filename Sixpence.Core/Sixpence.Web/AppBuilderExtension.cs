@@ -22,7 +22,6 @@ namespace Sixpence.Web
     {
         public static void UseSixpenceWeb(this IApplicationBuilder builder)
         {
-            ServiceFactory.Provider = builder.ApplicationServices;
             using (var scope = builder.ApplicationServices.CreateScope())
             {
                 builder.UseEntityFramework(options =>

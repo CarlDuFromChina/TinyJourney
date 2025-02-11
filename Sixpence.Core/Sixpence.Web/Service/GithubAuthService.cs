@@ -1,28 +1,29 @@
-﻿using Newtonsoft.Json;
-using Sixpence.Common;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Sixpence.Common.Crypto;
 using Sixpence.Common.Http;
+using Sixpence.EntityFramework;
+using Sixpence.EntityFramework.Entity;
+using Sixpence.Web.Config;
+using Sixpence.Web.Entity;
+using Sixpence.Web.Model.Github;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Sixpence.Web.Model.Github;
-using Sixpence.Web.Entity;
-using Sixpence.Common.Crypto;
-using Sixpence.Common.Extensions;
-using Sixpence.EntityFramework;
-using Microsoft.Extensions.Logging;
-using Sixpence.EntityFramework.Entity;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Sixpence.Web.Config;
 
 namespace Sixpence.Web.Service
 {
     public class GithubAuthService : BaseService<GithubAuthService>
     {
-        public GithubAuthService(IEntityManager manager, ILogger<GithubAuthService> logger) : base(manager, logger)
+        private readonly Lazy<IStorage> _storage;
+
+        public GithubAuthService(IEntityManager manager, ILogger<GithubAuthService> logger, IServiceProvider provider) : base(manager, logger)
         {
+            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace Sixpence.Web.Service
 
             var id = Guid.NewGuid().ToString();
             var fileName = $"{EntityCommon.GenerateGuidNumber()}.jpg";
-            AppContext.Storage.UploadAsync(stream, fileName).Wait();
+            _storage.Value.UploadAsync(stream, fileName).Wait();
 
             var data = new SysFile()
             {

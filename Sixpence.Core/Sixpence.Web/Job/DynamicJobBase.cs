@@ -33,11 +33,6 @@ namespace Sixpence.Web.Job
         public string Name;
 
         /// <summary>
-        /// 日志
-        /// </summary>
-        protected ILogger Logger => AppContext.GetLogger(this.GetType());
-
-        /// <summary>
         /// 默认触发器状态
         /// </summary>
         public virtual TriggerState DefaultTriggerState => TriggerState.Normal;
@@ -50,7 +45,6 @@ namespace Sixpence.Web.Job
             {
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
-                Logger.LogInformation($"作业：{Name} 开始执行");
                 try
                 {
                     UserIdentityUtil.SetCurrentUser(user);
@@ -58,10 +52,8 @@ namespace Sixpence.Web.Job
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"作业：{Name}执行异常", e);
                 }
                 stopWatch.Stop();
-                Logger.LogInformation($"作业：{Name} 执行结束，耗时{stopWatch.ElapsedMilliseconds}ms");
             });
         }
 

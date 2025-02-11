@@ -81,5 +81,10 @@ namespace Sixpence.Web.Config
 
             return "";
         }
+
+        public static bool Resolve(IStorage storage)
+        {
+            return Config.Type == storage.GetType().Name;
+        }
     }
 }

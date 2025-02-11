@@ -12,9 +12,14 @@ namespace Sixpence.Web.ImageResource
 {
     public class LandscapeImageResourceDriver : IThirdPartyImageResourceDriver
     {
+        private readonly ILogger<LandscapeImageResourceDriver> _logger;
+        public LandscapeImageResourceDriver(ILogger<LandscapeImageResourceDriver> logger)
+        {
+            this._logger = logger;
+        }
+
         public async Task<RandomImageModel> DownloadRandomImage()
         {
-            var _logger = AppContext.GetLogger<RandomImageModel>();
             string url = "https://picsum.photos/240/160";
             using (var client = new HttpClient())
             {

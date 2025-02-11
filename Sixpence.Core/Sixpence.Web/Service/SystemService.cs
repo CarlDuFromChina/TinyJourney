@@ -1,39 +1,33 @@
-﻿using Sixpence.Web.Auth;
-using Sixpence.Web.Config;
-using Sixpence.Common.Utils;
-using Jdenticon.AspNetCore;
+﻿using Jdenticon.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Sixpence.Common.Crypto;
+using Sixpence.Common.Current;
+using Sixpence.Common.Http;
+using Sixpence.Common.Utils;
+using Sixpence.EntityFramework;
+using Sixpence.Web.Auth;
+using Sixpence.Web.Config;
+using Sixpence.Web.Entity;
+using Sixpence.Web.Model;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Web;
-using Sixpence.Common;
-using Sixpence.Common.Current;
-using Sixpence.Web.Auth.Github;
-using Sixpence.Web.Auth.Gitee;
 using System.Linq;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Sixpence.Web.Entity;
-using Sixpence.Web.Model.System;
-using Sixpence.Web.Model;
-using Sixpence.Common.Crypto;
-using Sixpence.EntityFramework;
-using Sixpence.Common.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Sixpence.Web.Service
 {
     public class SystemService : BaseService<SystemService>
     {
-        private readonly GithubAuthService _githubAuthService;
-        private readonly GiteeAuthService _giteeAuthService;
         private readonly MailVertificationService _mailVertificationService;
-        public SystemService(IEntityManager manager, ILogger<SystemService> logger, GithubAuthService githubAuthService, GiteeAuthService giteeAuthService, MailVertificationService mailVertificationService) : base(manager, logger)
+        private readonly Lazy<IStorage> _storage;
+        private readonly Lazy<IEnumerable<IThirdPartyLoginStrategy>> _thirdPartyLoginStrategies;
+        public SystemService(IEntityManager manager, ILogger<SystemService> logger, MailVertificationService mailVertificationService, IServiceProvider provider) : base(manager, logger)
         {
-            _githubAuthService = githubAuthService;
-            _giteeAuthService = giteeAuthService;
             _mailVertificationService = mailVertificationService;
+            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
+            _thirdPartyLoginStrategies = new Lazy<IEnumerable<IThirdPartyLoginStrategy>>(() => provider.GetServices<IThirdPartyLoginStrategy>());
         }
 
         /// <summary>
@@ -69,7 +63,7 @@ namespace Sixpence.Web.Service
             var user = _manager.QueryFirst<SysUser>(id);
             if (!string.IsNullOrEmpty(user?.Avatar))
             {
-                return AppContext.Storage.DownloadAsync(user.Avatar).Result;
+                return _storage.Value.DownloadAsync(user.Avatar).Result;
             }
             return IdenticonResult.FromValue(id, 64);
         }
@@ -86,8 +80,7 @@ namespace Sixpence.Web.Service
             // 联合第三方登录
             if (model.ThirdPartyLogin != null)
             {
-                var loginStrategy = ServiceFactory
-                    .ResolveAll<IThirdPartyLoginStrategy>()
+                var loginStrategy = _thirdPartyLoginStrategies.Value
                     .First(item => item.GetName().Equals(model.ThirdPartyLogin.Type, StringComparison.OrdinalIgnoreCase));
                 AssertUtil.IsNull(loginStrategy, $"根据{model.ThirdPartyLogin.Type}未找到登录策略");
                 return loginStrategy.Login(model.ThirdPartyLogin.Param);

@@ -8,13 +8,17 @@ using Sixpence.Web.Auth;
 using Sixpence.EntityFramework;
 using Sixpence.Web.Model;
 using Microsoft.Extensions.Logging;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.Service
 {
     public class JobService : BaseService<JobService>
     {
-        public JobService(IEntityManager manager, ILogger<JobService> logger) : base(manager, logger)
+        private readonly IEnumerable<IJob> _jobs;
+        public JobService(IEntityManager manager, ILogger<JobService> logger, IServiceProvider provider) : base(manager, logger)
         {
+            _jobs = provider.GetServices<IJob>();
         }
 
         /// <summary>
@@ -45,7 +49,7 @@ LEFT JOIN qrtz_cron_triggers AS qct ON qt.trigger_name = qct.trigger_name
         /// <param name="name"></param>
         public void RunOnceNow(string name)
         {
-            ServiceFactory.ResolveAll<IJob>().Each(item =>
+            _jobs.Each(item =>
             {
                 var job = item as JobBase;
                 if (job.Name == name)
@@ -62,7 +66,7 @@ LEFT JOIN qrtz_cron_triggers AS qct ON qt.trigger_name = qct.trigger_name
         /// <param name="jobName"></param>
         public void Pause(string jobName)
         {
-            var job = ServiceFactory.ResolveAll<IJob>().FirstOrDefault(item => (item as JobBase).Name == jobName) as JobBase;
+            var job = _jobs.FirstOrDefault(item => (item as JobBase).Name == jobName) as JobBase;
             AssertUtil.IsNull(job, $"未找到名为[{jobName}]作业");
             JobHelpers.PauseJob(job.Name, job.GetType().Namespace);
         }
@@ -73,7 +77,7 @@ LEFT JOIN qrtz_cron_triggers AS qct ON qt.trigger_name = qct.trigger_name
         /// <param name="jobName"></param>
         public void Resume(string jobName)
         {
-            var job = ServiceFactory.ResolveAll<IJob>().FirstOrDefault(item => (item as JobBase).Name == jobName) as JobBase;
+            var job = _jobs.FirstOrDefault(item => (item as JobBase).Name == jobName) as JobBase;
             AssertUtil.IsNull(job, $"未找到名为[{jobName}]作业");
             JobHelpers.ResumeJob(job.Name, job.GetType().Namespace);
         }

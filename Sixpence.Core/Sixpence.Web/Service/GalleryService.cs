@@ -21,15 +21,22 @@ using System.Web;
 using Sixpence.Web.ImageResource;
 using Sixpence.Common.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Quartz.Impl.AdoJobStore.Common;
 
 namespace Sixpence.Web.Service
 {
     public class GalleryService : EntityService<Gallery>
     {
         private readonly SysFileService _sysFileService;
-        public GalleryService(IEntityManager manager, ILogger<EntityService<Gallery>> logger, IRepository<Gallery> repository, SysFileService sysFileService) : base(manager, logger, repository)
+        private readonly IStorage _storage;
+        private readonly IThirdPartyImageResourceDriver _thirdPartyImageResourceDriver;
+
+        public GalleryService(IEntityManager manager, ILogger<EntityService<Gallery>> logger, IRepository<Gallery> repository, SysFileService sysFileService, IServiceProvider provider, IThirdPartyImageResourceDriver thirdPartyImageResourceDriver) : base(manager, logger, repository)
         {
             _sysFileService = sysFileService;
+            _storage = provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve);
+            _thirdPartyImageResourceDriver = thirdPartyImageResourceDriver;
         }
 
         public override IList<EntityView> GetViewList()
@@ -64,7 +71,7 @@ namespace Sixpence.Web.Service
                 var originFileName = url.Substring(url.LastIndexOf("/") + 1); // 原始图片名
                 var fileType = originFileName.GetFileType(); // 文件类型
                 var fileName = $"{EntityCommon.GenerateGuidNumber()}.{fileType}"; // 新文件名
-                var filePath = AppContext.Storage.UploadAsync(stream, fileName).Result;
+                var filePath = _storage.UploadAsync(stream, fileName).Result;
 
                 var data = new SysFile()
                 {
@@ -108,7 +115,7 @@ namespace Sixpence.Web.Service
         /// </summary>
         public async Task<Gallery> GetRandomImage()
         {
-            var result = await ServiceFactory.Resolve<IThirdPartyImageResourceDriver>("LandscapeImageResourceDriver").DownloadRandomImage();
+            var result = await _thirdPartyImageResourceDriver.DownloadRandomImage();
             if (result == null)
             {
                 throw new SpException("图片下载失败，请重试");

@@ -15,13 +15,16 @@ using Sixpence.Common;
 using Sixpence.Web.Service;
 using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sixpence.Web.Controllers
 {
     public class SysFileController : EntityBaseController<SysFile, SysFileService>
     {
-        public SysFileController(SysFileService service) : base(service)
+        private readonly Lazy<IStorage> _storage;
+        public SysFileController(SysFileService service, IServiceProvider provider) : base(service)
         {
+            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace Sixpence.Web.Controllers
         [Route("Download")]
         public async Task<IActionResult> DownloadAsync(string objectId)
         {
-            return await AppContext.Storage.DownloadAsync(objectId);
+            return await _storage.Value.DownloadAsync(objectId);
         }
 
         /// <summary>

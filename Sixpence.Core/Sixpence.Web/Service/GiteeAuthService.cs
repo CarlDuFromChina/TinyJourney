@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Sixpence.Common.Crypto;
 using Sixpence.Common.Extensions;
-using Sixpence.Common.Http;
 using Sixpence.EntityFramework;
 using Sixpence.EntityFramework.Entity;
 using Sixpence.Web.Config;
 using Sixpence.Web.Entity;
 using Sixpence.Web.Model.Gitee;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -18,9 +18,11 @@ namespace Sixpence.Web.Service
     public class GiteeAuthService : BaseService<GiteeAuthService>
     {
         private readonly IRepository<SysFile> _sysFileRepository;
-        public GiteeAuthService(IEntityManager manager, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger) : base(manager, logger)
+        private readonly Lazy<IStorage> _storage;
+        public GiteeAuthService(IEntityManager manager, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger, IServiceProvider provider) : base(manager, logger)
         {
             _sysFileRepository = sysFileRepository;
+            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
         }
 
         public async Task<GiteeAccessToken> GetAccessToken(string code, string userid = "")
@@ -71,7 +73,7 @@ namespace Sixpence.Web.Service
                 var config = StoreConfig.Config;
                 var id = Guid.NewGuid().ToString();
                 var fileName = $"{EntityCommon.GenerateGuidNumber()}.png";
-                AppContext.Storage.UploadAsync(stream, fileName).Wait();
+                _storage.Value.UploadAsync(stream, fileName).Wait();
 
                 var data = new SysFile()
                 {
