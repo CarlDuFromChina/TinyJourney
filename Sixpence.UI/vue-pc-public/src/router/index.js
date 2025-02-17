@@ -30,6 +30,7 @@ const router = new VueRouter({
               path: '/index/home',
               name: 'home',
               component: () => import('@/views/index/home/index.vue'),
+              props: true,
               meta: { title: '主页', keepAlive: true }
             },
             {

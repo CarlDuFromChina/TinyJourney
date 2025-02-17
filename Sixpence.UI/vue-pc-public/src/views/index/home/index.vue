@@ -14,11 +14,11 @@
       <idea :pageSize="5" style="margin-bottom:20px;"></idea>
       <!-- 想法 -->
 
-      <div class="more">
-        <p>站长：{{ website.author }}</p>
-        <p>邮箱：<a :href="`mailto:${website.email}`">{{ website.email }}</a></p>
+      <div class="more" v-if="website">
+        <p>站长：{{ website?.author }}</p>
+        <p>邮箱：<a :href="`mailto:${website?.email}`">{{ website?.email }}</a></p>
         <p>版本号：{{ config.version }}</p>
-        <p><a href="https://beian.miit.gov.cn">{{ website.record_no }}</a></p>
+        <p><a href="https://beian.miit.gov.cn">{{ website?.record_no }}</a></p>
       </div>
     </a-layout-sider>
   </a-layout>
@@ -27,6 +27,7 @@
 <script>
 import { Idea, BlogList, Me } from './components'
 import packageConfig from '../../../../package.json';
+import { mapState } from 'vuex';
 
 export default {
   name: 'home',
@@ -43,27 +44,11 @@ export default {
         }
       },
       config: packageConfig,
-      searchValue: '',
-      website: {
-        author: '',
-        email: '',
-        record_no: ''
-      }
+      searchValue: ''
     };
   },
-  created() {
-    sp.get('api/index/website_info').then(resp => {
-      if (!sp.isNullOrEmpty(resp)) {
-        try {
-          var { author, email, record_no } = resp;
-          this.website.author = author;
-          this.website.email = email;
-          this.website.record_no = record_no;
-        } catch {
-          this.$message.error('网站信息配置格式错误');
-        }
-      }
-    })
+  computed: {
+    ...mapState(['website'])
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {

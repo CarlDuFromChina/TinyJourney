@@ -22,7 +22,7 @@ export default {
   name: 'blog-menu',
   data() {
     return {
-      menus: [
+      basicMenus: [
         {
           name: '主页',
           route: 'home'
@@ -44,6 +44,16 @@ export default {
     if (this.$route.query.search) {
       this.searchValue = this.$route.query.search;
       this.onSearch(this.searchValue);
+    }
+  },
+  computed: {
+    menus: function() {
+      if (!sp.isNullOrEmpty(this.$store.getters.website)) {
+        const menus = [...this.basicMenus];
+        menus.splice(2, 0, { name: '小红书', url: this.$store.getters.website.red_book_url });
+        return menus;
+      }
+      return this.basicMenus;
     }
   },
   methods: {

@@ -32,6 +32,18 @@ export default {
       activeIndex: '1',
     };
   },
+  created() {
+    // 获取网站信息
+    sp.get('api/index/website_info').then(resp => {
+      if (!sp.isNullOrEmpty(resp)) {
+        try {
+          this.$store.commit('setWebsite', resp);
+        } catch {
+          this.$message.error('网站信息配置格式错误');
+        }
+      }
+    })
+  },
   mounted() {
     window.addEventListener('scroll', this.scrollToTop, true);
   },

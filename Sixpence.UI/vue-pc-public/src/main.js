@@ -23,6 +23,25 @@ Vue.filter('moment', (data, formatStr) => (sp.isNullOrEmpty(data) ? '' : moment(
 moment.locale('zh-cn');
 Vue.prototype.$moment = moment;
 
+const store = new Vuex.Store({
+  state: {
+    website: {}
+  },
+  mutations: {
+    setWebsite(state, website) {
+      state.website = website;
+    }
+  },
+  actions: {
+    updateWebsite({ commit }, website) {
+      commit('setWebsite', website);
+    }
+  },
+  getters: {
+    website: state => state.website
+  }
+})
+
 // 如果是移动端则跳转到移动端应用
 if (window.device.mobile()) {
   const regex = /\/post\/\d+/;
@@ -36,6 +55,7 @@ if (window.device.mobile()) {
   /* eslint-disable no-new */
   new Vue({
     router,
+    store,
     render: h => h(App),
   }).$mount('#app');
 }
