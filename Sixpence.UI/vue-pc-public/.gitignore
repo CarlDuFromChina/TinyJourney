@@ -10,6 +10,7 @@ package-lock.json
 .env.*.local
 .env.dev
 .env.prod
+.env.development
 
 # Log files
 npm-debug.log*
@@ -25,5 +26,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-.env.development
