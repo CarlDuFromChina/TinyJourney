@@ -3,15 +3,19 @@ using Sixpence.Common.Utils;
 using Sixpence.EntityFramework;
 using Sixpence.TinyJourney.Entity;
 using Sixpence.TinyJourney.Config;
+using Sixpence.Common.Cache;
+using Sixpence.Web.Config;
 
 namespace Sixpence.TinyJourney.Plugin
 {
     public class PostPlugin : IEntityManagerPlugin
     {
         private readonly DraftService _draftService;
-        public PostPlugin(DraftService draftService)
+        private readonly ICacheService _cacheService;
+        public PostPlugin(DraftService draftService, ICacheService cacheService)
         {
             _draftService = draftService;
+            _cacheService = cacheService;
         }
         public void Execute(EntityManagerPluginContext context)
         {
@@ -28,7 +32,7 @@ namespace Sixpence.TinyJourney.Plugin
                 case EntityAction.PostUpdate:
                     var id = context.Entity.PrimaryColumn.Value?.ToString();
                     _draftService.DeleteDataByPostId(id); // 删除草稿
-                    MemoryCacheUtil.RemoveCacheItem(id);
+                    _cacheService.Remove(id); // 移除缓存
                     break;
                 default:
                     break;

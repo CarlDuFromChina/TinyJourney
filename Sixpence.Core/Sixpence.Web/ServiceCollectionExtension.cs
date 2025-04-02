@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using Sixpence.Web.ImageResource;
 using Sixpence.EntityFramework.Sqlite;
 using Sixpence.Web.Service;
+using StackExchange.Redis;
+using Sixpence.Common.Cache;
 
 namespace Sixpence.Web
 {
@@ -33,6 +35,7 @@ namespace Sixpence.Web
         public static void AddSixpenceWeb(this IServiceCollection services)
         {
             services
+                .AddCache()
                 .AddEntityFramework()
                 .AddRepository()
                 .AddStorage()
@@ -235,6 +238,18 @@ namespace Sixpence.Web
             services.AddScoped<SystemService>();
             services.AddScoped<SysUserService>();
             services.AddScoped<VersionScriptExecutionLogService>();
+            return services;
+        }
+
+        public static IServiceCollection AddCache(this IServiceCollection services)
+        {
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var config = ConfigurationOptions.Parse(RedisConfig.Config.ConnectionString);
+                config.AbortOnConnectFail = false;
+                return ConnectionMultiplexer.Connect(config);
+            });
+            services.AddSingleton<ICacheService, RedisCacheService>();
             return services;
         }
     }

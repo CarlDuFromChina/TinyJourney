@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Sixpence.Common.Utils;
 using System.IO;
 using Sixpence.Web.Model;
+using StackExchange.Redis;
 
 namespace Sixpence.Web.WebApi
 {

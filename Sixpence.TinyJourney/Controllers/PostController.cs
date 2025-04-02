@@ -11,13 +11,19 @@ using Sixpence.Web.Entity;
 using Newtonsoft.Json;
 using Sixpence.Web.Model;
 using System.Text.Json;
+using StackExchange.Redis;
+using Sixpence.Common.Cache;
+using Sixpence.Web.Config;
+using System.Linq;
 
 namespace Sixpence.TinyJourney.Controller
 {
     public class PostController : EntityBaseController<Post, PostService>
     {
-        public PostController(PostService service) : base(service)
+        private readonly ICacheService _cacheService;
+        public PostController(PostService service, ICacheService cacheService) : base(service)
         {
+            _cacheService = cacheService;
         }
 
         /// <summary>
@@ -63,7 +69,7 @@ namespace Sixpence.TinyJourney.Controller
         [HttpGet("{id}"), AllowAnonymous]
         public override Post GetData(string id)
         {
-            return MemoryCacheUtil.GetOrAddCacheItem(id, () => base.GetData(id), DateTime.Now.AddHours(2));
+            return _cacheService.GetOrCreate(id, () => base.GetData(id), TimeSpan.FromHours(2));
         }
 
         /// <summary>
