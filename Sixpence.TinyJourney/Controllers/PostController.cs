@@ -97,9 +97,11 @@ namespace Sixpence.TinyJourney.Controller
             using (var reader = new System.IO.StreamReader(Request.Body))
             {
                 content = await reader.ReadToEndAsync();
+                return await _service.GenerateSummary(content);
             }
-            return await _service.GenerateSummary(content);
         }
+
+        public record AIInputDto(string Prompt);
 
         /// <summary>
         /// 生成 Markdown 文章
