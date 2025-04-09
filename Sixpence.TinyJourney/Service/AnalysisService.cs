@@ -18,10 +18,9 @@ namespace Sixpence.TinyJourney.Service
 
         public IEnumerable<TimelineModel> GetTimeline()
         {
-            var post = _manager.Query<TimelineModel>(@"SELECT created_at, title, created_by_name FROM post");
-            return new List<TimelineModel>()
-                .Concat(post)
-                .OrderByDescending(item => item.created_at);
+            var sql = "SELECT created_at, title, created_by_name FROM post order by created_at desc";
+            var post = _manager.Query<TimelineModel>(sql);
+            return post;
         }
     }
 }
