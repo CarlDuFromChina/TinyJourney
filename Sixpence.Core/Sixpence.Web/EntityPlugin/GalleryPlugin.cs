@@ -1,11 +1,5 @@
-﻿using Sixpence.EntityFramework.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Sixpence.EntityFramework;
 using Sixpence.Web.Entity;
-using Sixpence.EntityFramework;
 
 namespace Sixpence.Web.EntityPlugin
 {
@@ -32,6 +26,8 @@ namespace Sixpence.Web.EntityPlugin
                 case EntityAction.PreDelete:
                     break;
                 case EntityAction.PostDelete:
+                    context.EntityManager.Delete<SysFile>(obj.PreviewId);
+                    context.EntityManager.Delete<SysFile>(obj.ImageId);
                     break;
                 default:
                     break;
