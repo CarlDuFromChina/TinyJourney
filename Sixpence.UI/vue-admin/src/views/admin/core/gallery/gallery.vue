@@ -3,13 +3,14 @@
     <div slot="waterfall-head">
       <sp-header>
         <div v-if="buttons && buttons.length > 0" style="display:inline-block">
-          <sp-button-list :buttons="buttons" @search-change="loadData" @unfold="showMore = true" @fold="showMore = false"></sp-button-list>
+          <sp-button-list :buttons="buttons" @search-change="loadData"></sp-button-list>
         </div>
       </sp-header>
-      <a-modal title="图片" v-model="readVisible">
+      <a-modal title="图片" v-model="readVisible" v-if="readVisible">
         <img class="big-image" :src="imgUrl" />
         <template slot="footer">
           <a-button type="primary" @click="downloadImg">点击下载</a-button>
+          <a-button type="danger" @click="deleteData">删除</a-button>
         </template>
       </a-modal>
       <gallery-edit v-model="editVisible" @saved="refresh"></gallery-edit>
@@ -20,10 +21,12 @@
 <script>
 import vueWaterfallEasy from '@sixpence/vue-waterfall-easy';
 import galleryEdit from './galleryEdit.vue';
+import { pagination } from '@/mixins';
 
 export default {
   name: 'gallery',
   components: { vueWaterfallEasy, galleryEdit },
+  mixins: [pagination],
   data() {
     return {
       imgUrl: '',
@@ -32,13 +35,11 @@ export default {
       isFirstLoad: true,
       busy: false,
       dataList: [],
-      pageIndex: 1,
-      pageSize: 15,
-      total: 0,
       loading: false,
       controllerName: 'gallery',
       baseUrl: sp.getServerUrl(),
-      buttons: [{ name: 'new', icon: 'plus', operate: () => (this.editVisible = true) }]
+      buttons: [{ name: 'new', icon: 'plus', operate: () => (this.editVisible = true) }],
+      selectData: null,
     };
   },
   computed: {
@@ -57,12 +58,10 @@ export default {
       this.dataList = [];
       this.loadData();
     },
-    showModal(event, { value }) {
-      // 阻止a标签跳转
-      event.preventDefault();
-      this.imgUrl = '';
+    showModal(event, { index, value }) {
       this.imgUrl = value.infoUrl;
       this.readVisible = true;
+      this.selectData = this.dataList[index];
     },
     downloadImg() {
       window.open(this.imgUrl, '_blank');
@@ -86,6 +85,7 @@ export default {
           this.dataList = this.dataList.concat(
             resp.data.map(item => {
               return {
+                id: item.id,
                 src: sp.getDownloadUrl(item.preview_url),
                 name: item.name,
                 infoUrl: sp.getDownloadUrl(item.image_url)
@@ -99,6 +99,28 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    deleteData(id) {
+      this.$confirm({
+        title: '是否删除',
+        content: '此操作将永久删除选择项, 是否继续?',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          sp.delete(`api/${this.controllerName}/${this.selectData.id}`)
+            .then(() => {
+              this.$message.success('删除成功');
+              this.loadData();
+            })
+            .catch(error => {
+              this.$message.error(error);
+            });
+          location.reload();
+        },
+        onCancel: () => {
+          this.$message.info('已取消删除');
+        }
+      });
     }
   }
 };
