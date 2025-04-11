@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Sixpence.Web.Store
 {
+    /// <summary>
+    /// 本地文件存储策略
+    /// </summary>
     public class SystemLocalStore : IStorage
     {
         private readonly ILogger<SystemLocalStore> logger;

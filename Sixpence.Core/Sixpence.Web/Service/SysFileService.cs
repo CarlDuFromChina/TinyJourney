@@ -19,11 +19,11 @@ namespace Sixpence.Web.Service
 {
     public class SysFileService : EntityService<SysFile>
     {
-        private readonly Lazy<IStorage> _storage;
+        private readonly IStorage _storage;
 
-        public SysFileService(IEntityManager manager, ILogger<EntityService<SysFile>> logger, IRepository<SysFile> repository, IServiceProvider provider) : base(manager, logger, repository)
+        public SysFileService(IEntityManager manager, ILogger<EntityService<SysFile>> logger, IRepository<SysFile> repository, IStorage storage, IServiceProvider provider) : base(manager, logger, repository)
         {
-            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
+            _storage = storage;
         }
 
         public override IList<EntityView> GetViewList()
@@ -84,7 +84,7 @@ FROM
 
                 // 保存图片到本地
                 // TODO：执行失败回滚操作
-                _storage.Value.UploadAsync(stream, newFileName).Wait();
+                _storage.UploadAsync(stream, newFileName).Wait();
 
                 var sysFile = new SysFile()
                 {

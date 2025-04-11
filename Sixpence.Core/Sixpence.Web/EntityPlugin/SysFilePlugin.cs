@@ -13,9 +13,9 @@ namespace Sixpence.Web.EntityPlugin
     public class SysFilePlugin : IEntityManagerPlugin
     {
         private readonly IStorage _storage;
-        public SysFilePlugin(IServiceProvider provider)
+        public SysFilePlugin(IStorage storage)
         {
-            _storage = provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve);
+            _storage = storage;
         }
         public void Execute(EntityManagerPluginContext context)
         {

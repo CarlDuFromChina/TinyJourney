@@ -32,10 +32,10 @@ namespace Sixpence.Web.Service
         private readonly IStorage _storage;
         private readonly IThirdPartyImageResourceDriver _thirdPartyImageResourceDriver;
 
-        public GalleryService(IEntityManager manager, ILogger<EntityService<Gallery>> logger, IRepository<Gallery> repository, SysFileService sysFileService, IServiceProvider provider, IThirdPartyImageResourceDriver thirdPartyImageResourceDriver) : base(manager, logger, repository)
+        public GalleryService(IEntityManager manager, ILogger<EntityService<Gallery>> logger, IRepository<Gallery> repository, SysFileService sysFileService, IStorage storage, IThirdPartyImageResourceDriver thirdPartyImageResourceDriver) : base(manager, logger, repository)
         {
             _sysFileService = sysFileService;
-            _storage = provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve);
+            _storage = storage;
             _thirdPartyImageResourceDriver = thirdPartyImageResourceDriver;
         }
 

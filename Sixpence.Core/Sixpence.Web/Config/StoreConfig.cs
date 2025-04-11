@@ -13,11 +13,6 @@ namespace Sixpence.Web.Config
     /// </summary>
     public class StoreConfig : BaseAppConfig<StoreConfig>
     {
-        /// <summary>
-        /// 存储方式（SystemLocalStore、MinIOStore）
-        /// </summary>
-        public string Type { get; set; }
-
         private string _temp;
         
         /// <summary>
@@ -80,11 +75,6 @@ namespace Sixpence.Web.Config
             }
 
             return "";
-        }
-
-        public static bool Resolve(IStorage storage)
-        {
-            return Config.Type == storage.GetType().Name;
         }
     }
 }

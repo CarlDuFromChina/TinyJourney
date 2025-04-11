@@ -21,10 +21,10 @@ namespace Sixpence.Web.Controllers
 {
     public class SysFileController : EntityBaseController<SysFile, SysFileService>
     {
-        private readonly Lazy<IStorage> _storage;
-        public SysFileController(SysFileService service, IServiceProvider provider) : base(service)
+        private readonly IStorage _storage;
+        public SysFileController(SysFileService service, IStorage storage) : base(service)
         {
-            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
+            _storage = storage;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Sixpence.Web.Controllers
         [Route("Download")]
         public async Task<IActionResult> DownloadAsync(string objectId)
         {
-            return await _storage.Value.DownloadAsync(objectId);
+            return await _storage.DownloadAsync(objectId);
         }
 
         /// <summary>

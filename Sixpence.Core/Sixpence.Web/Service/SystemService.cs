@@ -21,12 +21,12 @@ namespace Sixpence.Web.Service
     public class SystemService : BaseService<SystemService>
     {
         private readonly MailVertificationService _mailVertificationService;
-        private readonly Lazy<IStorage> _storage;
+        private readonly IStorage _storage;
         private readonly Lazy<IEnumerable<IThirdPartyLoginStrategy>> _thirdPartyLoginStrategies;
-        public SystemService(IEntityManager manager, ILogger<SystemService> logger, MailVertificationService mailVertificationService, IServiceProvider provider) : base(manager, logger)
+        public SystemService(IEntityManager manager, ILogger<SystemService> logger, MailVertificationService mailVertificationService, IStorage storage, IServiceProvider provider) : base(manager, logger)
         {
             _mailVertificationService = mailVertificationService;
-            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
+            _storage = storage;
             _thirdPartyLoginStrategies = new Lazy<IEnumerable<IThirdPartyLoginStrategy>>(() => provider.GetServices<IThirdPartyLoginStrategy>());
         }
 
@@ -63,7 +63,7 @@ namespace Sixpence.Web.Service
             var user = _manager.QueryFirst<SysUser>(id);
             if (!string.IsNullOrEmpty(user?.Avatar))
             {
-                return _storage.Value.DownloadAsync(user.Avatar).Result;
+                return _storage.DownloadAsync(user.Avatar).Result;
             }
             return IdenticonResult.FromValue(id, 64);
         }

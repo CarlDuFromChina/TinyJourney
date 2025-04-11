@@ -18,11 +18,11 @@ namespace Sixpence.Web.Service
     public class GiteeAuthService : BaseService<GiteeAuthService>
     {
         private readonly IRepository<SysFile> _sysFileRepository;
-        private readonly Lazy<IStorage> _storage;
-        public GiteeAuthService(IEntityManager manager, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger, IServiceProvider provider) : base(manager, logger)
+        private readonly IStorage _storage;
+        public GiteeAuthService(IEntityManager manager, IRepository<SysFile> sysFileRepository, ILogger<GiteeAuthService> logger, IStorage storage) : base(manager, logger)
         {
             _sysFileRepository = sysFileRepository;
-            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
+            _storage = storage;
         }
 
         public async Task<GiteeAccessToken> GetAccessToken(string code, string userid = "")
@@ -73,7 +73,7 @@ namespace Sixpence.Web.Service
                 var config = StoreConfig.Config;
                 var id = Guid.NewGuid().ToString();
                 var fileName = $"{EntityCommon.GenerateGuidNumber()}.png";
-                _storage.Value.UploadAsync(stream, fileName).Wait();
+                _storage.UploadAsync(stream, fileName).Wait();
 
                 var data = new SysFile()
                 {

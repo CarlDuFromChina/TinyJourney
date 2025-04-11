@@ -19,11 +19,11 @@ namespace Sixpence.Web.Service
 {
     public class GithubAuthService : BaseService<GithubAuthService>
     {
-        private readonly Lazy<IStorage> _storage;
+        private readonly IStorage _storage;
 
-        public GithubAuthService(IEntityManager manager, ILogger<GithubAuthService> logger, IServiceProvider provider) : base(manager, logger)
+        public GithubAuthService(IEntityManager manager, ILogger<GithubAuthService> logger, IStorage storage) : base(manager, logger)
         {
-            _storage = new Lazy<IStorage>(() => provider.GetServices<IStorage>().FirstOrDefault(StoreConfig.Resolve));
+            _storage = storage;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Sixpence.Web.Service
 
             var id = Guid.NewGuid().ToString();
             var fileName = $"{EntityCommon.GenerateGuidNumber()}.jpg";
-            _storage.Value.UploadAsync(stream, fileName).Wait();
+            _storage.UploadAsync(stream, fileName).Wait();
 
             var data = new SysFile()
             {
