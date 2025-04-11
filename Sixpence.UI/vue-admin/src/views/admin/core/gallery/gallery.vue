@@ -110,12 +110,13 @@ export default {
           sp.delete(`api/${this.controllerName}/${this.selectData.id}`)
             .then(() => {
               this.$message.success('删除成功');
-              this.loadData();
+              setTimeout(() => {
+                location.reload();
+              }, 1000);
             })
             .catch(error => {
               this.$message.error(error);
             });
-          location.reload();
         },
         onCancel: () => {
           this.$message.info('已取消删除');

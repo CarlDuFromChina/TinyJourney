@@ -166,9 +166,9 @@ namespace Sixpence.Web.WebApi
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("options")]
-        public virtual IActionResult GetOptions()
+        public virtual IEnumerable<SelectOption> GetOptions()
         {
-            return Ok(_service.GetOptions());
+            return _service.GetOptions();
         }
     }
 }
