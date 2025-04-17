@@ -1,4 +1,14 @@
 admin.duyuchen.cn {
 	encode gzip
-	reverse_proxy	127.0.0.1:8006
+	reverse_proxy	127.0.0.1:8007
+}
+
+duyuchen.cn, www.duyuchen.cn {
+	encode gzip
+	reverse_proxy	127.0.0.1:8008
+}
+
+m.duyuchen.cn {
+	encode gzip
+	reverse_proxy   127.0.0.1:8009
 }
