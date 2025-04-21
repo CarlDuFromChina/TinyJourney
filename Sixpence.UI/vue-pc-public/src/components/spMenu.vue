@@ -4,7 +4,9 @@
       <slot name="logo">
         <sp-menu-item class="sp-menu-logo" @click="$router.push({ name: 'index' })">
           <sp-icon name="sp-blog-baby" :size="38"></sp-icon>
-          <span>{{ APP_TITLE }}</span>
+          <span class="sp-menu-logo-title">{{ APP_TITLE }}</span>
+          <sp-icon class="sp-menu-logo-star" name="sp-blog-star"></sp-icon>
+          <span class="sp-menu-logo-subtitle">Powered by ChatGPT</span>
         </sp-menu-item>
       </slot>
       <ul class="sp-menu-list">
@@ -102,11 +104,24 @@ export default {
     > .svg-icon {
       height: 50px;
     }
-    > span {
+
+    .sp-menu-logo-title {
       color: rgba(0, 0, 0, 0.85);
       padding-left: 8px;
       font-size: 20px;
       font-weight: 600;
+    }
+
+    .sp-menu-logo-star {
+      padding: 0 4px 0 8px;
+    }
+
+    .sp-menu-logo-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #7E8A97;
+      font-weight: 500;
+      letter-spacing: 0.3px;
     }
   }
   .sp-menu-header-wrapper {
