@@ -61,18 +61,6 @@ namespace Sixpence.TinyJourney.Entity
         public int? ReadingTimes { get; set; }
 
         /// <summary>
-        /// 是否是系列
-        /// </summary>
-        [Column(DefaultValue: false), Description("是否是系列")]
-        public bool? IsSeries { get; set; }
-
-        /// <summary>
-        /// 是否是系列
-        /// </summary>
-        [Column(DefaultValue: "否"), Description("是否是系列")]
-        public string? IsSeriesName { get; set; }
-
-        /// <summary>
         /// 标签
         /// </summary>
         [Column, Description("标签")]

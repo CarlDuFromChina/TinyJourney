@@ -13,12 +13,6 @@ export default [
     meta: { title: '文章管理' }
   },
   {
-    path: '/admin/series',
-    name: 'seriesList',
-    component: () => import('./seriesList.vue'),
-    meta: { title: '博客系列' }
-  },
-  {
     path: '/admin/category',
     name: 'category',
     component: () => import('./category/categoryList.vue'),
@@ -29,12 +23,6 @@ export default [
     name: 'idea',
     component: () => import('./idea/ideaList.vue'),
     meta: { title: '想法' }
-  },
-  {
-    path: '/admin/link',
-    name: 'link',
-    component: () => import('./link/linkList.vue'),
-    meta: { title: '链接' }
   },
   {
     path: '/admin/drafts',

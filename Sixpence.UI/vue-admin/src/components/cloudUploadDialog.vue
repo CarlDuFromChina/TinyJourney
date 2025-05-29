@@ -1,5 +1,5 @@
 <template>
-  <a-modal title="图库" v-model="visible" width="60%">
+  <a-modal title="图库" v-model="visible" width="40%">
     <a-form-model-item label="数据源">
       <a-radio-group v-model="source" @change="onChange">
         <a-radio :value="1"> 本地图库 </a-radio>

@@ -44,7 +44,6 @@ export default {
       columns: [
         { prop: 'title', label: '标题' },
         { prop: 'tags', label: '标签', type: 'tag' },
-        { prop: 'is_series_name', label: '是否系列' },
         { prop: 'is_show_name', label: '是否展示' },
         { prop: 'created_by_name', label: '创建人' },
         { prop: 'updated_at', label: '最后修改日期', type: 'datetime' },

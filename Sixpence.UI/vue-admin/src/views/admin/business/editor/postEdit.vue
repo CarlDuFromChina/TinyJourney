@@ -64,22 +64,17 @@
           </a-col>
         </a-row>
         <a-row>
-          <a-col :span="6">
-            <a-form-model-item label="系列">
-              <a-switch v-model="data.is_series"></a-switch>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-model-item label="发布">
               <a-switch v-model="data.is_show"></a-switch>
             </a-form-model-item>
           </a-col>
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-model-item label="禁止评论">
               <a-switch v-model="data.disable_comment"></a-switch>
             </a-form-model-item>
           </a-col>
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-model-item label="置顶">
               <a-switch v-model="data.is_pop"></a-switch>
             </a-form-model-item>
@@ -180,7 +175,6 @@ export default {
       baseUrl: sp.getServerUrl(),
       tags: [],
       data: {
-        is_series: false,
         disable_comment: false,
         content: ''
       },
