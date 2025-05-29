@@ -93,7 +93,16 @@ export default {
   },
   methods: {
     exportData() {
-      sp.get(`api/sys_entity/export?entityid=${this.data.id}`);
+      sp.get(`api/sys_entity/export?id=${this.data.id}`, { responseType: 'blob' }).then(res => {
+        const url = window.URL.createObjectURL(res);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${this.data.name}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      });
     },
     handleClose() {
       this.editVisible = false;

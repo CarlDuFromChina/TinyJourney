@@ -8,6 +8,7 @@ using Sixpence.Web.Model;
 using Sixpence.Web.Entity;
 using Microsoft.Extensions.Logging;
 using Sixpence.EntityFramework.Entity;
+using System.Data;
 
 namespace Sixpence.Web.Service
 {
@@ -92,6 +93,16 @@ DELETE FROM sys_attrs WHERE entity_id {inSqlResult.sql};
         {
             var sql = $@"SELECT code AS Value, name AS Name FROM {new SysEntity().EntityMap.FullQualifiedName}";
             return _manager.Query<SelectOption>(sql);
+        }
+
+        public DataTable GetEntityAllData(string entityId)
+        {
+            var data = GetData(entityId);
+            if (data == null)
+            {
+                throw new Exception("未知的实体");
+            }
+            return _manager.Query($"select * from {data.Code}");
         }
     }
 }
