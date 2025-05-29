@@ -61,7 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseDefaultFiles();
     app.UseStaticFiles();
 
-    app.MapFallbackToFile("index.html");
+    app.MapFallbackToFile("{*path:regex(^(?!api).*$)}", "index.html");
 }
 
 app.UseRouting();
