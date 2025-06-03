@@ -73,7 +73,7 @@ namespace Sixpence.TinyJourney
             services.AddScoped<AnalysisService>();
             services.AddScoped<CategoryService>();
             services.AddScoped<DraftService>();
-            services.AddScoped<IdeaSerivice>();
+            services.AddScoped<IdeaService>();
             services.AddScoped<LinkService>();
             services.AddScoped<PostService>();
             return services;

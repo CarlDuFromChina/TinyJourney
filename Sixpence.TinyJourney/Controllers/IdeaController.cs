@@ -13,9 +13,9 @@ using Sixpence.Web.Model;
 
 namespace Sixpence.TinyJourney.Controller
 {
-    public class IdeaController : EntityBaseController<Idea, IdeaSerivice>
+    public class IdeaController : EntityBaseController<Idea, IdeaService>
     {
-        public IdeaController(IdeaSerivice service) : base(service)
+        public IdeaController(IdeaService service) : base(service)
         {
         }
 
