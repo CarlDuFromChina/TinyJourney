@@ -16,6 +16,10 @@
                   <a-icon type="eye" style="margin-right:4px"/>
                   <span>{{ item.reading_times }}</span>
                 </span>
+                <span class="meta-container-user">
+                  <a-icon type="user" style="margin-right:4px"></a-icon>
+                  <span>{{  item.created_by_name }}</span>
+                </span>
                 <a-tag v-show="item" v-for="(item, index) in JSON.parse(item.tags)" :key="index" :color="colors[index]">
                   {{ item }}
                 </a-tag>
@@ -152,6 +156,23 @@ export default {
       content: ' ';
       left: 6px;
     }
+    &::after {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: block;
+      width: 1px;
+      height: 14px;
+      background: #e5e6eb;
+      content: ' ';
+      right: 6px;
+    }
+  }
+  &-user{
+    padding: 0 12px 0 0;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+    position: relative;
     &::after {
       position: absolute;
       top: 50%;

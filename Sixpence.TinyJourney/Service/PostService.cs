@@ -34,7 +34,6 @@ SELECT
 	post.updated_by_name,
 	post.created_at,
 	post.updated_at,
-	post.is_series,
 	post.tags,
 	COALESCE(post.reading_times, 0) reading_times,
 	post.surface_id,
@@ -50,34 +49,10 @@ WHERE 1=1 AND post.is_show = true";
             {
                 new EntityView()
                 {
-                    Sql = "SELECT * FROM post",
-                    ViewId = "C94EDAAE-0C59-41E6-A373-D4816C2FD882",
-                    CustomFilter = new List<string>(){ "title" },
-                    Name = "全部博客",
-                    OrderBy = orderBy
-                },
-                new EntityView()
-                {
-                    Sql = sql + " AND post.is_series is false",
+                    Sql = sql,
                     ViewId = "463BE7FE-5435-4841-A365-C9C946C0D655",
                     CustomFilter = new List<string>() { "title" },
                     Name = "展示的博客",
-                    OrderBy = orderBy
-                },
-                new EntityView()
-                {
-                    Sql = sql + " AND post.is_series is true",
-                    ViewId = "834F8083-47BC-42F3-A6B2-DE25BE755714",
-                    CustomFilter = new List<string>() { "title" },
-                    Name = "展示的系列",
-                    OrderBy =orderBy
-                },
-                new EntityView()
-                {
-                    Sql = $@"SELECT * FROM post WHERE post.is_series is true",
-                    ViewId = "ACCE50D6-81A5-4240-BD82-126A50764FAB",
-                    CustomFilter = new List<string>() { "title" },
-                    Name = "全部系列",
                     OrderBy = orderBy
                 }
             };
