@@ -37,7 +37,6 @@ namespace Sixpence.TinyJourney
 
             // 2. 添加实体插件
             services.AddScoped<IEntityManagerPlugin, PostPlugin>();
-            services.AddScoped<IEntityManagerPlugin, CategoryPlugin>();
 
             // 3. 添加仓储
             services.AddScoped<IRepository<Category>, Repository<Category>>();
