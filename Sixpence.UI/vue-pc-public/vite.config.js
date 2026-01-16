@@ -19,33 +19,33 @@ export default defineConfig(( mode ) => {
           {
             name: 'vue',
             var: 'Vue',
-            path: 'https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js'
+            path: 'https://cdn.jsdmirror.com/npm/vue@2.6.14/dist/vue.min.js'
           },
           {
             name: 'vue-router',
             var: 'VueRouter',
-            path: 'https://cdn.bootcdn.net/ajax/libs/vue-router/3.5.3/vue-router.min.js'
+            path: 'https://cdn.jsdmirror.com/npm/vue-router@3.5.3/dist/vue-router.min.js'
           },
           {
             name: 'vuex',
             var: 'Vuex',
-            path: 'https://cdn.bootcdn.net/ajax/libs/vuex/3.6.2/vuex.min.js'
+            path: 'https://cdn.jsdmirror.com/npm/vuex@3.6.2/dist/vuex.min.js'
           },
           {
             name: 'moment',
             var: 'moment',
-            path: 'https://cdn.bootcdn.net/ajax/libs/moment.js/2.29.1/moment.min.js'
+            path: 'https://cdn.jsdmirror.com/npm/moment@2.29.1/min/moment.min.js'
           },
           {
             name: 'ant-design-vue',
             var: 'antd',
-            path: 'https://cdn.bootcdn.net/ajax/libs/ant-design-vue/1.7.8/antd.min.js',
-            css: 'https://cdn.bootcdn.net/ajax/libs/ant-design-vue/1.7.8/antd.min.css'
+            path: 'https://cdn.jsdmirror.com/npm/ant-design-vue@1.7.8/dist/antd.min.js',
+            css: 'https://cdn.jsdmirror.com/npm/ant-design-vue@1.7.8/dist/antd.min.css'
           },
           {
             name: 'marked',
             var: 'marked',
-            path: 'https://cdn.bootcdn.net/ajax/libs/marked/2.1.3/marked.min.js'
+            path: 'https://cdn.jsdmirror.com/npm/marked@2.1.3/marked.min.js'
           }
         ]
       }),
