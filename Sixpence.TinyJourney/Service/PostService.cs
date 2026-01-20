@@ -39,7 +39,9 @@ SELECT
 	post.surface_url,
 	post.brief,
 	post.is_pop,
-	post.is_pop_name
+	post.is_pop_name,
+	post.is_show,
+	post.is_show_name
 FROM
 	post
 WHERE 1=1 AND post.is_show = true";
