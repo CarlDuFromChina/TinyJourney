@@ -9,10 +9,12 @@
           </div>
           <div class="content">
             <div class="title">{{ row.title }}</div>
+            <div class="meta">
+              <span class="author"><sp-icon name="sp-blog-people" :size="11"></sp-icon> {{ row.created_by_name }}</span>
+              <span class="date">{{ row.created_at | moment('YYYY-MM-DD') }}</span>
+            </div>
             <div class="info">
               <div class="brief">{{ row.brief }}</div>
-              <span><sp-icon name="sp-blog-view" style="padding-right: 8px"></sp-icon>{{ row.reading_times }}</span>
-              <span style="float: right">{{ row.created_at | moment('YYYY-MM-DD') }}</span>
             </div>
           </div>
         </div>
@@ -94,7 +96,7 @@ export default {
   .avatar {
     border-radius: 4px;
     img {
-      width: 160px;
+      width: 133px;
       height: 90px;
       border-radius: 4px;
     }
@@ -115,7 +117,7 @@ export default {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-bottom: 18px;
+      padding-bottom: 6px;
     }
     .brief {
       display: -webkit-box;
@@ -125,14 +127,25 @@ export default {
       line-height: 1.5em;
       height: 3em;
     }
+    .meta {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .author {
+      color: #666666;
+      font-size: 12px;
+      line-height: 1.2em;
+    }
+    .date {
+      color: #666666;
+      font-size: 12px;
+      line-height: 1.2em;
+    }
     .info {
-      bottom: 30px;
       color: #888888;
       font-size: 12px;
-      .rt-icon {
-        vertical-align: middle;
-        padding-right: 3px;
-      }
+      padding-top: 6px;
     }
   }
 }

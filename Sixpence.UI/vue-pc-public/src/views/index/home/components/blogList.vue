@@ -12,10 +12,6 @@
               </div>
               <div class="meta-container">
                 <span class="meta-container-date">{{ formtDate(item.created_at) }}</span>
-                <span class="meta-container-view">
-                  <a-icon type="eye" style="margin-right:4px"/>
-                  <span>{{ item.reading_times }}</span>
-                </span>
                 <span class="meta-container-user">
                   <a-icon type="user" style="margin-right:4px"></a-icon>
                   <span>{{  item.created_by_name }}</span>

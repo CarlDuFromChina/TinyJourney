@@ -35,7 +35,6 @@ SELECT
 	post.created_at,
 	post.updated_at,
 	post.tags,
-	COALESCE(post.reading_times, 0) reading_times,
 	post.surface_id,
 	post.surface_url,
 	post.brief,
@@ -56,22 +55,6 @@ WHERE 1=1 AND post.is_show = true";
                     OrderBy = orderBy
                 }
             };
-        }
-
-        /// <summary>
-        /// 根据id查询博客
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public override Post GetData(string id)
-        {
-            return _manager.ExecuteTransaction(() =>
-            {
-                var data = base.GetData(id);
-                var paramList = new Dictionary<string, object>() { { "@id", id } };
-                _manager.Execute("UPDATE post SET reading_times = COALESCE(reading_times, 0) + 1 WHERE id = @id", paramList);
-                return data;
-            });
         }
 
         public PostCategories GetCategories()
@@ -144,7 +127,7 @@ WHERE
                 return (fileName, contentType, ms.ToArray());
             }
         }
-        
+
         /// <summary>
         /// 生成文章摘要
         /// </summary>
@@ -158,7 +141,7 @@ WHERE
 
             PromptTemplate promptTemplate = new(template);
 
-            Dictionary<string, string> variables = new ()
+            Dictionary<string, string> variables = new()
             {
                 { "question", content }
             };
@@ -173,7 +156,7 @@ WHERE
                 throw new SpException($"发生错误: {ex.Message}");
             }
         }
-        
+
         /// <summary>
         /// 根据提示词生成 Markdown 内容
         /// </summary>
