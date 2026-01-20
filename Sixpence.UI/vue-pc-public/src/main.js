@@ -42,22 +42,11 @@ const store = new Vuex.Store({
   }
 })
 
-// 如果是移动端则跳转到移动端应用
-if (window.device.mobile()) {
-  const regex = /\/post\/\d+/;
-  if (regex.test(window.location.pathname)) {
-    window.location.href = `${import.meta.env.VITE_APP_MOBILE_URL}/#/index${window.location.pathname}`;
-  } else {
-    window.location.href = import.meta.env.VITE_APP_MOBILE_URL;
-  }
-
-} else {
-  /* eslint-disable no-new */
-  new Vue({
-    router,
-    store,
-    render: h => h(App),
-  }).$mount('#app');
-}
+/* eslint-disable no-new */
+new Vue({
+  router,
+  store,
+  render: h => h(App),
+}).$mount('#app');
 
 document.title = import.meta.env.VITE_APP_TITLE;

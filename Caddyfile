@@ -5,6 +5,11 @@ admin.duyuchen.cn {
 
 duyuchen.cn, www.duyuchen.cn {
 	encode gzip
+	@is_mobile_post {
+		path /post/*
+		header_regexp User-Agent "(?i)(android|iphone|ipod|ipad|windows[ -]?phone|mobi|mobile|blackberry|opera mini|opera mobi)"
+	}
+	redir @is_mobile_post https://m.duyuchen.cn{uri} 302
 	reverse_proxy	127.0.0.1:8008
 }
 
