@@ -2,13 +2,13 @@
   <sp-view>
     <sp-header :title="data.title"></sp-header>
     <sp-content>
-      <article v-html="content" class="content markdown-body"></article>
+      <article v-html="content" class="content"></article>
     </sp-content>
   </sp-view>
 </template>
 
 <script>
-import marked from 'marked';
+import { marked } from 'marked';
 
 export default {
   name: 'post',
@@ -43,71 +43,129 @@ export default {
 <style lang="less" scoped>
 .content {
   text-align: left;
-  padding: 8px;
+  padding: 12px;
+  color: #2a2a2a;
+  line-height: 1.7;
+  font-size: 14px;
+  word-break: break-word;
+  background: #ffffff;
 }
 
-h2 {
+.content /deep/ h1,
+.content /deep/ h2,
+.content /deep/ h3,
+.content /deep/ h4,
+.content /deep/ h5,
+.content /deep/ h6 {
+  margin: 16px 0 10px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+.content /deep/ h1 {
+  font-size: 22px;
+}
+.content /deep/ h2 {
+  font-size: 18px;
+}
+.content /deep/ h3 {
   font-size: 16px;
 }
-
-/deep/ .markdown-body img {
-  max-width: 100%;
-  height: auto;
+.content /deep/ h4 {
+  font-size: 15px;
 }
-
-/deep/ .markdown-body {
-  line-height: 1.5;
+.content /deep/ h5 {
   font-size: 14px;
-  color: #333;
-  word-wrap: break-word;
+}
+.content /deep/ h6 {
+  font-size: 13px;
+  color: #666666;
 }
 
-/deep/ .markdown-body h1,
-/deep/ .markdown-body h2,
-/deep/ .markdown-body h3,
-/deep/ .markdown-body h4,
-/deep/ .markdown-body h5,
-/deep/ .markdown-body h6 {
-  margin-top: 1em;
-  margin-bottom: 0.5em;
-  font-weight: bold;
-  border-bottom: 1px solid #eaecef;
+.content /deep/ p {
+  margin: 10px 0;
 }
 
-/deep/ .markdown-body a {
-  color: #0366d6;
+.content /deep/ a {
+  color: #3b82f6;
   text-decoration: none;
+  word-break: break-word;
+}
+.content /deep/ a:active,
+.content /deep/ a:hover {
+  text-decoration: underline;
 }
 
-/deep/.markdown-body code {
-  background-color: #f6f8fa;
-  padding: 2px 4px;
-  border-radius: 3px;
-}
-
-/deep/ .markdown-body table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-bottom: 1em;
-}
-
-/deep/ .markdown-body th,
-/deep/ .markdown-body td {
-  border: 1px solid #ddd;
-  padding: 0.5em;
-}
-
-/deep/ .markdown-body th {
-  background-color: #f6f8fa;
-}
-
-/deep/ .markdown-body img {
+.content /deep/ img {
   max-width: 100%;
   height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: 10px auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
-/deep/ .markdown-body iframe {
+.content /deep/ ul,
+.content /deep/ ol {
+  margin: 8px 0 8px 20px;
+  padding: 0;
+}
+.content /deep/ li {
+  margin: 6px 0;
+}
+
+.content /deep/ blockquote {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-left: 4px solid #e5e7eb;
+  background: #f9fafb;
+  color: #555555;
+  border-radius: 6px;
+}
+
+.content /deep/ code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.content /deep/ pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.content /deep/ pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.content /deep/ hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 16px 0;
+}
+
+.content /deep/ table {
   width: 100%;
-  height: 30vh;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 13px;
+}
+.content /deep/ th,
+.content /deep/ td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: left;
+}
+.content /deep/ th {
+  background: #f3f4f6;
+  font-weight: 600;
 }
 </style>
