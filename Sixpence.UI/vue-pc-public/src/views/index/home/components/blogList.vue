@@ -133,53 +133,15 @@ export default {
 .meta-container {
   color: #86909c;
   font-size: 13px;
-  &-date {
+  .meta-container-date {
     position: relative;
+    padding-right: 12px;
   }
-  &-view {
-    position: relative;
-    color: rgba(0, 0, 0, 0.45);
-    font-size: 14px;
-    padding: 0 12px;
-    &::before {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      display: block;
-      width: 1px;
-      height: 14px;
-      background: #e5e6eb;
-      content: ' ';
-      left: 6px;
-    }
-    &::after {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      display: block;
-      width: 1px;
-      height: 14px;
-      background: #e5e6eb;
-      content: ' ';
-      right: 6px;
-    }
-  }
-  &-user{
-    padding: 0 12px 0 0;
+  .meta-container-user{
+    padding-right: 12px;
     color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
     position: relative;
-    &::after {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      display: block;
-      width: 1px;
-      height: 14px;
-      background: #e5e6eb;
-      content: ' ';
-      right: 6px;
-    }
   }
 }
 
