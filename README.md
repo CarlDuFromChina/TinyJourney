@@ -10,9 +10,18 @@
 
 ---  
 
-## 技术特点 🚀  
+## 技术栈 🚀  
 
-后端采用 **.NET 8.0**，前端采用 **Vue 2.6** 开发的 Web 应用程序。它具有响应式设计，可以在 PC 和移动设备上访问。  
+| 层级 | 技术 |
+|------|------|
+| 后端框架 | .NET 8.0 |
+| 前端框架 | Vue 2.6 |
+| 数据库 | PostgreSQL 12+ / SQLite |
+| ORM | 自研 Sixpence.EntityFramework |
+| 缓存 | Redis |
+| 定时任务 | Quartz.NET |
+| AI 集成 | 百度文心、DeepSeek |
+| 容器化 | Docker / Docker Compose |
 
 ---  
 
@@ -57,6 +66,42 @@ TinyJourney/
 ```  
 
 ---  
+
+## Docker Compose 部署 🐳
+
+### 1. 创建数据目录
+
+```bash
+mkdir -p /docker_data/tj/pg_data
+mkdir -p /docker_data/tj/server/logs
+mkdir -p /docker_data/tj/server/storage
+mkdir -p /docker_data/tj/caddy
+```
+
+### 2. 创建配置文件
+
+- 将 `docker-compose.yml` 复制到部署目录
+- 将 `appsettings.json` 复制到 `/docker_data/tj/server/appsettings.json`，修改数据库连接等配置
+- 将 `Caddyfile` 复制到 `/docker_data/tj/caddy/Caddyfile`，修改域名配置
+
+### 3. 启动服务
+
+```bash
+docker-compose up -d
+```
+
+### 端口说明
+
+| 端口 | 用途 |
+|------|------|
+| 80 | HTTP（自动跳转 HTTPS） |
+| 443 | HTTPS |
+| 5050 | API 服务（内部） |
+| 8010 | 后台管理（内部） |
+| 8012 | PC 公开页面（内部） |
+| 8014 | 移动端公开页面（内部） |
+
+---
 
 ## 许可证 📜  
 

@@ -21,14 +21,14 @@ services:
 
   tj-server:
     container_name: "tj-server"
-    image: carldu/tiny-journey:latest
-    links:
+    image: carldu/tiny-journey:2.0
+    depends_on:
       - tj-db
-    ports:
-      - "5050:5050"
-      - "8010:8010"
-      - "8012:8012"
-      - "8014:8014"
+    expose:
+      - "5050"
+      - "8010"
+      - "8012"
+      - "8014"
     environment:
       TZ: Asia/Shanghai
     volumes:
@@ -37,7 +37,31 @@ services:
       - /docker_data/tj/server/storage:/app/storage
     networks:
       - tj-network
+
+  tj-caddy:
+    container_name: "tj-caddy"
+    image: caddy:2
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /docker_data/tj/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /docker_data/tj/caddy/data:/data
+      - /docker_data/tj/caddy/config:/config
+    networks:
+      - tj-network
       
+  tj-redis:
+    container_name: "tj-redis"
+    image: redis:latest
+    links:
+      - tj-server
+    ports:
+      - "6379:6379"
+    networks:
+      - tj-network
+    
 networks:
   tj-network:
     driver: bridge
