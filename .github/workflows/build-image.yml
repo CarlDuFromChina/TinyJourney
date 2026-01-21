@@ -102,5 +102,5 @@ jobs:
           tags: |
             carldu/tiny-journey:latest
             carldu/tiny-journey:${{ github.ref_name }}
-            crpi-8hm9f8zs1od5bq71.cn-shanghai.personal.cr.aliyuncs.com/karldu/tiny-journey:latest
-            crpi-8hm9f8zs1od5bq71.cn-shanghai.personal.cr.aliyuncs.com/karldu/tiny-journey:${{ github.ref_name }}
+            crpi-8hm9f8zs1od5bq7l.cn-shanghai.personal.cr.aliyuncs.com/karldu/tiny-journey:latest
+            crpi-8hm9f8zs1od5bq7l.cn-shanghai.personal.cr.aliyuncs.com/karldu/tiny-journey:${{ github.ref_name }}
