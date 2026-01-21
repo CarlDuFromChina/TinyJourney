@@ -82,7 +82,7 @@ jobs:
       - name: Login to Aliyun Container Registry
         uses: docker/login-action@v1
         with:
-          registry: crpi-8hm9f8zs1od5bq71.cn-shanghai.personal.cr.aliyuncs.com
+          registry: crpi-8hm9f8zs1od5bq7l.cn-shanghai.personal.cr.aliyuncs.com
           username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
           password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
           
