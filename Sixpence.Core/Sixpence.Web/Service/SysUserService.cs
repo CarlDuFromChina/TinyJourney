@@ -31,6 +31,8 @@ LEFT JOIN (
         is_lock
     FROM sys_auth_user
 ) au ON sys_user.id = au.user_id
+WHERE
+    sys_user.code NOT IN ('system', 'guest', 'admin', 'user')
 ";
             var customFilter = new List<string>() { "name" };
             return new List<EntityView>()

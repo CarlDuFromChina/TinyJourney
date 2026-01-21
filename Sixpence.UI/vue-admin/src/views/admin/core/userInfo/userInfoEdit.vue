@@ -46,7 +46,12 @@
         <a-row :gutter="24">
           <a-col>
             <a-form-model-item label="自我介绍">
-              <a-input v-model="data.introduction" type="textarea" placeholder="请介绍一下你自己...."></a-input>
+              <a-input
+                v-model="data.introduction"
+                type="textarea"
+                :auto-size="{ minRows: 4, maxRows: 8 }"
+                placeholder="请介绍一下你自己...."
+              ></a-input>
             </a-form-model-item>
           </a-col>
         </a-row>

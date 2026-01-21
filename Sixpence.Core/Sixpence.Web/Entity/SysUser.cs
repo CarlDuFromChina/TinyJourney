@@ -5,6 +5,9 @@ using System.Runtime.Serialization;
 
 namespace Sixpence.Web.Entity
 {
+    /// <summary>
+    /// 用户信息表
+    /// </summary>
     [Table, Description("用户")]
     public partial class SysUser : TrackedBaseEntity
     {
@@ -106,10 +109,20 @@ namespace Sixpence.Web.Entity
 
         [Column, Description("出生日期")]
         public DateTime? Birthday { get; set; }
-    }
 
-    public partial class SysUser
-    {
+        /// <summary>
+        /// 是否锁定
+        /// </summary>
+        public bool? IsLock { get; set; }
+
+        /// <summary>
+        /// 是否锁定名称
+        /// </summary>
+        public string IsLockName { get {; return IsLock.HasValue && IsLock.Value ? "是" : "否"; } }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
         public string Password { get; set; }
     }
 }

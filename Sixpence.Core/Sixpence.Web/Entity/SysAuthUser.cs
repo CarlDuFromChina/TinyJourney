@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 
 namespace Sixpence.Web.Entity
 {
+    /// <summary>
+    /// 用户授权信息表
+    /// </summary>
     [Table, Description("用户授权")]
     public partial class SysAuthUser : TrackedBaseEntity
     {
