@@ -38,7 +38,7 @@ jobs:
       - name: Build vue-admin
         working-directory: ./Sixpence.UI/vue-admin
         run: |
-          npm ci
+          npm install
           npm run build
 
       - name: Configuare env (vue-pc-public)
@@ -54,13 +54,13 @@ jobs:
       - name: Build vue-pc-public
         working-directory: ./Sixpence.UI/vue-pc-public
         run: |
-          npm ci
+          npm install
           npm run build
 
       - name: Build vue-mobile-public
         working-directory: ./Sixpence.UI/vue-mobile-public
         run: |
-          npm ci
+          npm install
           npm run build
 
       - name: Set up QEMU
