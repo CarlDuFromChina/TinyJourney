@@ -1,0 +1,97 @@
+name: build-image
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - "v[0-9]+.[0-9]+.[0-9]"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=today::$(date +'%Y-%m-%d_%H-%M')"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Configuare env (vue-admin)
+        working-directory: ./Sixpence.UI/vue-admin
+        run: |
+          cat > .env.production << eof
+          NODE_ENV=production
+          VITE_APP_INDEX_URL=${{ vars.VITE_APP_INDEX_URL }}
+          VITE_APP_TITLE=${{ vars.VITE_APP_TITLE }}
+          eof
+
+      - name: Build vue-admin
+        working-directory: ./Sixpence.UI/vue-admin
+        run: |
+          npm ci
+          npm run build
+
+      - name: Configuare env (vue-pc-public)
+        working-directory: ./Sixpence.UI/vue-pc-public
+        run: |
+          cat > .env.production << eof
+          NODE_ENV=production
+          VITE_APP_INDEX_URL=${{ vars.VITE_APP_INDEX_URL }}
+          VITE_APP_TITLE=${{ vars.VITE_APP_TITLE }}
+          VITE_APP_DISQUS_SHORTNAME=${{ vars.VITE_APP_DISQUS_SHORTNAME }}
+          eof
+
+      - name: Build vue-pc-public
+        working-directory: ./Sixpence.UI/vue-pc-public
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build vue-mobile-public
+        working-directory: ./Sixpence.UI/vue-mobile-public
+        run: |
+          npm ci
+          npm run build
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+        
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          # 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
+          platforms: linux/amd64
+          # 镜像推送时间
+          push: true
+          labels: |
+            com.microsoft.created-by=visual-studio
+            com.microsoft.visual-studio.project-name=Sixpence.TinyJourney
+          # 给清单打上多个标签
+          tags: |
+            carldu/tiny-journey:latest
+            carldu/tiny-journey:2.0.0

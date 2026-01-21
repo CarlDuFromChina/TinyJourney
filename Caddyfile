@@ -1,19 +1,31 @@
 admin.duyuchen.cn {
 	encode gzip
-	reverse_proxy	127.0.0.1:8007
+	@api {
+		path /api/*
+	}
+	reverse_proxy @api 127.0.0.1:5050
+	reverse_proxy	127.0.0.1:8010
 }
 
 duyuchen.cn, www.duyuchen.cn {
 	encode gzip
+	@api {
+		path /api/*
+	}
+	reverse_proxy @api 127.0.0.1:5050
 	@is_mobile_post {
 		path /post/*
 		header_regexp User-Agent "(?i)(android|iphone|ipod|ipad|windows[ -]?phone|mobi|mobile|blackberry|opera mini|opera mobi)"
 	}
 	redir @is_mobile_post https://m.duyuchen.cn/#/index{uri} 302
-	reverse_proxy	127.0.0.1:8008
+	reverse_proxy	127.0.0.1:8012
 }
 
 m.duyuchen.cn {
 	encode gzip
-	reverse_proxy   127.0.0.1:8009
+	@api {
+		path /api/*
+	}
+	reverse_proxy @api 127.0.0.1:5050
+	reverse_proxy   127.0.0.1:8014
 }

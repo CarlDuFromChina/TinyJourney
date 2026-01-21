@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.Extensions.FileProviders;
 using NLog.Extensions.Logging;
 using Sixpence.TinyJourney;
 using Sixpence.Web;
@@ -51,6 +52,55 @@ builder.Services.AddSixpencePortal();
 builder.Services.AddSixpenceWeb();
 
 var app = builder.Build();
+
+var adminWebRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "admin");
+var pcWebRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "pc");
+var mobileWebRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "mobile");
+
+if (Directory.Exists(adminWebRoot))
+{
+    app.MapWhen(context => context.Connection.LocalPort == 8010, branch =>
+    {
+        var fileProvider = new PhysicalFileProvider(adminWebRoot);
+        branch.UseDefaultFiles(new DefaultFilesOptions { FileProvider = fileProvider });
+        branch.UseStaticFiles(new StaticFileOptions { FileProvider = fileProvider });
+        branch.UseRouting();
+        branch.UseEndpoints(endpoints =>
+        {
+            endpoints.MapFallbackToFile("{*path}", "index.html", new StaticFileOptions { FileProvider = fileProvider });
+        });
+    });
+}
+
+if (Directory.Exists(pcWebRoot))
+{
+    app.MapWhen(context => context.Connection.LocalPort == 8012, branch =>
+    {
+        var fileProvider = new PhysicalFileProvider(pcWebRoot);
+        branch.UseDefaultFiles(new DefaultFilesOptions { FileProvider = fileProvider });
+        branch.UseStaticFiles(new StaticFileOptions { FileProvider = fileProvider });
+        branch.UseRouting();
+        branch.UseEndpoints(endpoints =>
+        {
+            endpoints.MapFallbackToFile("{*path}", "index.html", new StaticFileOptions { FileProvider = fileProvider });
+        });
+    });
+}
+
+if (Directory.Exists(mobileWebRoot))
+{
+    app.MapWhen(context => context.Connection.LocalPort == 8014, branch =>
+    {
+        var fileProvider = new PhysicalFileProvider(mobileWebRoot);
+        branch.UseDefaultFiles(new DefaultFilesOptions { FileProvider = fileProvider });
+        branch.UseStaticFiles(new StaticFileOptions { FileProvider = fileProvider });
+        branch.UseRouting();
+        branch.UseEndpoints(endpoints =>
+        {
+            endpoints.MapFallbackToFile("{*path}", "index.html", new StaticFileOptions { FileProvider = fileProvider });
+        });
+    });
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

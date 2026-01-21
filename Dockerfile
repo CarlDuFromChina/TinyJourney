@@ -4,7 +4,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 5000
+EXPOSE 5050
+EXPOSE 8010
+EXPOSE 8012
+EXPOSE 8014
 
 
 # 此阶段用于生成服务项目

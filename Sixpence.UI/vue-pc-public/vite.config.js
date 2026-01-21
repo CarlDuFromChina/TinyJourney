@@ -70,7 +70,7 @@ export default defineConfig(( mode ) => {
       }
     },
     build: {
-      outDir: 'dist',
+      outDir: path.resolve(__dirname, '../../Sixpence.TinyJourney/wwwroot/pc'),
     },
     server: {
       port: 8080,
